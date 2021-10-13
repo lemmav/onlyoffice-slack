@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package installation;
+
+service InstallationService {
+  rpc GetInstallation(GetInstallationRequest) returns (Installation) {};
+  rpc SetInstallation(SetInstallationRequest) returns (SetInstallationResponse) {};
+}
+
+message GetInstallationRequest {
+  string id = 1;
+  bool isEnterprise = 2;
+}
+
+message SetInstallationRequest {
+  string id = 1;
+  Installation installation = 2;
+}
+
+message SetInstallationResponse {
+  bool success = 1;
+}
+
+message Installation {
+    Team team = 1;
+    string enterprise = 2;
+    User user = 3;
+    Bot bot = 4;
+    IncomingWebhook incomingWebhook = 5;
+    string appId = 6;
+    string tokenType = 7;
+    string enterpriseUrl = 8;
+    bool isEnterpriseInstall = 9;
+    string authVersion = 10;
+    string metadata = 11;
+}
+
+message Team {
+    string id = 1;
+    string name = 2;
+}
+
+message User {
+    string token = 1;
+    repeated string scopes = 2;
+    string id = 3;
+}
+
+message Bot {
+    repeated string scopes = 1;
+    string token = 2;
+    string userId = 3;
+    string id = 4;
+}
+
+message IncomingWebhook {
+  string url = 1;
+  string channel = 2;
+  string channelId = 3;
+  string configurationUrl = 4;
+}

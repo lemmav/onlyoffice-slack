@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package usertoken;
+
+service UserTokenService {
+    rpc GetUserToken (GetInstallationRequest) returns (GetUserTokenResponse) {};
+}
+
+message GetUserTokenRequest {
+    string id = 1;
+}
+
+message GetUserTokenResponse {
+    string token = 1;
+    bool ok = 2;
+}

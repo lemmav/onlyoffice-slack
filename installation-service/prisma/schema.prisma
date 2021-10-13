@@ -1,0 +1,19 @@
+datasource db {
+    provider = "postgresql"
+    url = env("MICROSERVICE_DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Installation {
+    id String @id
+    installation String
+    createdAt DateTime @default(now())
+}
+
+model UserToken {
+    id String @id
+    token String
+}
