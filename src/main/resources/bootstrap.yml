@@ -1,0 +1,44 @@
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: never
+    include-exception: false
+
+resilience4j.ratelimiter:
+  instances:
+    queryRateLimiter:
+      limitRefreshPeriod: 1s
+      limitForPeriod: 500
+      timeoutDuration: 150ms
+    commandInstallRateLimiter:
+      limitRefreshPeriod: 1s
+      limitForPeriod: 20
+      timeoutDuration: 150ms
+    commandUpdateRateLimiter:
+      limitRefreshPeriod: 1s
+      limitForPeriod: 100
+      timeoutDuration: 150ms
+    editorRateLimiter:
+      limitRefreshPeriod: 1s
+      limitForPeriod: 150
+      timeoutDuration: 150ms
+    callbackRateLimiter:
+      limitRefreshPeriod: 1s
+      limitForPeriod: 300
+      timeoutDuration: 150ms
+
+resilience4j.circuitbreaker:
+  instances:
+    onlyofficeRegistryQueryService:
+      registerHealthIndicator: true
+      ringBufferSizeInClosedState: 5
+      ringBufferSizeInHalfOpenState: 3
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 60
+    onlyofficeRegistryCommandService:
+      registerHealthIndicator: true
+      ringBufferSizeInClosedState: 5
+      ringBufferSizeInHalfOpenState: 3
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 60
