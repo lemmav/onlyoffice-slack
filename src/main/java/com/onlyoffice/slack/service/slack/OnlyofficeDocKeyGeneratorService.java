@@ -37,6 +37,7 @@ public class OnlyofficeDocKeyGeneratorService {
                 .teamId(slackBot)
                 .query(String.format(fallbackPattern, fileId))
                 .sortDir("desc")
+                .sort("timestamp")
                 .count(1)
                 .build());
 
