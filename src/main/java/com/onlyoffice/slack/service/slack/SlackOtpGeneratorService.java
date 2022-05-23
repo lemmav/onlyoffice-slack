@@ -13,8 +13,7 @@ import com.slack.api.methods.request.chat.scheduled_messages.ChatScheduledMessag
 import com.slack.api.methods.response.chat.ChatDeleteScheduledMessageResponse;
 import com.slack.api.methods.response.chat.ChatScheduleMessageResponse;
 import com.slack.api.methods.response.chat.scheduled_messages.ChatScheduledMessagesListResponse;
-import com.slack.api.model.block.ContextBlock;
-import com.slack.api.model.block.element.ImageElement;
+import com.slack.api.model.Attachment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.slack.api.model.block.Blocks.asBlocks;
+import static com.slack.api.model.block.Blocks.context;
 import static com.slack.api.model.block.composition.BlockCompositions.markdownText;
 
 @Service
@@ -33,9 +33,7 @@ import static com.slack.api.model.block.composition.BlockCompositions.markdownTe
 @Slf4j
 public class SlackOtpGeneratorService {
     private static final String slackBot = "USLACKBOT";
-    private static final String msgText = "Unused ONLYOFFICE OTP has expired";
-    private static final String altText = "Unused ONLYOFFICE OTP has expired";
-    private static final String iconUrl = "https://download.onlyoffice.com/assets/fb/fb_icon_325x325.jpg";
+    private static final String msgText = "Session has timed out";
 
     private final App app;
     private final SlackOnlyofficeRegistryInstallationService installationService;
@@ -57,21 +55,18 @@ public class SlackOtpGeneratorService {
                     .builder()
                     .postAt(Math.toIntExact(timestamp))
                     .channel(slackBot)
-                    .text(altText)
-                    .blocks(asBlocks(
-                            ContextBlock
+                    .text(msgText)
+                    .blocks(asBlocks(context(List.of(
+                            markdownText("*ONLYOFFICE SYSTEM MESSAGE*")
+                    ))))
+                    .attachments(List.of(
+                            Attachment
                                     .builder()
-                                    .elements(List.of(
-                                            markdownText(msgText),
-                                            ImageElement
-                                                    .builder()
-                                                    .imageUrl(iconUrl)
-                                                    .altText(altText)
-                                                    .build()
-                                    ))
+                                    .color("#f2c744")
+                                    .text(msgText)
+                                    .fallback(msgText)
                                     .build()
-                            )
-                    )
+                    ))
                     .token(user.getInstallerUserAccessToken())
                     .build());
 
@@ -148,7 +143,7 @@ public class SlackOtpGeneratorService {
             log.debug("Successfully removed {}", code);
             return true;
         } catch (IOException | SlackApiException e) {
-            log.warn("An error while removing an OTP {}", e.getMessage());
+            log.debug("An error while removing an OTP {}", e.getMessage());
             return false;
         }
     }
