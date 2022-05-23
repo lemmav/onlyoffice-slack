@@ -185,7 +185,6 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
         });
     }
 
-    //TODO: No files UI
     private List<LayoutBlock> getBlocks(Message message, MessageShortcutPayload.User user, ScheduledOtp otp) {
         log.debug("Building file block for message: " + message.getClientMsgId());
         List<LayoutBlock> blocks = new ArrayList<>();
@@ -280,9 +279,20 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
         }
 
         if (blocks.size() < 1) return asBlocks(
+                header(h -> h.text(plainText("Couldn't find any supported or public file"))),
                 divider(),
-                section(s -> s.text(markdownText("Could not find any supported or public file"))),
-                divider());
+                context(List.of(
+                        markdownText("*HOW TO MAKE A FILE PUBLIC:*")
+                )),
+                section(s -> s.text(markdownText("1. Click on the *More actions* button in the top right corner of your file window"))),
+                section(s -> s.text(markdownText("2. Select *Create external link*"))),
+                section(s -> s.text(markdownText("3. Change users access (optional) by clicking on *Change Access* button"))),
+                section(s -> s.text(markdownText("4. Save your settings"))),
+                divider(),
+                context(List.of(
+                        markdownText("*ONLYOFFICE APP SUPPORTS < " +  integrationConfiguration.getFileSizeLimitMb() + " MB OFFICE FILES*" )
+                ))
+        );
 
         return blocks;
     }
