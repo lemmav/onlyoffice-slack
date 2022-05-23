@@ -1,8 +1,6 @@
 package com.onlyoffice.slack.service.slack;
 
-import com.onlyoffice.slack.service.registry.SlackOnlyofficeRegistryInstallationService;
 import com.slack.api.bolt.App;
-import com.slack.api.bolt.model.Installer;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.request.search.SearchMessagesRequest;
@@ -15,18 +13,16 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class OnlyofficeDocKeyGeneratorService {
-    private static final String textPattern = "Generated a new document key for %s";
-    private static final String fallbackPattern = "ONLYOFFICE:%s";
+    private static final String textPattern = "ONLYOFFICE SYSTEM INFO: \n*File: %s*";
+    private static final String footerPattern = "Key: *%s*";
     private static final String slackBot = "USLACKBOT";
 
     private final App app;
-    private final SlackOnlyofficeRegistryInstallationService installationService;
 
     public String findGeneratedDocKey(String ownerToken, String fileId) throws IOException, SlackApiException {
         log.debug("Trying to find an already generated document key: {}", fileId);
@@ -35,7 +31,7 @@ public class OnlyofficeDocKeyGeneratorService {
                 .builder()
                 .token(ownerToken)
                 .teamId(slackBot)
-                .query(String.format(fallbackPattern, fileId))
+                .query(String.format(textPattern, fileId))
                 .sortDir("desc")
                 .sort("timestamp")
                 .count(1)
@@ -46,7 +42,7 @@ public class OnlyofficeDocKeyGeneratorService {
 
         if (searchMessagesResponse.getMessages().getMatches().size() == 1)
             return searchMessagesResponse.getMessages().getMatches()
-                    .get(0).getAttachments().get(0).getFooter();
+                    .get(0).getAttachments().get(0).getFallback();
 
         log.debug("Could not find any document key: {}", fileId);
         return null;
@@ -70,8 +66,8 @@ public class OnlyofficeDocKeyGeneratorService {
                         .builder()
                         .color("#c2c4c4")
                         .text(String.format(textPattern, fileId))
-                        .footer(docKey)
-                        .fallback(String.format(fallbackPattern, fileId))
+                        .footer(String.format(footerPattern, docKey))
+                        .fallback(docKey)
                         .build()))
                 .build());
         if (!postMessageResponse.isOk())
