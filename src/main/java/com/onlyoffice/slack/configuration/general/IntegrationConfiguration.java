@@ -25,6 +25,7 @@ public class IntegrationConfiguration {
     private String editorSecret;
     private String callbackSecret;
 
+    private String installUrl;
     private String editorUrl;
     private String callbackUrl;
 }

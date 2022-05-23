@@ -3,6 +3,7 @@ package com.onlyoffice.slack.service.registry;
 import com.onlyoffice.slack.configuration.cache.bot.HazelcastBotUsersCacheClient;
 import com.onlyoffice.slack.configuration.cache.user.HazelcastUsersCacheClient;
 import com.onlyoffice.slack.configuration.cache.workspaces.HazelcastWorkspacesCacheClient;
+import com.onlyoffice.slack.configuration.general.IntegrationConfiguration;
 import com.onlyoffice.slack.exception.UnableToPerformSlackOperationException;
 import com.onlyoffice.slack.model.registry.GenericResponse;
 import com.onlyoffice.slack.model.registry.License;
@@ -27,6 +28,7 @@ import java.util.function.Predicate;
 
 import static com.slack.api.model.block.Blocks.*;
 import static com.slack.api.model.block.composition.BlockCompositions.markdownText;
+import static com.slack.api.model.block.composition.BlockCompositions.plainText;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +42,7 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
     private final HazelcastUsersCacheClient usersCacheClient;
     private final HazelcastBotUsersCacheClient botUsersCacheClient;
 
+    private final IntegrationConfiguration integrationConfiguration;
     private final EncryptorAesGcm encryptor;
     private final SlackInstallationMapper slackInstallationMapper;
 
@@ -289,15 +292,12 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
 
     public void saveBot(Bot bot) {}
 
-
-    //TODO: Proper Block UI
     public List<LayoutBlock> getInstallationGuideBlocks(String enterpriseId, String teamId, String userId) {
         return asBlocks(
-                divider(),
+                header(h -> h.text(plainText("Seems you did not install ONLYOFFICE App"))),
                 section(s -> s.text(
-                        markdownText("INSTALL ME")
-                )),
-                divider()
+                        markdownText("Please go to *<"+integrationConfiguration.getInstallUrl()+"|ONLYOFFICE Installation>* page to install the App")
+                ))
         );
     }
 }

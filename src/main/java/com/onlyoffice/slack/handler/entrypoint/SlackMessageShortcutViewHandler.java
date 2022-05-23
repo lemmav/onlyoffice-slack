@@ -18,6 +18,7 @@ import com.slack.api.app_backend.interactive_components.payload.MessageShortcutP
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.model.Installer;
 import com.slack.api.methods.SlackApiException;
+import com.slack.api.methods.request.views.ViewsOpenRequest;
 import com.slack.api.model.Message;
 import com.slack.api.model.block.LayoutBlock;
 import com.slack.api.model.block.element.BlockElements;
@@ -43,16 +44,13 @@ import static com.slack.api.model.block.Blocks.*;
 import static com.slack.api.model.block.composition.BlockCompositions.markdownText;
 import static com.slack.api.model.block.composition.BlockCompositions.plainText;
 import static com.slack.api.model.block.element.BlockElements.button;
-import static com.slack.api.model.view.Views.viewClose;
-import static com.slack.api.model.view.Views.viewTitle;
+import static com.slack.api.model.view.Views.*;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class SlackMessageShortcutViewHandler implements SlackHandler {
     private static final String modalTitle = "ONLYOFFICE Files";
-    private static final String documentInfoFormat = "Document type: *%s*\nFile extension: *%s*\nSize: *%s*\nCreated: *%s*";
-    private static final String noFiles = "Could not find any supported or public file";
 
     private final SlackOtpGeneratorService otpGenerator;
     private final IntegrationConfiguration integrationConfiguration;
@@ -76,23 +74,83 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
 
                 try {
                     Workspace workspace = installationService.findWorkspace(wid);
-                    //TODO: No workspace/workspace credentials view
                     if (workspace == null || workspace.getServerUrl() == null || workspace.getServerUrl().isBlank()) {
-                        ctx.respond("NO WORKSPACE");
+                        ctx.client()
+                                .viewsOpen(ViewsOpenRequest
+                                        .builder()
+                                        .token(ctx.getBotToken())
+                                        .triggerId(ctx.getTriggerId())
+                                        .view(
+                                                view(
+                                                        view -> view.type("modal")
+                                                                .notifyOnClose(false)
+                                                                .title(viewTitle(title -> title.type("plain_text").text(modalTitle)))
+                                                                .callbackId(SlackActions.GENERIC_ACTION.getEntrypoint())
+                                                                .close(viewClose(close -> close.type("plain_text").text("Cancel")))
+                                                                .blocks(asBlocks(
+                                                                        header(h -> h.text(plainText("Seems you have not connected your Workspace"))),
+                                                                        section(s -> s.text(
+                                                                                markdownText("Please go to ONLYOFFICE App *<https://app.slack.com/client/"+ ctx.getTeamId() +"/apps|Home>* page and fill out all fields to connect your Workspace")
+                                                                        ))
+                                                                ))
+                                                )
+                                        )
+                                        .build()
+                                );
                         return;
                     }
 
                     Installer userInstaller = installationService.findInstaller(null, wid, ctx.getRequestUserId());
-                    //TODO: No user token view
                     if (userInstaller == null) {
-                        ctx.respond("NO USER TOKEN");
+                        ctx.client()
+                                .viewsOpen(ViewsOpenRequest
+                                        .builder()
+                                        .token(ctx.getBotToken())
+                                        .triggerId(ctx.getTriggerId())
+                                        .view(
+                                                view(
+                                                        view -> view.type("modal")
+                                                                .notifyOnClose(false)
+                                                                .title(viewTitle(title -> title.type("plain_text").text(modalTitle)))
+                                                                .callbackId(SlackActions.GENERIC_ACTION.getEntrypoint())
+                                                                .close(viewClose(close -> close.type("plain_text").text("Cancel")))
+                                                                .blocks(asBlocks(
+                                                                        header(h -> h.text(plainText("Seems you did not install ONLYOFFICE App"))),
+                                                                        section(s -> s.text(
+                                                                                markdownText("Please go to *<"+integrationConfiguration.getInstallUrl()+"|ONLYOFFICE Installation>* page to install the App")
+                                                                        ))
+                                                                ))
+                                                )
+                                        )
+                                        .build()
+                                );
                         return;
                     }
 
                     Installer ownerInstaller = installationService.findInstaller(null, wid, message.getUser());
-                    //TODO: No owner token view
                     if (ownerInstaller == null) {
-                        ctx.respond("NO OWNER TOKEN");
+                        ctx.client()
+                                .viewsOpen(ViewsOpenRequest
+                                        .builder()
+                                        .token(ctx.getBotToken())
+                                        .triggerId(ctx.getTriggerId())
+                                        .view(
+                                                view(
+                                                        view -> view.type("modal")
+                                                                .notifyOnClose(false)
+                                                                .title(viewTitle(title -> title.type("plain_text").text(modalTitle)))
+                                                                .callbackId(SlackActions.GENERIC_ACTION.getEntrypoint())
+                                                                .close(viewClose(close -> close.type("plain_text").text("Cancel")))
+                                                                .blocks(asBlocks(
+                                                                        header(h -> h.text(plainText("Seems the owner did not install ONLYOFFICE App"))),
+                                                                        section(s -> s.text(
+                                                                                markdownText("Please ask the owner to go to *<"+integrationConfiguration.getInstallUrl()+"|ONLYOFFICE Installation>* page to install the App")
+                                                                        ))
+                                                                ))
+                                                )
+                                        )
+                                        .build()
+                                );
                         return;
                     }
 
@@ -162,7 +220,7 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
                         section(s -> s
                                 .text(markdownText(
                                         String.format(
-                                                documentInfoFormat,
+                                                "Document type: *%s*\nFile extension: *%s*\nSize: *%s*\nCreated: *%s*",
                                                 fileUtil.findDocumentType(file.getName()).getType(),
                                                 fileUtil.findFileType(file.getName()),
                                                 fileConverter.convertFileSize(file),
@@ -223,7 +281,7 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
 
         if (blocks.size() < 1) return asBlocks(
                 divider(),
-                section(s -> s.text(markdownText(noFiles))),
+                section(s -> s.text(markdownText("Could not find any supported or public file"))),
                 divider());
 
         return blocks;

@@ -47,7 +47,6 @@ class OnlyofficeUserRegistryService {
 
         HttpStatus status = response.getStatusCode();
         if (status == HttpStatus.BAD_REQUEST) {
-            log.warn("An error has occurred while trying to get a user instance");
             return null;
         }
 
