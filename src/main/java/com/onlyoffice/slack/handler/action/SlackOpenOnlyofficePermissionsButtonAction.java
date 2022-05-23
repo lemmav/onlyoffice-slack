@@ -66,17 +66,6 @@ public class SlackOpenOnlyofficePermissionsButtonAction implements SlackHandler 
                             .blocks(asBlocks(
                                     divider(),
                                     header(h -> h.text(plainText(fileInfo[1]))),
-                                    input(i -> i
-                                            .blockId(usersBlock)
-                                            .element(MultiUsersSelectElement
-                                            .builder()
-                                                    .actionId(SlackActions.GENERIC_ACTION.getEntrypoint())
-                                                    .initialUsers(permissions.getSharedUsers())
-                                                    .placeholder(plainText("Select users"))
-                                            .build())
-                                            .label(plainText("Share this file with"))
-                                            .optional(true)
-                                    ),
                                     section(s -> s
                                             .blockId(permissionBlock)
                                             .text(markdownText("Default access rights for chat members"))
@@ -85,9 +74,9 @@ public class SlackOpenOnlyofficePermissionsButtonAction implements SlackHandler 
                                                     .placeholder(plainText("Choose"))
                                                     .initialOption(OptionObject
                                                             .builder()
-                                                                .text(plainText(permissions.getDefaultPermission().substring(0,1).toUpperCase() +
-                                                                        permissions.getDefaultPermission().substring(1)))
-                                                                .value(permissions.getDefaultPermission())
+                                                            .text(plainText(permissions.getDefaultPermission().substring(0,1).toUpperCase() +
+                                                                    permissions.getDefaultPermission().substring(1)))
+                                                            .value(permissions.getDefaultPermission())
                                                             .build()
                                                     )
                                                     .options(List.of(
@@ -104,7 +93,17 @@ public class SlackOpenOnlyofficePermissionsButtonAction implements SlackHandler 
                                                     ))
                                                     .build())
                                     ),
-                                    divider()
+                                    input(i -> i
+                                            .blockId(usersBlock)
+                                            .element(MultiUsersSelectElement
+                                            .builder()
+                                                    .actionId(SlackActions.GENERIC_ACTION.getEntrypoint())
+                                                    .initialUsers(permissions.getSharedUsers())
+                                                    .placeholder(plainText("Select users"))
+                                            .build())
+                                            .label(plainText("Select users who can edit the file"))
+                                            .optional(true)
+                                    )
                             ))))
                     .token(ctx.getBotToken())
             );
