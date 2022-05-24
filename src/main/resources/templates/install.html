@@ -7,7 +7,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <!--
     *
-    * (c) Copyright Ascensio System SIA 2020
+    * (c) Copyright Ascensio System SIA 2022
     *
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
@@ -23,11 +23,27 @@
     *
     -->
     <title>ONLYOFFICE</title>
+    <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="/styles/install.css">
+    <link rel="stylesheet" href="/styles/root.css">
 </head>
 <body>
-<div>
-    <h1>INSTALL</h1>
-    <a th:href="@{${installationUrl}}"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
+<div class="container">
+    <img class="container__icon" 
+        src="/styles/images/onlyoffice_slack.svg"
+        alt="ONLYOFFICE x Slack" />
+    <div class="container__text">
+        <h1>Представляем ONLYOFFICE для Slack</h1>
+        <span>Редактирование документов и совместная работа над ними</span>
+    </div>
+    <a class="container__button"
+       th:href="@{${installationUrl}}">
+        <img class="container__button__image"
+            alt="Add to Slack" 
+            src="/styles/images/slack_logo.svg"
+        />
+        <span>Добавить в <b>Slack</b></span>
+    </a>
 </div>
 </body>
 </html>
