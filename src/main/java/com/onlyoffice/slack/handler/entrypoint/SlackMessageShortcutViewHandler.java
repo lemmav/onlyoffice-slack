@@ -10,6 +10,7 @@ import com.onlyoffice.slack.model.registry.Workspace;
 import com.onlyoffice.slack.model.slack.Caller;
 import com.onlyoffice.slack.model.slack.ScheduledOtp;
 import com.onlyoffice.slack.service.registry.SlackOnlyofficeRegistryInstallationService;
+import com.onlyoffice.slack.service.slack.SlackLocaleService;
 import com.onlyoffice.slack.service.slack.SlackOtpGeneratorService;
 import com.onlyoffice.slack.util.SlackFileConverter;
 import com.onlyoffice.slack.util.SlackLinkConverter;
@@ -29,15 +30,13 @@ import core.util.OnlyofficeFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.slack.api.model.block.Blocks.*;
@@ -50,8 +49,8 @@ import static com.slack.api.model.view.Views.*;
 @RequiredArgsConstructor
 @Slf4j
 public class SlackMessageShortcutViewHandler implements SlackHandler {
-    private static final String modalTitle = "ONLYOFFICE Files";
-
+    private final MessageSource messageSource;
+    private final SlackLocaleService slackLocaleService;
     private final SlackOtpGeneratorService otpGenerator;
     private final IntegrationConfiguration integrationConfiguration;
     private final SlackFileConverter fileConverter;
@@ -72,7 +71,20 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
                 message.setChannel(req.getPayload().getChannel().getId());
                 message.setBotId(ctx.getBotId());
 
+                Locale locale = slackLocaleService.getLocale(Caller
+                        .builder()
+                                .name(ctx.getRequestUserId())
+                                .id(ctx.getRequestUserId())
+                                .wid(ctx.getTeamId())
+                                .isRoot(false)
+                                .token(ctx.getBotToken())
+                        .build()
+                );
+
                 try {
+                    String modalTitle = messageSource.getMessage("file.modal.title", null, locale);
+                    String cancelButton = messageSource.getMessage("file.modal.cancel", null, locale);
+
                     Workspace workspace = installationService.findWorkspace(wid);
                     if (workspace == null || workspace.getServerUrl() == null || workspace.getServerUrl().isBlank()) {
                         ctx.client()
@@ -86,11 +98,11 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
                                                                 .notifyOnClose(false)
                                                                 .title(viewTitle(title -> title.type("plain_text").text(modalTitle)))
                                                                 .callbackId(SlackActions.GENERIC_ACTION.getEntrypoint())
-                                                                .close(viewClose(close -> close.type("plain_text").text("Cancel")))
+                                                                .close(viewClose(close -> close.type("plain_text").text(cancelButton)))
                                                                 .blocks(asBlocks(
-                                                                        header(h -> h.text(plainText("Seems you have not connected your Workspace"))),
+                                                                        header(h -> h.text(plainText(messageSource.getMessage("file.modal.workspace.error.header", null, locale)))),
                                                                         section(s -> s.text(
-                                                                                markdownText("Please go to ONLYOFFICE App *<https://app.slack.com/client/"+ ctx.getTeamId() +"/apps|Home>* page and fill out all fields to connect your Workspace")
+                                                                                markdownText(String.format(messageSource.getMessage("file.modal.workspace.error.body", null, locale), ctx.getTeamId()))
                                                                         ))
                                                                 ))
                                                 )
@@ -113,11 +125,11 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
                                                                 .notifyOnClose(false)
                                                                 .title(viewTitle(title -> title.type("plain_text").text(modalTitle)))
                                                                 .callbackId(SlackActions.GENERIC_ACTION.getEntrypoint())
-                                                                .close(viewClose(close -> close.type("plain_text").text("Cancel")))
+                                                                .close(viewClose(close -> close.type("plain_text").text(cancelButton)))
                                                                 .blocks(asBlocks(
-                                                                        header(h -> h.text(plainText("Seems you did not install ONLYOFFICE App"))),
+                                                                        header(h -> h.text(plainText(messageSource.getMessage("file.modal.user.error.header", null, locale)))),
                                                                         section(s -> s.text(
-                                                                                markdownText("Please go to *<"+integrationConfiguration.getInstallUrl()+"|ONLYOFFICE Installation>* page to install the App")
+                                                                                markdownText(String.format(messageSource.getMessage("file.modal.user.error.body", null, locale), integrationConfiguration.getInstallUrl()))
                                                                         ))
                                                                 ))
                                                 )
@@ -140,11 +152,11 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
                                                                 .notifyOnClose(false)
                                                                 .title(viewTitle(title -> title.type("plain_text").text(modalTitle)))
                                                                 .callbackId(SlackActions.GENERIC_ACTION.getEntrypoint())
-                                                                .close(viewClose(close -> close.type("plain_text").text("Cancel")))
+                                                                .close(viewClose(close -> close.type("plain_text").text(cancelButton)))
                                                                 .blocks(asBlocks(
-                                                                        header(h -> h.text(plainText("Seems the owner did not install ONLYOFFICE App"))),
+                                                                        header(h -> h.text(plainText(messageSource.getMessage("file.modal.owner.error.header", null, locale)))),
                                                                         section(s -> s.text(
-                                                                                markdownText("Please ask the owner to go to *<"+integrationConfiguration.getInstallUrl()+"|ONLYOFFICE Installation>* page to install the App")
+                                                                                markdownText(String.format(messageSource.getMessage("file.modal.owner.error.body", null, locale), integrationConfiguration.getInstallUrl()))
                                                                         ))
                                                                 ))
                                                 )
@@ -172,8 +184,8 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
                                     .callbackId(SlackActions.CLOSE_ONLYOFFICE_FILE_MODAL.getEntrypoint())
                                     .privateMetadata(otp.getCode())
                                     .title(viewTitle(title -> title.type("plain_text").text(modalTitle)))
-                                    .close(viewClose(close -> close.type("plain_text").text("Close")))
-                                    .blocks(getBlocks(message, user, otp))
+                                    .close(viewClose(close -> close.type("plain_text").text(cancelButton)))
+                                    .blocks(getBlocks(message, user, otp, locale))
                                     .build()
                             )
                     );
@@ -185,9 +197,21 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
         });
     }
 
-    private List<LayoutBlock> getBlocks(Message message, MessageShortcutPayload.User user, ScheduledOtp otp) {
+    private List<LayoutBlock> getBlocks(Message message, MessageShortcutPayload.User user, ScheduledOtp otp, Locale locale) {
         log.debug("Building file block for message: " + message.getClientMsgId());
         List<LayoutBlock> blocks = new ArrayList<>();
+
+        String fileInfo = messageSource.getMessage("file.modal.blocks.info", null, locale);
+        String noblocksHeader = messageSource.getMessage("file.modal.noblocks.header", null, locale);
+        String noblocksHeaderContext = messageSource.getMessage("file.modal.noblocks.header.context", null, locale);
+
+        String sectionsFirst = messageSource.getMessage("file.modal.noblocks.sections.first", null, locale);
+        String sectionsSecond = messageSource.getMessage("file.modal.noblocks.sections.second", null, locale);
+        String sectionsThird = messageSource.getMessage("file.modal.noblocks.sections.third", null, locale);
+        String sectionsFourth = messageSource.getMessage("file.modal.noblocks.sections.fourth", null, locale);
+
+        String footerContext = messageSource.getMessage("file.modal.noblocks.footer.context", null, locale);
+
         try {
             message.getFiles().forEach(file -> {
                 if (!fileConverter.fileSizeAllowed(file) || !file.isPublicUrlShared()) return;
@@ -219,7 +243,7 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
                         section(s -> s
                                 .text(markdownText(
                                         String.format(
-                                                "Document type: *%s*\nFile extension: *%s*\nSize: *%s*\nCreated: *%s*",
+                                                fileInfo,
                                                 fileUtil.findDocumentType(file.getName()).getType(),
                                                 fileUtil.findFileType(file.getName()),
                                                 fileConverter.convertFileSize(file),
@@ -241,7 +265,7 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
                 if (signature.isEmpty()) return;
 
                 ButtonElement openButton = button(b -> b
-                        .text(plainText("Open in ONLYOFFICE"))
+                        .text(plainText(messageSource.getMessage("file.modal.blocks.button.open", null, locale)))
                         .actionId(SlackActions.OPEN_ONLYOFFICE_FILE.getEntrypoint())
                         .value(file.getId())
                         .url(String.format("%s?token=%s",
@@ -255,7 +279,7 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
                                     List.of(
                                             openButton,
                                             button(b -> b
-                                                    .text(plainText("Change Access"))
+                                                    .text(plainText(messageSource.getMessage("file.modal.blocks.button.access", null, locale)))
                                                     .value(String.format("%s;%s;%s;%s;%s;%s",
                                                             otp.getCode(),
                                                             file.getName(), file.getId(),
@@ -279,18 +303,18 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
         }
 
         if (blocks.size() < 1) return asBlocks(
-                header(h -> h.text(plainText("Couldn't find any supported or public file"))),
+                header(h -> h.text(plainText(noblocksHeader))),
                 divider(),
                 context(List.of(
-                        markdownText("*HOW TO MAKE A FILE PUBLIC:*")
+                        markdownText(noblocksHeaderContext)
                 )),
-                section(s -> s.text(markdownText("1. Click on the *More actions* button in the top right corner of your file window"))),
-                section(s -> s.text(markdownText("2. Select *Create external link*"))),
-                section(s -> s.text(markdownText("3. Change users access (optional) by clicking on *Change Access* button"))),
-                section(s -> s.text(markdownText("4. Save your settings"))),
+                section(s -> s.text(markdownText(sectionsFirst))),
+                section(s -> s.text(markdownText(sectionsSecond))),
+                section(s -> s.text(markdownText(sectionsThird))),
+                section(s -> s.text(markdownText(sectionsFourth))),
                 divider(),
                 context(List.of(
-                        markdownText("*ONLYOFFICE APP SUPPORTS < " +  integrationConfiguration.getFileSizeLimitMb() + " MB OFFICE FILES*" )
+                        markdownText(String.format(footerContext, integrationConfiguration.getFileSizeLimitMb()))
                 ))
         );
 

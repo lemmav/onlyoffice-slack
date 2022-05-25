@@ -296,7 +296,7 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
         return asBlocks(
                 header(h -> h.text(plainText("Seems you did not install ONLYOFFICE App"))),
                 section(s -> s.text(
-                        markdownText("Please go to *<"+integrationConfiguration.getInstallUrl()+"|ONLYOFFICE Installation>* page to install the App")
+                        markdownText("Please go to *<"+integrationConfiguration.getInstallUrl()+"|ONLYOFFICE Installation>* page to install/reinstall the App")
                 ))
         );
     }

@@ -3,9 +3,11 @@ package com.onlyoffice.slack.handler.action;
 import com.onlyoffice.slack.SlackActions;
 import com.onlyoffice.slack.SlackOperations;
 import com.onlyoffice.slack.handler.SlackHandler;
+import com.onlyoffice.slack.model.slack.Caller;
 import com.onlyoffice.slack.model.slack.permission.FilePermissionRequest;
 import com.onlyoffice.slack.model.slack.permission.FilePermissionResponse;
 import com.onlyoffice.slack.service.slack.SlackFilePermissionsService;
+import com.onlyoffice.slack.service.slack.SlackLocaleService;
 import com.slack.api.bolt.App;
 import com.slack.api.model.block.composition.OptionObject;
 import com.slack.api.model.block.element.MultiUsersSelectElement;
@@ -13,9 +15,11 @@ import com.slack.api.model.block.element.StaticSelectElement;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Locale;
 
 import static com.slack.api.model.block.Blocks.*;
 import static com.slack.api.model.block.composition.BlockCompositions.markdownText;
@@ -29,6 +33,8 @@ public class SlackOpenOnlyofficePermissionsButtonAction implements SlackHandler 
     public static final String usersBlock = "users_block";
     public static final String permissionBlock = "permission_block";
 
+    private final SlackLocaleService slackLocaleService;
+    private final MessageSource messageSource;
     private final SlackFilePermissionsService filePermissionsService;
 
     @Autowired
@@ -52,6 +58,25 @@ public class SlackOpenOnlyofficePermissionsButtonAction implements SlackHandler 
                     .build()
             );
 
+            Locale locale = slackLocaleService.getLocale(Caller
+                    .builder()
+                            .id(ctx.getRequestUserId())
+                            .name(ctx.getRequestUserId())
+                            .wid(ctx.getTeamId())
+                            .isRoot(false)
+                            .token(ctx.getBotToken())
+                    .build()
+            );
+
+            String permissionsTitle = messageSource.getMessage("file.modal.permissions.title", null, locale);
+            String saveButton = messageSource.getMessage("file.modal.save", null, locale);
+            String sectionText = messageSource.getMessage("file.modal.permissions.main.header", null, locale);
+            String permissionPlaceholder = messageSource.getMessage("file.modal.permissions.main.permission.placeholder", null, locale);
+            String permissionRead = messageSource.getMessage("file.modal.permissions.main.permission.read", null, locale);
+            String permissionEdit = messageSource.getMessage("file.modal.permissions.main.permission.edit", null, locale);
+            String selectUsers = messageSource.getMessage("file.modal.permissions.main.permission.select", null, locale);
+            String selectPlaceholder = messageSource.getMessage("file.modal.permissions.main.permission.select.placeholder", null, locale);
+
             ctx.client().viewsPush(r -> r
                     .triggerId(ctx.getTriggerId())
                     .token(ctx.getBotToken())
@@ -59,8 +84,8 @@ public class SlackOpenOnlyofficePermissionsButtonAction implements SlackHandler 
                             .type("modal")
                             .notifyOnClose(true)
                             .clearOnClose(true)
-                            .title(viewTitle(title -> title.type("plain_text").text("ONLYOFFICE Permissions")))
-                            .submit(viewSubmit(submit -> submit.type("plain_text").text("Save")))
+                            .title(viewTitle(title -> title.type("plain_text").text(permissionsTitle)))
+                            .submit(viewSubmit(submit -> submit.type("plain_text").text(saveButton)))
                             .callbackId(getSlackRequestHandler().getEntrypoint())
                             .privateMetadata(value)
                             .blocks(asBlocks(
@@ -68,10 +93,10 @@ public class SlackOpenOnlyofficePermissionsButtonAction implements SlackHandler 
                                     header(h -> h.text(plainText(fileInfo[1]))),
                                     section(s -> s
                                             .blockId(permissionBlock)
-                                            .text(markdownText("Default access rights for chat members"))
+                                            .text(markdownText(sectionText))
                                             .accessory(StaticSelectElement.builder()
                                                     .actionId(SlackActions.GENERIC_ACTION.getEntrypoint())
-                                                    .placeholder(plainText("Choose"))
+                                                    .placeholder(plainText(permissionPlaceholder))
                                                     .initialOption(OptionObject
                                                             .builder()
                                                             .text(plainText(permissions.getDefaultPermission().substring(0,1).toUpperCase() +
@@ -82,12 +107,12 @@ public class SlackOpenOnlyofficePermissionsButtonAction implements SlackHandler 
                                                     .options(List.of(
                                                             OptionObject
                                                                     .builder()
-                                                                    .text(plainText("Read"))
+                                                                    .text(plainText(permissionRead))
                                                                     .value("read")
                                                                     .build(),
                                                             OptionObject
                                                                     .builder()
-                                                                    .text(plainText("Edit"))
+                                                                    .text(plainText(permissionEdit))
                                                                     .value("edit")
                                                                     .build()
                                                     ))
@@ -99,9 +124,9 @@ public class SlackOpenOnlyofficePermissionsButtonAction implements SlackHandler 
                                             .builder()
                                                     .actionId(SlackActions.GENERIC_ACTION.getEntrypoint())
                                                     .initialUsers(permissions.getSharedUsers())
-                                                    .placeholder(plainText("Select users"))
+                                                    .placeholder(plainText(selectPlaceholder))
                                             .build())
-                                            .label(plainText("Select users who can edit the file"))
+                                            .label(plainText(selectUsers))
                                             .optional(true)
                                     )
                             ))))

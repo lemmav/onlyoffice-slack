@@ -1,4 +1,4 @@
-package com.onlyoffice.slack.configuration;
+package com.onlyoffice.slack.configuration.general;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

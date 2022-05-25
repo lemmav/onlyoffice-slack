@@ -8,11 +8,15 @@ import com.slack.api.model.User;
 import com.slack.api.model.block.LayoutBlock;
 import com.slack.api.model.event.AppHomeOpenedEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.apache.commons.lang3.LocaleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.slack.api.model.block.Blocks.*;
 import static com.slack.api.model.block.composition.BlockCompositions.markdownText;
@@ -23,6 +27,8 @@ import static com.slack.api.model.view.Views.view;
 @Configuration
 @RequiredArgsConstructor
 public class SlackAppHomeConfigurer {
+    private final MessageSource messageSource;
+
     @Autowired
     public void register(App app) {
         app.event(AppHomeOpenedEvent.class, (payload, ctx) -> {
@@ -31,6 +37,7 @@ public class SlackAppHomeConfigurer {
                             .builder()
                             .user(payload.getEvent().getUser())
                             .token(ctx.getBotToken())
+                            .includeLocale(true)
                             .build()
                     );
 
@@ -41,7 +48,8 @@ public class SlackAppHomeConfigurer {
                     .userId(payload.getEvent().getUser())
                     .view(view(view -> view
                             .type("home")
-                            .blocks(getBlocks(infoResponse.getUser()))
+                            .blocks(getBlocks(infoResponse.getUser(), LocaleUtils
+                                    .toLocale(infoResponse.getUser().getLocale().replace("-", "_"))))
                     ))
                     .token(ctx.getBotToken())
             );
@@ -50,30 +58,25 @@ public class SlackAppHomeConfigurer {
         });
     }
 
-    private List<LayoutBlock> getBlocks(User user) {
+    @SneakyThrows
+    private List<LayoutBlock> getBlocks(User user, Locale locale) {
         List<LayoutBlock> blocks = new ArrayList<>();
 
         blocks.addAll(List.of(
-                header(h -> h.text(plainText("Welcome to ONLYOFFICE"))),
-                section(s -> s.text(markdownText(
-                        "This app enables users to edit office document from Slack messages using *ONLYOFFICE Docs*."
-                ))),
-                section(s -> s.text(markdownText(
-                        "The app allows to: \n*1. Edit* text documents, spreadsheets and presentations." +
-                        "\n*2. Share* files with basic permission types - viewing/editing.\n" +
-                        "*3. Co-edit* documents in real-time."
-                ))),
+                header(h -> h.text(plainText(messageSource.getMessage("home", null, locale)))),
+                section(s -> s.text(markdownText(messageSource.getMessage("home.app.info", null, locale)))),
+                section(s -> s.text(markdownText(messageSource.getMessage("home.app.instruction", null, locale)))),
                 divider(),
-                context(List.of(
-                        markdownText("Logged in as <@"+user.getId()+">")
-                ))
+                context(List.of(markdownText(String
+                        .format(messageSource.getMessage("home.app.logged", null, locale),user.getId())))
+                )
         ));
 
         if (user.isAdmin()) {
             blocks.add(actions(a -> a.elements(
                     List.of(
                             button(b -> b
-                                    .text(plainText("Configure connection settings"))
+                                    .text(plainText(messageSource.getMessage("home.app.admin", null, locale)))
                                     .style("primary")
                                     .actionId(SlackActions.OPEN_SETTINGS.getEntrypoint())
                             )
