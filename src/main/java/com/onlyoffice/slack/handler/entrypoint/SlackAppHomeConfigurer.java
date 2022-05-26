@@ -8,7 +8,6 @@ import com.slack.api.model.User;
 import com.slack.api.model.block.LayoutBlock;
 import com.slack.api.model.event.AppHomeOpenedEvent;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.LocaleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -58,7 +57,6 @@ public class SlackAppHomeConfigurer {
         });
     }
 
-    @SneakyThrows
     private List<LayoutBlock> getBlocks(User user, Locale locale) {
         List<LayoutBlock> blocks = new ArrayList<>();
 
