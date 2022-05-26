@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, caller-scalable=no, minimal-ui" />
@@ -29,9 +29,9 @@
 </head>
 <body>
 <div class="container">
-    <h1 class="container__header">Invalid session code or document server URL</h1>
-    <span class="container__main">Please make sure that your document server URL is valid, close the tab and try to open the file again</span>
-    <a href="https://app.slack.com" class="container__button">BACK TO SLACK</a>
+    <h1 class="container__header" th:text="#{pages.error.header}"></h1>
+    <span class="container__main" th:text="#{pages.error.main}"></span>
+    <a href="https://app.slack.com" class="container__button" th:text="#{pages.error.button}"></a>
 </div>
 </body>
 </html>

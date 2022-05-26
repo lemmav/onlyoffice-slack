@@ -294,7 +294,7 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
 
     public List<LayoutBlock> getInstallationGuideBlocks(String enterpriseId, String teamId, String userId) {
         return asBlocks(
-                header(h -> h.text(plainText("Seems you did not install ONLYOFFICE App"))),
+                header(h -> h.text(plainText("Seems ONLYOFFICE App has not been installed properly"))),
                 section(s -> s.text(
                         markdownText("Please go to *<"+integrationConfiguration.getInstallUrl()+"|ONLYOFFICE Installation>* page to install/reinstall the App")
                 ))

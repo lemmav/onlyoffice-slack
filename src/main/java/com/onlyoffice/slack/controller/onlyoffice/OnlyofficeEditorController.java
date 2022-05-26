@@ -13,10 +13,14 @@ import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.LocaleUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.LocaleResolver;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
@@ -24,6 +28,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class OnlyofficeEditorController {
+    private final LocaleResolver localeResolver;
     private final IntegrationConfiguration integrationConfiguration;
     private final OnlyofficeIntegrationSDK integrationSDK;
 
@@ -76,7 +81,10 @@ public class OnlyofficeEditorController {
     @RateLimiter(name = "editorRateLimiter", fallbackMethod = "editorFallback")
     @GetMapping(path = "/onlyoffice/editor")
     public String editor(
+            HttpServletRequest request,
+            HttpServletResponse response,
             @RequestParam(value = "token") String token,
+            @RequestParam(value = "lang") String lang,
             Model model
     ) {
         try {
@@ -103,16 +111,21 @@ public class OnlyofficeEditorController {
                     );
             return "editor";
         } catch (RuntimeException | IOException e) {
+            localeResolver.setLocale(request, response, LocaleUtils.toLocale(lang));
             return "error";
         }
     }
 
     public String editorFallback(
+            HttpServletRequest request,
+            HttpServletResponse response,
             String token,
+            String lang,
             Model model,
             RequestNotPermitted e
     ) {
         log.warn("build editor: {}", e.getMessage());
+        localeResolver.setLocale(request, response, LocaleUtils.toLocale(lang));
         return "limit";
     }
 }

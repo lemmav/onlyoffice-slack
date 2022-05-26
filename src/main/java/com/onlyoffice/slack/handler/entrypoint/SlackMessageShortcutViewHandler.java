@@ -268,8 +268,8 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
                         .text(plainText(messageSource.getMessage("file.modal.blocks.button.open", null, locale)))
                         .actionId(SlackActions.OPEN_ONLYOFFICE_FILE.getEntrypoint())
                         .value(file.getId())
-                        .url(String.format("%s?token=%s",
-                                integrationConfiguration.getEditorUrl().trim(), signature.get()))
+                        .url(String.format("%s?token=%s&lang=%s",
+                                integrationConfiguration.getEditorUrl().trim(), signature.get(), locale))
                         .style("primary"));
 
                 if (message.getUser().equals(user.getId())) {
