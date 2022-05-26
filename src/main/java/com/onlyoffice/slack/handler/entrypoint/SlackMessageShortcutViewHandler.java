@@ -198,7 +198,7 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
     }
 
     private List<LayoutBlock> getBlocks(Message message, MessageShortcutPayload.User user, ScheduledOtp otp, Locale locale) {
-        log.debug("Building file block for message: " + message.getClientMsgId());
+        log.debug("building file block for message: " + message.getClientMsgId());
         List<LayoutBlock> blocks = new ArrayList<>();
 
         String fileInfo = messageSource.getMessage("file.modal.blocks.info", null, locale);

@@ -22,29 +22,29 @@ public class SlackFileConverter {
     private final OnlyofficeFile fileUtil;
 
     public boolean fileSizeAllowed(File file) {
-        log.debug("Validating file {} size", file.getName());
+        log.debug("validating file {} size", file.getName());
         return ((double) file.getSize() / (1024 * 1024)) <= integrationConfiguration.getFileSizeLimitMb();
     }
 
     public String convertFileSize(File file) {
-        log.debug("Converting file {} size: {}", file.getName(), file.getSize());
+        log.debug("converting file {} size: {}", file.getName(), file.getSize());
         return decimalFormat.format((double) file.getSize() / (1024 * 1024)) + " mb";
     }
 
     public String convertFileTimestamp(File file) {
-        log.debug("Converting file {} timestamp: {}", file.getName(), file.getTimestamp());
+        log.debug("converting file {} timestamp: {}", file.getName(), file.getTimestamp());
         SimpleDateFormat f = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         return f.format(new Date((long) file.getTimestamp() * 1000));
     }
 
     public String covertDownloadName(File file) {
-        log.debug("Converting file {} download name", file.getName());
+        log.debug("converting file {} download name", file.getName());
         int downloadNameIndex = file.getUrlPrivateDownload().lastIndexOf("/")+1;
         return file.getUrlPrivateDownload().substring(downloadNameIndex);
     }
 
     public String convertFileIconUrl(File file) {
-        log.debug("Converting file {} icon url", file.getName());
+        log.debug("converting file {} icon url", file.getName());
 
         Boolean isOOXML = fileUtil.isEditable(file.getName());
         DocumentType type = fileUtil.findDocumentType(file.getName());

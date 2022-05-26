@@ -9,12 +9,14 @@ import core.processor.preprocessor.OnlyofficeCallbackPreProcessor;
 import exception.OnlyofficeInvalidParameterRuntimeException;
 import exception.OnlyofficeProcessBeforeRuntimeException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OnlyofficeCallbackJwtPreProcessor extends OnlyofficeCallbackPreProcessor<CallbackJwtSchema> {
     private static final String tokenPrefix = "Bearer ";
     private static final String tokenReplacer = "";
@@ -23,6 +25,7 @@ public class OnlyofficeCallbackJwtPreProcessor extends OnlyofficeCallbackPreProc
 
     public CallbackJwtSchema validateSchema(Map<String, Object> customData, ImmutableMap<String, Object> schema) {
         try {
+            log.debug("validating callback jwt schema");
             OnlyofficeCallbackToken token = (OnlyofficeCallbackToken) customData.get("callbackToken");
             if (token == null)
                 throw new ClassCastException("Expected to get an OnlyofficeCalbackToken instance. Got null");

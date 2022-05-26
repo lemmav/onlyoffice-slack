@@ -13,7 +13,7 @@ public class TimeoutScheduler {
     private final ScheduledExecutorService pool = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 
     public void setTimeout(Runnable runnable, TimeUnit unit, int delay) throws RuntimeException {
-        log.debug("Scheduling a new task");
+        log.debug("scheduling a new task");
         pool.schedule(runnable, delay, unit);
     }
 }

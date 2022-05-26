@@ -42,7 +42,7 @@ class OnlyofficeWorkspaceRegistryService {
     @CircuitBreaker(name = "onlyofficeRegistryQueryService", fallbackMethod = "getWorkspaceCircuitFallback")
     public Workspace getWorkspace(String wid)
             throws UnableToPerformSlackOperationException {
-        log.debug("New registry request to get workspace with id = {}", wid);
+        log.debug("new registry request to get workspace with id = {}", wid);
 
         ResponseEntity<Workspace> response = restClient.getForEntity(String
                         .format("%s/v1/workspace/%s/%s", clientConfiguration.getResourceServer(),
@@ -52,20 +52,20 @@ class OnlyofficeWorkspaceRegistryService {
 
         HttpStatus status = response.getStatusCode();
         if (status == HttpStatus.BAD_REQUEST) {
-            log.warn("An attempt to get an invalid workspace instance: " +
+            log.warn("an attempt to get an invalid workspace instance: " +
                     response.getStatusCode().getReasonPhrase());
             return null;
         }
 
         if (!status.is2xxSuccessful())
             throw new OnlyofficeRegistryResponseException(
-                    "Workspace fetching error: " + response.getStatusCode().name() + " " + response.getStatusCode().getReasonPhrase());
+                    "workspace fetching error: " + response.getStatusCode().name() + " " + response.getStatusCode().getReasonPhrase());
 
         return response.getBody();
     }
 
     public Workspace getWorkspaceCircuitFallback(String wid, CallNotPermittedException e) {
-        log.error("Current get workspace {} call has been terminated by CircuitBreaker", wid);
+        log.error("current get workspace {} call has been terminated by CircuitBreaker", wid);
         return null;
     }
 
@@ -82,7 +82,7 @@ class OnlyofficeWorkspaceRegistryService {
     @CircuitBreaker(name = "onlyofficeRegistryCommandService", fallbackMethod = "saveWorkspaceAndUserFallback")
     public void saveWorkspaceAndUser(Workspace workspace, User user, User bot)
             throws UnableToPerformSlackOperationException {
-        log.debug("New registry request to save workspace with id = {}, uid = {} and bot = {}",
+        log.debug("new registry request to save workspace with id = {}, uid = {} and bot = {}",
                 workspace.getId(), user.getId(), bot.getId());
 
         Function<User, ResponseEntity<User>> persistUser = (u) -> restClient.postForEntity(
@@ -107,19 +107,19 @@ class OnlyofficeWorkspaceRegistryService {
 
             ResponseEntity<User> botPersistResponse = persistUser.apply(bot);
             if (!botPersistResponse.getStatusCode().is2xxSuccessful())
-                throw new UnableToPerformSlackOperationException("Bot user persistence error: " + botPersistResponse
+                throw new UnableToPerformSlackOperationException("bot user persistence error: " + botPersistResponse
                         .getStatusCode().name() + botPersistResponse.getStatusCode().getReasonPhrase());
         }
 
         ResponseEntity<User> userPersistResponse = persistUser.apply(user);
         if (!userPersistResponse.getStatusCode().is2xxSuccessful())
-            throw new UnableToPerformSlackOperationException("User persistence error: " + userPersistResponse
+            throw new UnableToPerformSlackOperationException("user persistence error: " + userPersistResponse
                     .getStatusCode().name() + userPersistResponse.getStatusCode().getReasonPhrase());
     }
 
     private void saveWorkspaceAndUserFallback(Workspace workspace, User user, User bot, Throwable t)
             throws UnableToPerformSlackOperationException {
-        log.error("Circuit breaker has terminated save workspace {} and user {} call",
+        log.error("circuit breaker has terminated save workspace {} and user {} call",
                 workspace.getId(), user.getId());
         throw new UnableToPerformSlackOperationException("Could not save workspace due to circuit breaker termination");
     }
@@ -136,7 +136,7 @@ class OnlyofficeWorkspaceRegistryService {
     @CircuitBreaker(name = "onlyofficeRegistryQueryService", fallbackMethod = "deleteWorkspaceFallback")
     public void deleteWorkspace(String wid)
             throws UnableToPerformSlackOperationException {
-        log.debug("New registry request to delete workspace with id = {}", wid);
+        log.debug("new registry request to delete workspace with id = {}", wid);
         restClient.delete(String
                 .format("%s/v1/workspace/%s/%s", clientConfiguration.getResourceServer(),
                         clientConfiguration.getWorkspaceType(), wid));
@@ -144,7 +144,7 @@ class OnlyofficeWorkspaceRegistryService {
 
     private void deleteWorkspaceFallback(String wid, Throwable t)
             throws UnableToPerformSlackOperationException {
-        log.error("Circuit breaker has terminated delete workspace {} call", wid);
-        throw new UnableToPerformSlackOperationException("Could not delete workspace due to circuit breaker termination");
+        log.error("circuit breaker has terminated delete workspace {} call", wid);
+        throw new UnableToPerformSlackOperationException("could not delete workspace due to circuit breaker termination");
     }
 }

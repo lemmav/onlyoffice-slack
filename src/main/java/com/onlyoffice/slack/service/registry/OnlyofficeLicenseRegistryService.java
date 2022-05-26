@@ -39,7 +39,7 @@ class OnlyofficeLicenseRegistryService {
     @CircuitBreaker(name = "onlyofficeRegistryCommandService", fallbackMethod = "saveLicenseFallback")
     public GenericResponse saveLicense(String wid, License license)
             throws OnlyofficeRegistryResponseException {
-        log.debug("New registry license update request with workspace id = {}", wid);
+        log.debug("new registry license update request with workspace id = {}", wid);
 
         ResponseEntity<GenericResponse> response = restClient.postForEntity(
                 String.format("%s/v1/workspace/%s/%s/license",
@@ -49,7 +49,7 @@ class OnlyofficeLicenseRegistryService {
 
         HttpStatus status = response.getStatusCode();
         if (status == HttpStatus.BAD_REQUEST) {
-            String message = "An error has occurred while trying to persist a license instance: "
+            String message = "an error has occurred while trying to persist a license instance: "
                     + response.getBody().getMessage();
             log.warn(message);
             return GenericResponse
@@ -68,7 +68,7 @@ class OnlyofficeLicenseRegistryService {
 
     private GenericResponse saveLicenseFallback(String wid, License license, Throwable t)
             throws OnlyofficeRegistryResponseException {
-        log.error("Circuit breaker has terminated save license {} call", wid);
+        log.error("circuit breaker has terminated save license {} call", wid);
         return GenericResponse
                 .builder()
                 .success(false)
@@ -89,7 +89,7 @@ class OnlyofficeLicenseRegistryService {
     @CircuitBreaker(name = "onlyofficeRegistryQueryService", fallbackMethod = "startDemoFallback")
     public GenericResponse startDemo(String wid)
             throws OnlyofficeRegistryResponseException {
-        log.debug("New registry start demo request with workspace id = {}", wid);
+        log.debug("new registry start demo request with workspace id = {}", wid);
 
         ResponseEntity<GenericResponse> response = restClient.postForEntity(
                 String.format("%s/v1/workspace/%s/%s/demo",
@@ -99,7 +99,7 @@ class OnlyofficeLicenseRegistryService {
 
         HttpStatus status = response.getStatusCode();
         if (status == HttpStatus.BAD_REQUEST) {
-            String message = "An error has occurred while trying to persist a new demo instance: " +
+            String message = "an error has occurred while trying to persist a new demo instance: " +
                     response.getBody().getMessage();
             log.warn(message);
             return GenericResponse
@@ -110,7 +110,7 @@ class OnlyofficeLicenseRegistryService {
         }
 
         if (!status.is2xxSuccessful())
-            throw new OnlyofficeRegistryResponseException("An error has occurred while trying to persist a new demo instance: "
+            throw new OnlyofficeRegistryResponseException("an error has occurred while trying to persist a new demo instance: "
                     + response.getStatusCode().name() + response.getStatusCode().getReasonPhrase());
 
         return response.getBody();
@@ -118,7 +118,7 @@ class OnlyofficeLicenseRegistryService {
 
     private GenericResponse startDemoFallback(String wid, Throwable t)
             throws OnlyofficeRegistryResponseException {
-        log.error("Circuit breaker has terminated start demo {} call", wid);
+        log.error("circuit breaker has terminated start demo {} call", wid);
         return GenericResponse
                 .builder()
                 .message("Circuit breaker has terminated start demo call for " + wid)
@@ -139,7 +139,7 @@ class OnlyofficeLicenseRegistryService {
     @CircuitBreaker(name = "onlyofficeRegistryQueryService", fallbackMethod = "getDemoFallback")
     public DemoInfo getDemo(String wid)
             throws OnlyofficeRegistryResponseException {
-        log.debug("New registry get demo request with workspace id = {}", wid);
+        log.debug("new registry get demo request with workspace id = {}", wid);
 
         ResponseEntity<DemoInfo> response = restClient.getForEntity(
                 String.format("%s/v1/workspace/%s/%s/demo",
@@ -149,13 +149,13 @@ class OnlyofficeLicenseRegistryService {
 
         HttpStatus status = response.getStatusCode();
         if (status == HttpStatus.BAD_REQUEST) {
-            log.warn("An error has occurred while trying to get a demo instance: " +
+            log.warn("an error has occurred while trying to get a demo instance: " +
                     response.getStatusCode().getReasonPhrase());
             return null;
         }
 
         if (!status.is2xxSuccessful())
-            throw new OnlyofficeRegistryResponseException("An error has occurred while trying to get a demo instance: "
+            throw new OnlyofficeRegistryResponseException("an error has occurred while trying to get a demo instance: "
                     + response.getStatusCode().name() + response.getStatusCode().getReasonPhrase());
 
         return response.getBody();
@@ -163,7 +163,7 @@ class OnlyofficeLicenseRegistryService {
 
     private DemoInfo getDemoFallback(String wid, Throwable t)
             throws OnlyofficeRegistryResponseException {
-        log.error("Circuit breaker has terminated get demo {} call", wid);
+        log.error("circuit breaker has terminated get demo {} call", wid);
         return null;
     }
 }

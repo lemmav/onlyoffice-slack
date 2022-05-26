@@ -20,7 +20,7 @@ public class SlackFilePermissionsClose implements SlackHandler {
     @Autowired
     public void register(App app) {
         app.viewClosed(getSlackRequestHandler().getEntrypoint(), (req, ctx) -> {
-            log.debug("Closing file permissions");
+            log.debug("closing file permissions");
             String[] fileInfo = req.getPayload().getView().getPrivateMetadata().split(";");
 
             otpGeneratorService.removeScheduledOtp(fileInfo[0], Caller

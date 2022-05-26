@@ -24,7 +24,7 @@ public class SlackFilePermissionsSubmission implements SlackHandler {
     @Autowired
     public void register(App app) {
         app.viewSubmission(getSlackRequestHandler().getEntrypoint(), (req, ctx) -> {
-            log.debug("Submitting file permissions");
+            log.debug("submitting file permissions");
             String[] fileInfo = req.getPayload().getView().getPrivateMetadata().split(";");
 
             List<String> users = req.getPayload().getView().getState().getValues()

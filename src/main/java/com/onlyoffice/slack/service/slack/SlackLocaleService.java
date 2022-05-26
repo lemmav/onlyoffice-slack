@@ -20,8 +20,11 @@ public class SlackLocaleService {
     private final App app;
 
     public Locale getLocale(Caller caller) {
-        if (!caller.validate() || caller.getToken() == null || caller.getToken().isBlank())
+        log.debug("trying to get locale for: {}", caller.getId());
+        if (!caller.validate() || caller.getToken() == null || caller.getToken().isBlank()) {
+            log.debug("invalid caller instance. Getting english locale");
             return Locale.ENGLISH;
+        }
         try {
             UsersInfoResponse response = app.client().usersInfo(UsersInfoRequest
                     .builder()
@@ -36,7 +39,7 @@ public class SlackLocaleService {
 
             return LocaleUtils.toLocale(response.getUser().getLocale().replace("-", "_"));
         } catch (IOException | SlackApiException e) {
-            log.warn(e.getMessage());
+            log.warn("got an exception: {}. Getting english locale", e.getMessage());
             return Locale.ENGLISH;
         }
     }

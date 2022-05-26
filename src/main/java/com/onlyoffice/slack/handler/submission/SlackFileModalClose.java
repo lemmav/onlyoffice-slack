@@ -20,7 +20,7 @@ public class SlackFileModalClose implements SlackHandler {
     @Autowired
     public void register(App app) {
         app.viewClosed(getSlackRequestHandler().getEntrypoint(), (req, ctx) -> {
-            log.debug("Removing a scheduled otp");
+            log.debug("removing a scheduled otp");
             otpGenerator.removeScheduledOtp(
                     req.getPayload().getView().getPrivateMetadata(),
                     Caller

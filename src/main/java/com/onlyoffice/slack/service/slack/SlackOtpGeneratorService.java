@@ -40,13 +40,13 @@ public class SlackOtpGeneratorService {
 
     public ScheduledOtp generateScheduledOtp(Caller caller) throws UnableToPerformSlackOperationException {
         if (!caller.validate())
-            throw new UnableToPerformSlackOperationException("Caller instance is not valid");
+            throw new UnableToPerformSlackOperationException("caller instance is not valid");
 
         Installer user = installationService.findInstaller(null, caller.getWid(), caller.getId());
         if (user == null)
-            throw new UnableToPerformSlackOperationException("Could not fetch caller data");
+            throw new UnableToPerformSlackOperationException("could not fetch caller data");
 
-        log.debug("Generating a new scheduled otp for user: {}", caller.getId());
+        log.debug("generating a new scheduled otp for user: {}", caller.getId());
         Long timestamp = Date.from(LocalDateTime.now().plusHours(12)
                 .atZone(ZoneId.systemDefault()).toInstant()).getTime() / 1000;
 
@@ -73,12 +73,12 @@ public class SlackOtpGeneratorService {
             if (!response.isOk())
                 throw new IOException(response.getError());
 
-            log.debug("Successfully generated an OTP with id = {} and token = {}",
+            log.debug("successfully generated an OTP with id = {} and token = {}",
                     response.getScheduledMessageId(), user.getInstallerUserAccessToken());
 
             return new ScheduledOtp(response.getScheduledMessageId(), response.getChannel(), response.getPostAt());
         } catch (IOException | SlackApiException e) {
-            log.warn("An error while generating a new OTP: {}", e.getMessage());
+            log.warn("an error while generating a new OTP: {}", e.getMessage());
             throw new UnableToPerformSlackOperationException(e.getMessage());
         }
     }
@@ -89,7 +89,7 @@ public class SlackOtpGeneratorService {
         Installer user = installationService.findInstaller(null, caller.getWid(), caller.getId());
         if (user == null) return false;
 
-        log.debug("Validating a scheduled OTP at {}", at);
+        log.debug("validating a scheduled OTP at {}", at);
 
         try {
             ChatScheduledMessagesListResponse response = app.client()
@@ -108,7 +108,7 @@ public class SlackOtpGeneratorService {
 
             return response.getScheduledMessages().size() == 1;
         } catch (IOException | SlackApiException e) {
-            log.warn("An error while checking an OTP {}", e.getMessage());
+            log.warn("an error while checking an OTP {}", e.getMessage());
             return false;
         }
     }
@@ -125,7 +125,7 @@ public class SlackOtpGeneratorService {
     }
 
     private boolean doRemoveOtp(String code, String token) {
-        log.debug("Removing a scheduled OTP with id = {} and token = {} ", code, token);
+        log.debug("removing a scheduled OTP with id = {} and token = {} ", code, token);
         try {
             ChatDeleteScheduledMessageResponse response = app.client()
                     .chatDeleteScheduledMessage(
@@ -140,10 +140,10 @@ public class SlackOtpGeneratorService {
             if (!response.isOk())
                 throw new IOException(response.getError());
 
-            log.debug("Successfully removed {}", code);
+            log.debug("successfully removed {}", code);
             return true;
         } catch (IOException | SlackApiException e) {
-            log.debug("An error while removing an OTP {}", e.getMessage());
+            log.debug("an error while removing an OTP {}", e.getMessage());
             return false;
         }
     }

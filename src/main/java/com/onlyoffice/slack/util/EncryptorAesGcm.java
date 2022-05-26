@@ -30,14 +30,14 @@ public class EncryptorAesGcm {
     private final IntegrationConfiguration integrationConfiguration;
 
     private byte[] getRandomNonce(int bytes) {
-        log.debug("Generating nonce");
+        log.debug("generating nonce");
         byte[] nonce = new byte[bytes];
         new SecureRandom().nextBytes(nonce);
         return nonce;
     }
 
     private SecretKey getKey(byte[] nonce) throws Exception {
-        log.debug("Getting a secret key from nonce");
+        log.debug("getting a secret key from nonce");
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
         KeySpec spec = new PBEKeySpec(integrationConfiguration.getAesSecret().toCharArray(), nonce, 65536, GCM_KEY_SIZE);
         SecretKey key = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
@@ -45,7 +45,7 @@ public class EncryptorAesGcm {
     }
 
     public String encrypt(String plainText) throws Exception {
-        log.debug("Encrypting: {}", plainText);
+        log.debug("encrypting: {}", plainText);
         byte[] salt = getRandomNonce(GCM_SALT_LENGTH);
         byte[] iv = getRandomNonce(GCM_IV_LENGTH);
 
@@ -60,12 +60,12 @@ public class EncryptorAesGcm {
                 .put(cipherText)
                 .array();
 
-        log.debug("Successfully encrypted: {}", plainText);
+        log.debug("successfully encrypted: {}", plainText);
         return Base64.getEncoder().encodeToString(result);
     }
 
     public String decrypt(String cipherText) throws Exception {
-        log.debug("Decrypting: {}", cipherText);
+        log.debug("decrypting: {}", cipherText);
         byte[] decoded = Base64.getDecoder().decode(cipherText.getBytes(StandardCharsets.UTF_8));
         ByteBuffer buffer = ByteBuffer.wrap(decoded);
 
@@ -84,7 +84,7 @@ public class EncryptorAesGcm {
 
         byte[] plainText = cipher.doFinal(text);
 
-        log.debug("Successfully decrypted: {}", cipherText);
+        log.debug("successfully decrypted: {}", cipherText);
         return new String(plainText, StandardCharsets.UTF_8);
     }
 }

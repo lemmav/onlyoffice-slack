@@ -37,7 +37,7 @@ public class SlackFilePermissionsService {
 
     public void updatePermissions(UpdateFilePermissionRequest request) {
         if (request == null || !request.validate()) {
-            log.warn("Invalid FilePermissionUpdateRequest instance: {}", request);
+            log.warn("invalid FilePermissionUpdateRequest instance: {}", request);
             return;
         }
 
@@ -54,7 +54,7 @@ public class SlackFilePermissionsService {
             );
 
             if (!fileInfo.isOk()) {
-                log.warn("Bad file info request: {}", fileInfo.getError());
+                log.warn("bad file info request: {}", fileInfo.getError());
                 return;
             }
 
@@ -71,12 +71,12 @@ public class SlackFilePermissionsService {
             );
 
             if (!messages.isOk()) {
-                log.warn("Bad message request: {}", messages.getError());
+                log.warn("bad message request: {}", messages.getError());
                 return;
             }
 
             if (messages.getMessages().size() != 1 && messages.getMessages().size() != 2) {
-                log.warn("Could not find {} message", request.getMessageTs());
+                log.warn("could not find {} message", request.getMessageTs());
                 return;
             }
 
@@ -114,7 +114,7 @@ public class SlackFilePermissionsService {
 
     public boolean hasEditPermissions(FilePermissionRequest request) {
         if (!request.validate()) {
-            log.warn("Invalid FilePermissionGetRequest instance: {}", request);
+            log.warn("invalid FilePermissionGetRequest instance: {}", request);
             return false;
         }
 
@@ -122,7 +122,7 @@ public class SlackFilePermissionsService {
                 .findInstaller(null, request.getTeam(), request.getUser());
 
         if (owner == null) {
-            log.warn("Could not fetch owner installation");
+            log.warn("could not fetch owner installation");
             return false;
         }
 
@@ -140,12 +140,12 @@ public class SlackFilePermissionsService {
             );
 
             if (!messages.isOk()) {
-                log.warn("Bad message request: {}", messages.getError());
+                log.warn("bad message request: {}", messages.getError());
                 return false;
             }
 
             if (messages.getMessages().size() != 1 && messages.getMessages().size() != 2) {
-                log.warn("Could not find {} message", request.getMessageTs());
+                log.warn("could not find {} message", request.getMessageTs());
                 return false;
             }
 
@@ -174,7 +174,7 @@ public class SlackFilePermissionsService {
 
     public FilePermissionResponse getPermissionsAttachment(FilePermissionRequest request) {
         if (!request.validate()) {
-            log.warn("Invalid FilePermissionGetRequest instance: {}", request);
+            log.warn("invalid FilePermissionGetRequest instance: {}", request);
             return FilePermissionResponse.builder().build();
         }
 
@@ -183,7 +183,7 @@ public class SlackFilePermissionsService {
 
         FilePermissionResponse defaultPermissions = FilePermissionResponse.builder().build();
         if (owner == null) {
-            log.warn("Could not fetch owner installation");
+            log.warn("could not fetch owner installation");
             return defaultPermissions;
         }
 
@@ -201,12 +201,12 @@ public class SlackFilePermissionsService {
             );
 
             if (!messages.isOk()) {
-                log.warn("Bad message request: {}", messages.getError());
+                log.warn("bad message request: {}", messages.getError());
                 return defaultPermissions;
             }
 
             if (messages.getMessages().size() != 1 && messages.getMessages().size() != 2) {
-                log.warn("Could not find {} message", request.getMessageTs());
+                log.warn("could not find {} message", request.getMessageTs());
                 return defaultPermissions;
             }
 

@@ -64,6 +64,7 @@ public class OnlyofficeEditorController {
                     );
             return "{\"error\": 0}";
         } catch (RuntimeException | IOException e) {
+            log.warn("callback exception: {}", e.getMessage());
             return "{\"error\": 1}";
         }
     }
@@ -111,6 +112,7 @@ public class OnlyofficeEditorController {
                     );
             return "editor";
         } catch (RuntimeException | IOException e) {
+            log.warn("editor exception: {}", e.getMessage());
             localeResolver.setLocale(request, response, LocaleUtils.toLocale(lang));
             return "error";
         }

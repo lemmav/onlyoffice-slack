@@ -55,7 +55,7 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
         Workspace cached = workspacesCacheClient.getWorkspace(wid);
 
         if (cached != null) {
-            log.debug("Found {} instance in the cache", wid);
+            log.debug("found {} instance in the cache", wid);
             return cached;
         }
 
@@ -66,14 +66,14 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
             try {
                 workspace.setServerSecret(encryptor.decrypt(workspace.getServerSecret()));
             } catch (Exception e) {
-                log.error("An error has occurred while decrypting workspace secret: {}", e.getMessage());
+                log.error("an error has occurred while decrypting workspace secret: {}", e.getMessage());
                 return null;
             }
         }
 
         workspacesCacheClient.addWorkspace(wid, workspace);
 
-        log.debug("Found workspace with id {}", wid);
+        log.debug("found workspace with id {}", wid);
 
         return workspace;
     }
@@ -89,7 +89,7 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
     @RateLimiter(name = "commandUpdateRateLimiter", fallbackMethod = "saveLicenseRateFallback")
     public boolean saveLicense(String wid, License license) {
         try {
-            log.debug("Saving license for {}", wid);
+            log.debug("saving license for {}", wid);
 
             String plainSecret = license.getServerSecret();
             license.setServerSecret(encryptor.encrypt(plainSecret));
@@ -108,11 +108,11 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
                 return true;
             }
 
-            log.debug("Successfully save license for {}", wid);
+            log.debug("successfully save license for {}", wid);
 
             return false;
         } catch (Exception e) {
-            log.error("An error has occurred while saving license: {}", e.getMessage());
+            log.error("an error has occurred while saving license: {}", e.getMessage());
             return false;
         }
     }
@@ -129,16 +129,16 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
     public void saveInstallerAndBot(Installer installation) throws UnableToPerformSlackOperationException {
         try {
             if (!(installation instanceof DefaultInstaller))
-                throw new UnableToPerformSlackOperationException("Expected to get installation of type DefaultInstaller. Got unknown type");
+                throw new UnableToPerformSlackOperationException("expected to get installation of type DefaultInstaller. Got unknown type");
             DefaultInstaller installer = (DefaultInstaller) installation;
 
             if (!isValidString.test(installer.getTeamId()))
-                throw new UnableToPerformSlackOperationException("Could not save a new installation. Invalid arguments (team id is empty)");
+                throw new UnableToPerformSlackOperationException("could not save a new installation. Invalid arguments (team id is empty)");
 
             if (!isValidString.test(installer.getInstallerUserId()))
-                throw new UnableToPerformSlackOperationException("Could not save a new installation. Invalid arguments (user id is empty)");
+                throw new UnableToPerformSlackOperationException("could not save a new installation. Invalid arguments (user id is empty)");
 
-            log.debug("New installation request with workspace id = {} and user id = {}",
+            log.debug("new installation request with workspace id = {} and user id = {}",
                     installation.getTeamId(), installation.getInstallerUserId());
 
             Workspace workspace = Workspace
@@ -164,7 +164,7 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
 
             workspaceRegistryService.saveWorkspaceAndUser(workspace, user, bot);
 
-            log.debug("Successfully executed installation request with workspace id = {} and user id = {}",
+            log.debug("successfully executed installation request with workspace id = {} and user id = {}",
                     workspace.getId(), user.getId());
         } catch (Exception e) {
             throw new UnableToPerformSlackOperationException(e.getMessage());
@@ -181,7 +181,7 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
     @RateLimiter(name = "queryRateLimiter", fallbackMethod = "findInstallerRateFallback")
     public Installer findInstaller(String s, String wid, String uid) {
         if (!isValidString.test(wid) || !isValidString.test(uid)) return null;
-        log.debug("New request to find installation with workspace id = {} and user id = {}",
+        log.debug("new request to find installation with workspace id = {} and user id = {}",
                 wid, uid);
 
         try {
@@ -197,7 +197,7 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
 
             usersCacheClient.addUser(wid, uid, user);
 
-            log.debug("Successfully found installation with workspace id = {} and user id = {}",
+            log.debug("successfully found installation with workspace id = {} and user id = {}",
                     wid, uid);
 
             return installer;
@@ -216,23 +216,23 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
 
     public void deleteInstaller(Installer installer) throws UnableToPerformSlackOperationException {
         if (!isValidString.test(installer.getTeamId()) || !isValidString.test(installer.getInstallerUserId()))
-            throw new UnableToPerformSlackOperationException("Could not delete an installer instance. Invalid wid/uid arguments");
+            throw new UnableToPerformSlackOperationException("could not delete an installer instance. Invalid wid/uid arguments");
 
-        log.debug("New request to delete installation with workspace id = {} and user id = {}",
+        log.debug("new request to delete installation with workspace id = {} and user id = {}",
                 installer.getTeamId(), installer.getInstallerUserId());
 
         userRegistryService.deleteUser(installer.getTeamId(), installer.getInstallerUserId());
         usersCacheClient.deleteUser(installer.getTeamId(), installer.getInstallerUserId());
 
-        log.debug("Successfully deleted installation with workspace id = {} and user id = {}",
+        log.debug("successfully deleted installation with workspace id = {} and user id = {}",
                 installer.getTeamId(), installer.getInstallerUserId());
     }
 
     public void deleteAll(String enterpriseId, String wid) throws UnableToPerformSlackOperationException {
         if (!isValidString.test(wid))
-            throw new UnableToPerformSlackOperationException("Could remove all workspace records. Invalid arguments (wid)");
+            throw new UnableToPerformSlackOperationException("could remove all workspace records. Invalid arguments (wid)");
 
-        log.debug("New request to delete workspace with id = {}", wid);
+        log.debug("new request to delete workspace with id = {}", wid);
 
         workspaceRegistryService.deleteWorkspace(wid);
 
@@ -240,7 +240,7 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
         botUsersCacheClient.deleteBot(wid);
         usersCacheClient.deleteAll();
 
-        log.debug("Successfully deleted workspace with id = {}", wid);
+        log.debug("successfully deleted workspace with id = {}", wid);
     }
 
     public boolean isHistoricalDataEnabled() {
@@ -255,12 +255,12 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
     public Bot findBot(String s, String wid) {
         if (!isValidString.test(wid)) return null;
 
-        log.debug("New request to find workspace bot = {}", wid);
+        log.debug("new request to find workspace bot = {}", wid);
 
         try {
             User cached = botUsersCacheClient.getBot(wid);
             if (cached != null) {
-                log.debug("Found a bot instance in the cache");
+                log.debug("found a bot instance in the cache");
                 return slackInstallationMapper.toBot(cached.getToken());
             }
 
@@ -271,7 +271,7 @@ public class SlackOnlyofficeRegistryInstallationService implements InstallationS
 
             botUsersCacheClient.addBot(wid, user);
 
-            log.debug("Successfully found workspace bot = {}", wid);
+            log.debug("successfully found workspace bot = {}", wid);
 
             return bot;
         } catch (Exception e) {

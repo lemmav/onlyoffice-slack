@@ -37,7 +37,7 @@ public class SlackOpenOnlyofficeSettingsAction implements SlackHandler {
     @Autowired
     public void register(App app) {
         app.blockAction(getSlackRequestHandler().getEntrypoint(), (req, ctx) -> {
-            log.debug("Open settings call");
+            log.debug("open settings call");
 
             Workspace workspace = installationService.findWorkspace(ctx.getTeamId());
             if (workspace == null) return null;

@@ -42,7 +42,7 @@ public class SlackOpenOnlyofficePermissionsButtonAction implements SlackHandler 
         app.blockAction(getSlackRequestHandler().getEntrypoint(), (req, ctx) -> {
             String value = req.getPayload().getActions().get(0).getValue();
             if (value == null || value.isBlank() || value.split(";").length != 6) {
-                log.warn("Invalid file info string");
+                log.warn("invalid file info string");
                 return ctx.ack();
             }
 

@@ -25,7 +25,7 @@ public class OnlyofficeDocKeyGeneratorService {
     private final App app;
 
     public String findGeneratedDocKey(String ownerToken, String fileId) throws IOException, SlackApiException {
-        log.debug("Trying to find an already generated document key: {}", fileId);
+        log.debug("trying to find an already generated document key: {}", fileId);
 
         SearchMessagesResponse searchMessagesResponse = app.client().searchMessages(SearchMessagesRequest
                 .builder()
@@ -44,7 +44,7 @@ public class OnlyofficeDocKeyGeneratorService {
             return searchMessagesResponse.getMessages().getMatches()
                     .get(0).getAttachments().get(0).getFallback();
 
-        log.debug("Could not find any document key: {}", fileId);
+        log.debug("could not find any document key: {}", fileId);
         return null;
     }
 
@@ -55,7 +55,7 @@ public class OnlyofficeDocKeyGeneratorService {
 //    }
 
     public void publishDocKey(String ownerToken, String fileId, String docKey) throws IOException, SlackApiException {
-        log.debug("Publishing a new document key {} for {}", docKey, fileId);
+        log.debug("publishing a new document key {} for {}", docKey, fileId);
 
         ChatPostMessageResponse postMessageResponse = app.client().chatPostMessage(ChatPostMessageRequest
                 .builder()

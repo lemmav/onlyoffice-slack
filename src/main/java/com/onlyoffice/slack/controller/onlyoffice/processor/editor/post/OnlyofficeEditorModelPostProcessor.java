@@ -7,6 +7,7 @@ import core.processor.postprocessor.OnlyofficeEditorPostProcessor;
 import exception.OnlyofficeInvalidParameterRuntimeException;
 import exception.OnlyofficeProcessAfterRuntimeException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -14,8 +15,10 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OnlyofficeEditorModelPostProcessor extends OnlyofficeEditorPostProcessor<Model> {
     public Model validateSchema(Map<String, Object> customData, ImmutableMap<String, Object> schema) {
+        log.debug("validating model's schema");
         if (customData == null || !customData.containsKey("apijs")) return null;
         if (schema == null || !schema.containsKey("model")) return null;
 
@@ -24,6 +27,7 @@ public class OnlyofficeEditorModelPostProcessor extends OnlyofficeEditorPostProc
             if (model == null) return null;
             return model;
         } catch (ClassCastException e) {
+            log.error("could not cast to model type: {}", e.getMessage());
             return null;
         }
     }

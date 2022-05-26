@@ -43,12 +43,14 @@ public class OnlyofficeEditorApiPreProcessor extends OnlyofficeEditorPreProcesso
     private final OnlyofficeFile onlyofficeFileUtil;
 
     public OnlyofficeEditorToken validateSchema(Map<String, Object> customData, ImmutableMap<String, Object> schema) {
+        log.debug("validating editor token's schema");
         if (!customData.containsKey("editorToken")) return null;
         try {
             OnlyofficeEditorToken token = (OnlyofficeEditorToken) customData.get("editorToken");
             if (token == null) return null;
             return token;
         } catch (ClassCastException e) {
+            log.error("could not cast to editor token type: {}", e.getMessage());
             return null;
         }
     }

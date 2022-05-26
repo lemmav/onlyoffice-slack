@@ -33,12 +33,14 @@ public class OnlyofficeEditorDocKeyPreProcessor extends OnlyofficeEditorPreProce
     private final OnlyofficeDocKeyGeneratorService docKeyGeneratorService;
 
     public OnlyofficeEditorToken validateSchema(Map<String, Object> customData, ImmutableMap<String, Object> schema) {
+        log.debug("validating editor token's schema");
         if (!customData.containsKey("editorToken")) return null;
         try {
             OnlyofficeEditorToken token = (OnlyofficeEditorToken) customData.get("editorToken");
             if (token == null) return null;
             return token;
         } catch (ClassCastException e) {
+            log.error("could not cast to editor token type: {}", e.getMessage());
             return null;
         }
     }
@@ -88,6 +90,7 @@ public class OnlyofficeEditorDocKeyPreProcessor extends OnlyofficeEditorPreProce
             config.getDocument().setKey(newDocKey);
 
         } catch (IOException | SlackApiException e) {
+            log.debug("doc key processor got an exception: {}. using temp values (edit = false, docKey = uuid)", e.getMessage());
             config.getDocument().setPermissions(Permissions.builder().edit(false).build());
             config.getDocument().setKey(UUID.randomUUID().toString());
         }

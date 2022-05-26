@@ -9,17 +9,20 @@ import core.processor.preprocessor.OnlyofficeCallbackPreProcessor;
 import exception.OnlyofficeInvalidParameterRuntimeException;
 import exception.OnlyofficeProcessBeforeRuntimeException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OnlyofficeCallbackRemoveOtpPreProcessor extends OnlyofficeCallbackPreProcessor<OnlyofficeCallbackToken> {
     private final SlackOtpGeneratorService otpGeneratorService;
 
     public OnlyofficeCallbackToken validateSchema(Map<String, Object> customData, ImmutableMap<String, Object> schema) {
         try {
+            log.debug("validating callback token");
             OnlyofficeCallbackToken token = (OnlyofficeCallbackToken) customData.get("callbackToken");
             if (token == null)
                 throw new ClassCastException("Expected to get an OnlyofficeCalbackToken instance. Got null");

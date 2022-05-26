@@ -26,7 +26,7 @@ public class SlackSettingsSubmission implements SlackHandler {
     @Autowired
     public void register(App app) {
         app.viewSubmission(getSlackRequestHandler().getEntrypoint(), (req, ctx) -> {
-            log.debug("Submitting new settings");
+            log.debug("submitting new settings");
             Map<String, Map<String, ViewState.Value>> values = req.getPayload()
                     .getView().getState().getValues();
 
@@ -54,7 +54,6 @@ public class SlackSettingsSubmission implements SlackHandler {
                     )
                     .build();
 
-            //TODO: Display errors according to Slack guidelines
             if (!installationService.saveLicense(ctx.getTeamId(), license))
                 return ctx.ackWithErrors(Map.of("error", "Could not update workspace license information. Please try again later"));
 

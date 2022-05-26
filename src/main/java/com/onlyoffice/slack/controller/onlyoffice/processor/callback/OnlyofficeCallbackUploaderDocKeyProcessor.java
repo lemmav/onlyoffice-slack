@@ -38,6 +38,7 @@ public class OnlyofficeCallbackUploaderDocKeyProcessor implements OnlyofficeUplo
         if (!callback.getCustom().containsKey("callbackToken"))
             throw new OnlyofficeUploaderRuntimeException("Expected to find an OnlyofficeCallbackToken (custom -> callbackToken) instance. Got null");
 
+        log.debug("trying to upload a file");
         OnlyofficeCallbackToken token = (OnlyofficeCallbackToken) callback.getCustom().get("callbackToken");
         Installer user = installationService.findInstaller(null, token.getWorkspace(), token.getUser());
         Installer owner = installationService.findInstaller(null, token.getWorkspace(), token.getOwner());

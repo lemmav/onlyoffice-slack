@@ -38,7 +38,7 @@ class OnlyofficeUserRegistryService {
     @CircuitBreaker(name = "onlyofficeRegistryQueryService", fallbackMethod = "getUserFallback")
     public User getUser(String wid, String uid)
             throws OnlyofficeRegistryResponseException {
-        log.debug("New registry request to get user with id = {} and workspace id = {}", uid, wid);
+        log.debug("new registry request to get user with id = {} and workspace id = {}", uid, wid);
 
         ResponseEntity<User> response = restClient.getForEntity(String.format(
                 "%s/v1/workspace/%s/%s/user/%s", clientConfiguration.getResourceServer(),
@@ -52,7 +52,7 @@ class OnlyofficeUserRegistryService {
 
         if (!status.is2xxSuccessful())
             throw new OnlyofficeRegistryResponseException(
-                    "An error has occurred while trying to get a user instance: " + response
+                    "an error has occurred while trying to get a user instance: " + response
                             .getStatusCode().name() + response.getStatusCode().getReasonPhrase());
 
         return response.getBody();
@@ -60,7 +60,7 @@ class OnlyofficeUserRegistryService {
 
     private User getUserFallback(String wid, String uid, Throwable t)
             throws OnlyofficeRegistryResponseException {
-        log.error("Circuit breaker has terminated get user {} call", uid);
+        log.error("circuit breaker has terminated get user {} call", uid);
         return null;
     }
 
@@ -77,7 +77,7 @@ class OnlyofficeUserRegistryService {
     @CircuitBreaker(name = "onlyofficeRegistryQueryService", fallbackMethod = "deleteUserFallback")
     public void deleteUser(String wid, String uid)
             throws UnableToPerformSlackOperationException {
-        log.debug("New registry request to delete user with id = {} and workspace id = {}", uid, wid);
+        log.debug("new registry request to delete user with id = {} and workspace id = {}", uid, wid);
 
         restClient.delete(String.format(
                 "%s/v1/workspace/%s/%s/user/%s", clientConfiguration.getResourceServer(),
@@ -87,7 +87,7 @@ class OnlyofficeUserRegistryService {
 
     private void deleteUserFallback(String wid, String uid, Throwable t)
             throws OnlyofficeRegistryResponseException {
-        log.error("Circuit breaker has terminated delete user {} call", uid);
+        log.error("circuit breaker has terminated delete user {} call", uid);
         throw new OnlyofficeRegistryResponseException("Could not delete user " +
                 uid + " for workspace " + wid + " due to circuit breaker termination");
     }
