@@ -5,6 +5,7 @@ import com.onlyoffice.slack.model.onlyoffice.OnlyofficeEditorToken;
 import com.onlyoffice.slack.model.slack.Caller;
 import com.onlyoffice.slack.service.registry.SlackOnlyofficeRegistryInstallationService;
 import com.onlyoffice.slack.service.slack.OnlyofficeDocKeyGeneratorService;
+import com.onlyoffice.slack.service.slack.SlackLocaleService;
 import com.onlyoffice.slack.service.slack.SlackOtpGeneratorService;
 import com.slack.api.bolt.model.Installer;
 import com.slack.api.methods.SlackApiException;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -25,6 +27,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class OnlyofficeEditorDocKeyPreProcessor extends OnlyofficeEditorPreProcessor<OnlyofficeEditorToken> {
+    private final SlackLocaleService slackLocaleService;
     private final SlackOnlyofficeRegistryInstallationService installationService;
     private final SlackOtpGeneratorService otpGenerator;
     private final OnlyofficeDocKeyGeneratorService docKeyGeneratorService;
@@ -60,6 +63,17 @@ public class OnlyofficeEditorDocKeyPreProcessor extends OnlyofficeEditorPreProce
             throw new OnlyofficeProcessBeforeRuntimeException("OTP validation exception. This scheduled message does not exist");
 
         try {
+            Locale locale = slackLocaleService.getLocale(Caller
+                    .builder()
+                            .id(user.getInstallerUserId())
+                            .name(user.getInstallerUserId())
+                            .wid(user.getTeamId())
+                            .isRoot(false)
+                            .token(user.getInstallerUserAccessToken())
+                    .build()
+            );
+
+            config.getEditorConfig().setLang(locale.getLanguage());
             String publishedDocKey = docKeyGeneratorService
                     .findGeneratedDocKey(owner.getInstallerUserAccessToken(), token.getFile());
 

@@ -14,6 +14,7 @@ import core.uploader.OnlyofficeUploaderType;
 import exception.OnlyofficeRegistryHandlerRuntimeException;
 import exception.OnlyofficeUploaderRuntimeException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -25,6 +26,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OnlyofficeCallbackUploaderDocKeyProcessor implements OnlyofficeUploader<Callback> {
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
