@@ -164,8 +164,11 @@
                         innerAlert("Please update ONLYOFFICE Docs to version 7.0 to work on fillable forms online.");
                         return;
                     }
-
-                    docEditor = new DocsAPI.DocEditor("iframeEditor", config);
+                    try {
+                        docEditor = new DocsAPI.DocEditor("iframeEditor", config);
+                    } catch (e) {
+                        location.replace(`${window.location.origin}/onlyoffice/error`);
+                    }
                 };
 
                 if (window.addEventListener) {
