@@ -19,7 +19,9 @@ import com.slack.api.app_backend.interactive_components.payload.MessageShortcutP
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.model.Installer;
 import com.slack.api.methods.SlackApiException;
+import com.slack.api.methods.request.chat.ChatGetPermalinkRequest;
 import com.slack.api.methods.request.views.ViewsOpenRequest;
+import com.slack.api.methods.response.chat.ChatGetPermalinkResponse;
 import com.slack.api.model.Message;
 import com.slack.api.model.block.LayoutBlock;
 import com.slack.api.model.block.element.BlockElements;
@@ -166,6 +168,18 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
                         return;
                     }
 
+                    ChatGetPermalinkResponse permalinkResponse = app.client().chatGetPermalink(ChatGetPermalinkRequest
+                            .builder()
+                            .channel(message.getChannel())
+                            .messageTs(message.getTs())
+                            .token(userInstaller.getInstallerUserAccessToken())
+                            .build());
+
+                    if (!permalinkResponse.isOk()) {
+                        log.warn("permalink generation error: {}", permalinkResponse.getError());
+                        return;
+                    }
+
                     MessageShortcutPayload.User user = req.getPayload().getUser();
                     ScheduledOtp otp = otpGenerator.generateScheduledOtp(Caller.builder()
                             .id(user.getId())
@@ -185,7 +199,7 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
                                     .privateMetadata(otp.getCode())
                                     .title(viewTitle(title -> title.type("plain_text").text(modalTitle)))
                                     .close(viewClose(close -> close.type("plain_text").text(cancelButton)))
-                                    .blocks(getBlocks(message, user, otp, locale))
+                                    .blocks(getBlocks(message, user, otp, locale, permalinkResponse.getPermalink()))
                                     .build()
                             )
                     );
@@ -197,7 +211,8 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
         });
     }
 
-    private List<LayoutBlock> getBlocks(Message message, MessageShortcutPayload.User user, ScheduledOtp otp, Locale locale) {
+    //TODO: Refactoring
+    private List<LayoutBlock> getBlocks(Message message, MessageShortcutPayload.User user, ScheduledOtp otp, Locale locale, String permalinkUrl) {
         log.debug("building file block for message: " + message.getClientMsgId());
         List<LayoutBlock> blocks = new ArrayList<>();
 
@@ -234,6 +249,7 @@ public class SlackMessageShortcutViewHandler implements SlackHandler {
                         .otpCode(otp.getCode())
                         .otpAt(otp.getAt())
                         .otpChannel(otp.getChannel())
+                        .permalinkUrl(permalinkUrl)
                         .build();
 
                 blocks.add(header(

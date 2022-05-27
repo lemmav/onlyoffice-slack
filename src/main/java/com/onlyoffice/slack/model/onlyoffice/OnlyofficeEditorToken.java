@@ -26,6 +26,7 @@ public class OnlyofficeEditorToken implements OnlyofficeModelMutator<Config> {
     private String otpCode; // scheduled message id
     private Integer otpAt; // scheduled message timestamp
     private String otpChannel; // scheduled message channel
+    private String permalinkUrl;
 
     public void mutate(Config config) {
         config.getDocument().setTitle(fileName);

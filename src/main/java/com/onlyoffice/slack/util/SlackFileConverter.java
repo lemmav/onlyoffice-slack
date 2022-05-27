@@ -45,23 +45,6 @@ public class SlackFileConverter {
 
     public String convertFileIconUrl(File file) {
         log.debug("converting file {} icon url", file.getName());
-
-        Boolean isOOXML = fileUtil.isEditable(file.getName());
-        DocumentType type = fileUtil.findDocumentType(file.getName());
-
-        if (isOOXML) {
-            switch (type) {
-                case CELL -> { return integrationConfiguration.getXlsxIcon(); }
-                case SLIDE -> { return integrationConfiguration.getPptxIcon(); }
-                default -> { return integrationConfiguration.getDocxIcon(); }
-            }
-        }
-
-        switch (type) {
-            case WORD -> { return integrationConfiguration.getWordIcon(); }
-            case CELL -> { return integrationConfiguration.getCellIcon(); }
-            case SLIDE -> { return integrationConfiguration.getSlideIcon(); }
-            default -> { return integrationConfiguration.getGenericIcon(); }
-        }
+        return String.format("%s.png", integrationConfiguration.getIconsBaseUrl() + fileUtil.findFileType(file.getName()));
     }
 }

@@ -96,6 +96,7 @@ public class OnlyofficeEditorApiPreProcessor extends OnlyofficeEditorPreProcesso
                                     .ts(token.getThreadTs())
                                     .otpCode(UUID.randomUUID().toString())
                                     .otpChannel(UUID.randomUUID().toString())
+                                    .permalinkUrl(token.getPermalinkUrl())
                                     .otpAt(1)
                                     .build(),
                             integrationConfiguration.getCallbackSecret(),
@@ -123,6 +124,7 @@ public class OnlyofficeEditorApiPreProcessor extends OnlyofficeEditorPreProcesso
                                     .otpCode(callbackOtp.getCode())
                                     .otpChannel(callbackOtp.getChannel())
                                     .otpAt(callbackOtp.getAt())
+                                    .permalinkUrl(token.getPermalinkUrl())
                                     .build(),
                             integrationConfiguration.getCallbackSecret(),
                             Date.valueOf(LocalDate.now().plusDays(1))

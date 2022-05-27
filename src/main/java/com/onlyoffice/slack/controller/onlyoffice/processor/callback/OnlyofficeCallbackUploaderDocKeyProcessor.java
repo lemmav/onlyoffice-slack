@@ -63,6 +63,7 @@ public class OnlyofficeCallbackUploaderDocKeyProcessor implements OnlyofficeUplo
                     .file(file)
                     .filename(token.getFileName())
                     .title(token.getFileName())
+                    .initialComment(String.format("Previous version: %s",token.getPermalinkUrl()))
                     .build();
             FilesUploadResponse response = app.client().filesUpload(request);
 

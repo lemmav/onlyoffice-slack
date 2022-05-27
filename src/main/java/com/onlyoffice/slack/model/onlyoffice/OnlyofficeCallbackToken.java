@@ -24,6 +24,8 @@ public class OnlyofficeCallbackToken implements OnlyofficeModelMutator<Callback>
     private Integer otpAt;
     private String otpChannel;
 
+    private String permalinkUrl;
+
     public void mutate(Callback callback) {
         callback.getCustom().put("callbackToken", this);
     }

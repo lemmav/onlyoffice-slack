@@ -17,13 +17,7 @@ public class IntegrationConfiguration {
     @Value("${onlyoffice.application.cache.users:80}") private int usersSizeMb;
     @Value("${onlyoffice.application.cache.workspaces:30}") private int workspaceSizeMb;
 
-    @Value("${onlyoffice.application.resources.icons.docx}") private String docxIcon;
-    @Value("${onlyoffice.application.resources.icons.xlsx}") private String xlsxIcon;
-    @Value("${onlyoffice.application.resources.icons.pptx}") private String pptxIcon;
-    @Value("${onlyoffice.application.resources.icons.word}") private String wordIcon;
-    @Value("${onlyoffice.application.resources.icons.cell}") private String cellIcon;
-    @Value("${onlyoffice.application.resources.icons.slide}") private String slideIcon;
-    @Value("${onlyoffice.application.resources.icons.generic}") private String genericIcon;
+    @Value("${onlyoffice.application.resources.icons}") private String iconsBaseUrl;
 
     private String aesSecret;
     private String editorSecret;
