@@ -1,165 +1,85 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html>
 <head>
-    <title>ONLYOFFICE Editor - Loading</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <style>
-        html, body {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            background: #fff;
-            color: #333;
-            font-family: Arial, Tahoma, sans-serif;
-            font-size: 14px;
-        }
-
-        .loading-container {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #446995;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .loading-subtext {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .error-message {
-            display: none;
-            background: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 4px;
-            margin-top: 20px;
-            max-width: 400px;
-        }
-
-        .retry-button {
-            display: none;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: #446995;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .retry-button:hover {
-            background: #385580;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, caller-scalable=no, minimal-ui" />
+    <title>ONLYOFFICE Editor - Loading</title>
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Lato:700,400&display=swap' rel='stylesheet'>
+    <link rel="stylesheet" href="/styles/root.css">
+    <link rel="stylesheet" href="/styles/loading.css">
 </head>
-
-<body th:data-session="${sessionId}">
-<div class="loading-container">
-    <div class="spinner"></div>
-    <div class="loading-text">Loading Editor...</div>
-    <div class="loading-subtext">Preparing your document session</div>
-    
-    <div id="error-message" class="error-message">
-        Session timeout. The document session could not be established within the time limit.
+<body class="loading-page">
+    <div class="loading-container">
+        <img src="/styles/images/logo_long.svg" alt="ONLYOFFICE Logo" class="loading__logo">
+        <div class="loading-container__spinner"></div>
+        <div class="loading-container__title">[[${loadingTitle}]]</div>
+        <div class="loading-container__description">[[${loadingDescription}]]</div>
+        <div id="error-block" class="loading-container__error-block" style="display:none; flex-direction:column; align-items:center; justify-content:center;">
+            <div id="error-message" class="loading-container__error-message" style="text-align:center; margin-bottom:16px;">
+                [[${loadingError}]]
+            </div>
+            <button id="retry-button" class="loading-container__button" style="margin:0 auto;">[[${loadingRetry}]]</button>
+        </div>
+        <button id="cancel-button" class="loading-container__button" onclick="window.location.href='/'">[[${loadingCancel}]]</button>
     </div>
-    
-    <button id="retry-button" class="retry-button" onclick="window.location.reload()">
-        Retry
-    </button>
-</div>
+    <script>
+        var sessionId = "[[${sessionId}]]";
+        let maxWaitTime, pollInterval, startTime;
 
-<script>
-    let sessionId, maxWaitTime, pollInterval, startTime;
-
-    function showError() {
-        document.querySelector('.spinner').style.display = 'none';
-        document.querySelector('.loading-text').style.display = 'none';
-        document.querySelector('.loading-subtext').style.display = 'none';
-        document.getElementById('error-message').style.display = 'block';
-        document.getElementById('retry-button').style.display = 'inline-block';
-    }
-
-    function checkSessionStatus() {
-        const currentTime = Date.now();
-        const elapsed = currentTime - startTime;
-        
-        console.log(`Checking session status for: ${sessionId}, elapsed: ${elapsed}ms`);
-        
-        if (elapsed >= maxWaitTime) {
-            console.log('Timeout reached, showing error');
-            showError();
-            return;
+        function showError() {
+            document.querySelector('.loading-container__spinner').style.display = 'none';
+            document.querySelector('.loading-container__title').style.display = 'none';
+            document.querySelector('.loading-container__description').style.display = 'none';
+            document.getElementById('error-block').style.display = 'flex';
+            document.getElementById('cancel-button').style.display = 'none';
         }
 
-        fetch(`/editor/status?session=${sessionId}`)
-            .then(response => {
-                console.log('Status response:', response.status, response.statusText);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Session status data:', data);
-                if (data.ready) {
-                    console.log('Session is ready, redirecting to editor content');
-                    window.location.href = `editor/content?session=${sessionId}`;
-                } else {
-                    console.log('Session not ready yet, continuing to poll...');
-                    setTimeout(checkSessionStatus, pollInterval);
-                }
-            })
-            .catch(error => {
-                console.error('Error checking session status:', error);
-                if (elapsed < maxWaitTime) {
-                    console.log('Continuing to poll despite error...');
-                    setTimeout(checkSessionStatus, pollInterval);
-                } else {
-                    console.log('Max time reached with error, showing error page');
-                    showError();
-                }
-            });
-    }
+        function checkSessionStatus() {
+            const currentTime = Date.now();
+            const elapsed = currentTime - startTime;
 
-    function initializeEditor() {
-        sessionId = document.body.getAttribute('data-session');
+            if (elapsed >= maxWaitTime) {
+                showError();
+                return;
+            }
 
-        if (!sessionId) {
-            console.error('Missing required parameters: sessionId=' + sessionId);
-            showError();
-            return;
+            fetch(`/editor/status?session=${encodeURIComponent(sessionId)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ready) {
+                        window.location.href = `editor/content?session=${encodeURIComponent(sessionId)}`;
+                    } else {
+                        setTimeout(checkSessionStatus, pollInterval);
+                    }
+                })
+                .catch(error => {
+                    if (elapsed < maxWaitTime) {
+                        setTimeout(checkSessionStatus, pollInterval);
+                    } else {
+                        showError();
+                    }
+                });
         }
-        
-        maxWaitTime = 5000;
-        pollInterval = 500;
-        startTime = Date.now();
 
-        setTimeout(checkSessionStatus, 100);
-    }
+        function initializeEditor() {
+            if (!sessionId || sessionId.indexOf('$') !== -1 || sessionId.indexOf('{') !== -1) {
+                showError();
+                return;
+            }
+            maxWaitTime = 5000;
+            pollInterval = 500;
+            startTime = Date.now();
+            setTimeout(checkSessionStatus, 100);
+        }
 
-    document.addEventListener('DOMContentLoaded', initializeEditor);
-</script>
+        document.getElementById('retry-button').onclick = function() {
+            window.location.reload();
+        };
+
+        document.addEventListener('DOMContentLoaded', initializeEditor);
+    </script>
 </body>
-</html> 
+</html>

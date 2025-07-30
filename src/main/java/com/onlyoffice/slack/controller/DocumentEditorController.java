@@ -4,6 +4,7 @@ import com.hazelcast.map.IMap;
 import com.onlyoffice.model.documenteditor.config.document.Type;
 import com.onlyoffice.model.documenteditor.config.editorconfig.Mode;
 import com.onlyoffice.slack.configuration.ServerConfigurationProperties;
+import com.onlyoffice.slack.configuration.slack.SlackMessageConfigurationProperties;
 import com.onlyoffice.slack.service.data.RotatingInstallationService;
 import com.onlyoffice.slack.service.data.TeamSettingsService;
 import com.onlyoffice.slack.service.document.core.ConfigManagerService;
@@ -15,6 +16,7 @@ import com.slack.api.bolt.model.Installer;
 import com.slack.api.methods.request.users.UsersInfoRequest;
 import com.slack.api.methods.response.files.FilesInfoResponse;
 import com.slack.api.methods.response.users.UsersInfoResponse;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -22,6 +24,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,9 +45,34 @@ public class DocumentEditorController {
   private final TeamSettingsService settingsService;
   private final App app;
 
+  private final SlackMessageConfigurationProperties slackMessageConfigurationProperties;
+  private final MessageSource messageSource;
+
   @GetMapping(path = "/editor")
   public String editor(@RequestParam("session") final String sessionId, final Model model) {
     model.addAttribute("sessionId", sessionId);
+    model.addAttribute(
+        "loadingTitle",
+        messageSource.getMessage(
+            slackMessageConfigurationProperties.getMessageLoadingTitle(), null, Locale.ENGLISH));
+    model.addAttribute(
+        "loadingDescription",
+        messageSource.getMessage(
+            slackMessageConfigurationProperties.getMessageLoadingDescription(),
+            null,
+            Locale.ENGLISH));
+    model.addAttribute(
+        "loadingError",
+        messageSource.getMessage(
+            slackMessageConfigurationProperties.getMessageLoadingError(), null, Locale.ENGLISH));
+    model.addAttribute(
+        "loadingRetry",
+        messageSource.getMessage(
+            slackMessageConfigurationProperties.getMessageLoadingRetry(), null, Locale.ENGLISH));
+    model.addAttribute(
+        "loadingCancel",
+        messageSource.getMessage(
+            slackMessageConfigurationProperties.getMessageLoadingCancel(), null, Locale.ENGLISH));
     return "loading";
   }
 

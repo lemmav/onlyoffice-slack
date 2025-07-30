@@ -47,6 +47,12 @@ public class SlackMessageConfigurationProperties {
   private String messageInstallFeatureFileSupport = "install.feature.fileSupport";
   private String messageInstallFeatureSecureEditing = "install.feature.secureEditing";
 
+  private String messageLoadingTitle = "loading.title";
+  private String messageLoadingDescription = "loading.description";
+  private String messageLoadingError = "loading.error";
+  private String messageLoadingRetry = "loading.retry";
+  private String messageLoadingCancel = "loading.cancel";
+
   private String messageManagerModalTitle = "manager.modal.title";
   private String messageManagerModalHeader = "manager.modal.header";
   private String messageManagerModalFileInfo = "manager.modal.fileInfo";
