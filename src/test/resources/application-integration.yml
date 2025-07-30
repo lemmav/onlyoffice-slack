@@ -1,0 +1,64 @@
+hazelcast:
+  enabled: false
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      enabled: true
+server:
+  demo:
+    duration-days: 7
+    address: https://demo.onlyoffice.com
+    header: AuthorizationJwt
+    secret: secret
+  cryptography:
+    secret: secret
+  base-address: http://localhost:8080
+  shutdown: graceful
+slack:
+  app:
+    client-id: test-client-id
+    client-secret: test-client-secret
+    signing-secret: test-signing-secret
+  installation:
+    path: /slack/install
+  oauth:
+    redirect-uri: http://localhost:8080/slack/oauth_redirect
+    completion-url: http://localhost:8080/slack/oauth_completion
+    cancellation-url: http://localhost:8080/slack/oauth_cancellation
+spring:
+  cache:
+    type: simple
+  flyway:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        jdbc:
+          time_zone: UTC
+    open-in-view: false
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
+  sql:
+    init:
+      mode: always
+      continue-on-error: false
+logging:
+  level:
+    org.springframework.web: WARN
+    org.hibernate: WARN
+    com.hazelcast: OFF
+    org.testcontainers: INFO
+    org.springframework.test: INFO
+    com.onlyoffice.slack: DEBUG
+    com.zaxxer.hikari: WARN
+    root: WARN

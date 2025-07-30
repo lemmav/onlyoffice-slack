@@ -1,20 +1,15 @@
 package com.onlyoffice.slack;
 
-import com.onlyoffice.slack.configuration.registry.KeycloakConfiguration;
-import com.onlyoffice.slack.configuration.slack.SlackConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@SpringBootApplication
+@EnableJpaAuditing
 @ServletComponentScan
-@EnableConfigurationProperties({
-		KeycloakConfiguration.class,
-		SlackConfiguration.class
-})
+@SpringBootApplication
 public class SlackApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(SlackApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(SlackApplication.class, args);
+  }
 }

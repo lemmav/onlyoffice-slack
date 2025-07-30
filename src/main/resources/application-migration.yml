@@ -1,0 +1,13 @@
+spring:
+  flyway:
+    enabled: true
+    baselineOnMigrate: true
+    locations: classpath:migration
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/slack}
+    user: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    repeatable-sql-migration-prefix: R
+    #    schemas: schema
+    sql-migration-prefix: V
+    sql-migration-separator: __
+    sql-migration-suffixes: .sql

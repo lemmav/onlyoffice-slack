@@ -1,0 +1,12 @@
+http:
+  client:
+    connectTimeoutSeconds: 15
+    readTimeoutSeconds: 60
+    writeTimeoutSeconds: 60
+    callTimeoutSeconds: 120
+    maxIdleConnections: 20
+    keepAliveDurationMinutes: 5
+    retryOnConnectionFailure: true
+    followRedirects: false
+    followSslRedirects: false
+    maxResponseSizeBytes: 26214400

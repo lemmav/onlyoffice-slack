@@ -1,50 +1,118 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, caller-scalable=no, minimal-ui" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <!--
-    *
-    * (c) Copyright Ascensio System SIA 2022
-    *
-    * Licensed under the Apache License, Version 2.0 (the "License");
-    * you may not use this file except in compliance with the License.
-    * You may obtain a copy of the License at
-    *
-    *     http://www.apache.org/licenses/LICENSE-2.0
-    *
-    * Unless required by applicable law or agreed to in writing, software
-    * distributed under the License is distributed on an "AS IS" BASIS,
-    * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    * See the License for the specific language governing permissions and
-    * limitations under the License.
-    *
-    -->
-    <title>ONLYOFFICE</title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
-    <link rel="stylesheet" href="/styles/install.css">
-    <link rel="stylesheet" href="/styles/root.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Install ONLYOFFICE for Slack</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4A154B 0%, #350d36 50%, #2b0a2e 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            margin: 20px;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: #4A154B;
+            border-radius: 12px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        h1 {
+            color: #2c2d30;
+            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .subtitle {
+            color: #696969;
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .install-btn {
+            background: #007a5a;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s ease;
+        }
+        .install-btn:hover {
+            background: #005a42;
+        }
+        .features {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .feature {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            background: #007a5a;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    <img class="container__icon" 
-        src="/styles/images/onlyoffice_slack.svg"
-        alt="ONLYOFFICE x Slack" />
-    <div class="container__text">
-        <h1>Introducing ONLYOFFICE for Slack</h1>
-        <span>Document editing and collaboration</span>
+    <div class="container">
+        <div class="logo">O</div>
+        <h1>ONLYOFFICE for Slack</h1>
+        <p class="subtitle">Collaborate on documents directly from Slack with powerful editing capabilities.</p>
+        
+        <a th:href="${installationUrl}" class="install-btn">Add to Slack</a>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">✓</div>
+                <span>Edit documents directly from Slack messages</span>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">✓</div>
+                <span>Real-time collaboration with team members</span>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">✓</div>
+                <span>Support for Word, Excel, and PowerPoint files</span>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">✓</div>
+                <span>Secure document editing and sharing</span>
+            </div>
+        </div>
     </div>
-    <a class="container__button"
-       th:href="@{${installationUrl}}">
-        <img class="container__button__image"
-            alt="Add to Slack" 
-            src="/styles/images/slack_logo.svg"
-        />
-        <span>Add to <b>Slack</b></span>
-    </a>
-</div>
 </body>
-</html>
+</html> 

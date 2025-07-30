@@ -1,0 +1,107 @@
+package com.onlyoffice.slack.handler.action.slack;
+
+import com.onlyoffice.slack.configuration.slack.SlackConfigurationProperties;
+import com.onlyoffice.slack.registry.SlackBlockActionHandlerRegistrar;
+import com.onlyoffice.slack.service.data.TeamSettingsService;
+import com.onlyoffice.slack.service.document.core.SettingsValidationService;
+import com.onlyoffice.slack.transfer.request.SubmitSettingsRequest;
+import com.slack.api.bolt.handler.builtin.BlockActionHandler;
+import com.slack.api.model.view.ViewState;
+import java.util.Map;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class SlackSubmitSettingsBlockActionHandler implements SlackBlockActionHandlerRegistrar {
+  private final SlackConfigurationProperties slackConfigurationProperties;
+
+  private final SettingsValidationService settingsValidationService;
+  private final TeamSettingsService settingsService;
+
+  private String extractValue(
+      final Map<String, Map<String, ViewState.Value>> values,
+      final String blockId,
+      final String actionId) {
+    try {
+      return Optional.ofNullable(values.get(blockId))
+          .map(blockValues -> blockValues.get(actionId))
+          .map(ViewState.Value::getValue)
+          .map(String::trim)
+          .filter(value -> !value.isEmpty())
+          .orElse(null);
+    } catch (Exception e) {
+      log.warn(
+          "Error extracting value for block '{}' action '{}': {}",
+          blockId,
+          actionId,
+          e.getMessage());
+      return null;
+    }
+  }
+
+  private boolean extractDemoEnabled(final Map<String, Map<String, ViewState.Value>> values) {
+    return Optional.ofNullable(values.get("demo_enabled"))
+        .map(block -> block.get("demo_enabled_checkbox"))
+        .map(ViewState.Value::getSelectedOptions)
+        .map(options -> !options.isEmpty())
+        .orElse(false);
+  }
+
+  private SubmitSettingsRequest buildSettingsRequest(
+      final String httpsAddress, final String secret, final String header, boolean demoEnabled) {
+    return SubmitSettingsRequest.builder()
+        .address(httpsAddress)
+        .secret(secret)
+        .header(header)
+        .demoEnabled(demoEnabled)
+        .build();
+  }
+
+  private boolean shouldValidateConnection(final SubmitSettingsRequest request) {
+    return !request.isDemoEnabled() || request.isCredentialsComplete();
+  }
+
+  @Override
+  public String getId() {
+    return slackConfigurationProperties.getSubmitSettingsActionId();
+  }
+
+  @Override
+  public BlockActionHandler getAction() {
+    return (req, ctx) -> {
+      var values = req.getPayload().getView().getState().getValues();
+      var httpsAddress = extractValue(values, "https_address", "https_address_input");
+      var secret = extractValue(values, "secret", "secret_input");
+      var header = extractValue(values, "header", "header_input");
+      var demoEnabled = extractDemoEnabled(values);
+
+      try {
+        var request = buildSettingsRequest(httpsAddress, secret, header, demoEnabled);
+
+        if (!request.isValidConfiguration()) {
+          log.warn(
+              "Invalid configuration provided: address={}, secret={}, header={}, demoEnabled={}",
+              httpsAddress,
+              secret != null ? "***" : null,
+              header,
+              demoEnabled);
+          return ctx.ack();
+        }
+
+        if (shouldValidateConnection(request))
+          settingsValidationService.validateConnection(request);
+
+        settingsService.saveSettings(ctx, request);
+      } catch (Exception e) {
+        log.error("Error updating settings", e);
+        return ctx.ack();
+      }
+
+      return ctx.ack();
+    };
+  }
+}

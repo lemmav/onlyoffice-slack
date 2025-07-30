@@ -1,0 +1,12 @@
+slack:
+  application:
+    id: ${SLACK_APPLICATION_ID}
+    clientId: ${SLACK_APPLICATION_CLIENT_ID}
+    clientSecret: ${SLACK_APPLICATION_CLIENT_SECRET}
+    signingSecret: ${SLACK_APPLICATION_SIGNING_SECRET}
+    scopes: commands
+    userScopes: chat:write,files:read,files:write,users:read
+    pathInstallation: /slack/install
+    pathRedirect: /slack/oauth_redirect
+    pathCompletion: /slack/oauth/completion
+    pathCancellation: /slack/oauth/cancellation

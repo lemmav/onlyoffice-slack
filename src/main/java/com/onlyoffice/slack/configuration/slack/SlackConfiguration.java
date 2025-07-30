@@ -1,56 +1,67 @@
 package com.onlyoffice.slack.configuration.slack;
 
+import com.onlyoffice.slack.registry.SlackBlockActionRegistry;
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.AppConfig;
+import com.slack.api.bolt.handler.BoltEventHandler;
+import com.slack.api.bolt.handler.builtin.MessageShortcutHandler;
 import com.slack.api.bolt.service.InstallationService;
+import com.slack.api.bolt.service.OAuthStateService;
 import com.slack.api.bolt.service.builtin.oauth.view.OAuthInstallPageRenderer;
-import com.slack.api.model.event.AppUninstalledEvent;
-import com.slack.api.model.event.TokensRevokedEvent;
+import com.slack.api.model.event.AppHomeOpenedEvent;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.retry.annotation.EnableRetry;
 
-@Configuration
-@ConfigurationProperties(prefix = "slack.application")
+@Slf4j
 @Setter
 @Getter
-@EnableRetry
+@Configuration
+@RequiredArgsConstructor
 public class SlackConfiguration {
-    private String clientID;
-    private String clientSecret;
-    private String clientSecretSigning;
-    private String scopes;
-    private String userScopes;
-    private String pathInstallation;
-    private String pathRedirect;
-    private String pathCompletion;
-    private String pathCancellation;
+  private final SlackConfigurationProperties properties;
+  private final SlackBlockActionRegistry blockActionRegistry;
 
-    @Bean
-    public App initializeSlackApplication(
-            InstallationService onlyofficeInstallationService,
-            OAuthInstallPageRenderer installPageRenderer
-    ) {
-        App app = new App(AppConfig
-                .builder()
-                .clientId(clientID)
-                .clientSecret(clientSecret)
-                .signingSecret(clientSecretSigning)
-                .scope(scopes)
-                .userScope(userScopes)
-                .oauthInstallPath(pathInstallation)
-                .oAuthInstallPageRenderer(installPageRenderer)
-                .oauthRedirectUriPath(pathRedirect)
-                .oauthCompletionUrl(pathCompletion)
-                .oauthCancellationUrl(pathCancellation)
-                .build())
-                .service(onlyofficeInstallationService)
-                .asOAuthApp(true);
-        app.event(TokensRevokedEvent.class, app.defaultTokensRevokedEventHandler());
-        app.event(AppUninstalledEvent.class, app.defaultAppUninstalledEventHandler());
-        return app;
-    }
+  private final BoltEventHandler<AppHomeOpenedEvent> appHomeOpenedEventBoltEventHandler;
+  private final MessageShortcutHandler slackMessageShortcutHandler;
+
+  @Bean
+  public AppConfig slackBoltApplicationConfiguration(
+      final OAuthInstallPageRenderer installPageRenderer) {
+    return AppConfig.builder()
+        .clientId(properties.getClientId())
+        .clientSecret(properties.getClientSecret())
+        .signingSecret(properties.getSigningSecret())
+        .scope(properties.getScopes())
+        .userScope(properties.getUserScopes())
+        .oauthInstallPath(properties.getPathInstallation())
+        .oAuthInstallPageRenderer(installPageRenderer)
+        .oauthRedirectUriPath(properties.getPathRedirect())
+        .oauthCompletionUrl(properties.getPathCompletion())
+        .oauthCancellationUrl(properties.getPathCancellation())
+        .alwaysRequestUserTokenNeeded(true)
+        .build();
+  }
+
+  @Bean
+  public App slackBoltApplication(
+      final AppConfig slackBoltApplicationConfiguration,
+      final InstallationService onlyofficeInstallationService,
+      final OAuthStateService stateService) {
+    var app =
+        new App(slackBoltApplicationConfiguration)
+            .service(onlyofficeInstallationService)
+            .service(stateService)
+            .asOAuthApp(true)
+            .enableTokenRevocationHandlers();
+
+    app.event(AppHomeOpenedEvent.class, appHomeOpenedEventBoltEventHandler);
+    app.messageShortcut(properties.getFileManagerShortcutId(), slackMessageShortcutHandler);
+    blockActionRegistry.getRegistry().forEach(app::blockAction);
+
+    return app;
+  }
 }

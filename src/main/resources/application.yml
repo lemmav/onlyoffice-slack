@@ -1,0 +1,62 @@
+spring:
+  application:
+    name: slack
+  config:
+    import:
+      - "classpath:application-client.yml"
+      - "classpath:application-datasource.yml"
+      - "classpath:application-migration.yml"
+      - "classpath:application-resilience.yml"
+      - "classpath:application-slack.yml"
+server:
+  baseAddress: ${SERVER_BASE_ADDRESS}
+  cryptography:
+    secret: ${SERVER_CRYPTOGRAPHY_SECRET:secret}
+  demo:
+    address: ${SERVER_DEMO_ADDRESS}
+    header: ${SERVER_DEMO_HEADER}
+    secret: ${SERVER_DEMO_SECRET}
+    durationDays: 7
+  port: 8080
+info:
+  app:
+    name: '@project.name@'
+    description: '@project.description@'
+    version: '@project.version@'
+    group: '@project.groupId@'
+    artifact: '@project.artifactId@'
+    java:
+      version: '@java.version@'
+  build:
+    encoding: '@project.build.sourceEncoding@'
+    java:
+      source: '@java.version@'
+      target: '@java.version@'
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
+  info:
+    build:
+      enabled: true
+    env:
+      enabled: true
+    git:
+      mode: full
+    java:
+      enabled: true
+    os:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
