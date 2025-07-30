@@ -14,15 +14,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "slack.application.messages")
 public class SlackMessageConfigurationProperties {
-  private String messageManagerModalTitle = "manager.modal.title";
-  private String messageManagerModalHeader = "manager.modal.header";
-  private String messageManagerModalFileInfo = "manager.modal.fileInfo";
-  private String messageManagerModalFileStatusPublic = "manager.modal.fileStatus.public";
-  private String messageManagerModalFileStatusPrivate = "manager.modal.fileStatus.private";
-  private String messageManagerModalNoFilesFound = "manager.modal.noFiles";
-  private String messageManagerModalOpenButton = "manager.modal.button.open";
-  private String messageManagerModalCloseButton = "manager.modal.button.close";
-
   private String messageHomeTitle = "home.title";
   private String messageHomeDescription = "home.description";
   private String messageHomeDemoActive = "home.demo.active";
@@ -37,4 +28,21 @@ public class SlackMessageConfigurationProperties {
   private String messageHomeBannerDescription = "home.banner.description";
   private String messageHomeImageAltText = "home.image.altText";
   private String messageHomeErrorRenderView = "home.error.renderView";
+
+  private String messageInstallButton = "install.button";
+  private String messageInstallTitle = "install.title";
+  private String messageInstallSubtitle = "install.subtitle";
+  private String messageInstallFeatureEdit = "install.feature.edit";
+  private String messageInstallFeatureCollaboration = "install.feature.collaboration";
+  private String messageInstallFeatureFileSupport = "install.feature.fileSupport";
+  private String messageInstallFeatureSecureEditing = "install.feature.secureEditing";
+
+  private String messageManagerModalTitle = "manager.modal.title";
+  private String messageManagerModalHeader = "manager.modal.header";
+  private String messageManagerModalFileInfo = "manager.modal.fileInfo";
+  private String messageManagerModalFileStatusPublic = "manager.modal.fileStatus.public";
+  private String messageManagerModalFileStatusPrivate = "manager.modal.fileStatus.private";
+  private String messageManagerModalNoFilesFound = "manager.modal.noFiles";
+  private String messageManagerModalOpenButton = "manager.modal.button.open";
+  private String messageManagerModalCloseButton = "manager.modal.button.close";
 }

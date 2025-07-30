@@ -3,114 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Install ONLYOFFICE for Slack</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #4A154B 0%, #350d36 50%, #2b0a2e 100%);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            text-align: center;
-            max-width: 500px;
-            margin: 20px;
-        }
-        .logo {
-            width: 60px;
-            height: 60px;
-            background: #4A154B;
-            border-radius: 12px;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        h1 {
-            color: #2c2d30;
-            margin-bottom: 10px;
-            font-size: 28px;
-            font-weight: 600;
-        }
-        .subtitle {
-            color: #696969;
-            margin-bottom: 30px;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-        .install-btn {
-            background: #007a5a;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-block;
-            transition: background 0.2s ease;
-        }
-        .install-btn:hover {
-            background: #005a42;
-        }
-        .features {
-            margin-top: 30px;
-            text-align: left;
-        }
-        .feature {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-        .feature-icon {
-            width: 20px;
-            height: 20px;
-            background: #007a5a;
-            border-radius: 50%;
-            margin-right: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 12px;
-        }
-    </style>
+    <title>[[${installationTitle}]]</title>
+    <link rel="stylesheet" href="/styles/install.css">
 </head>
 <body>
-    <div class="container">
-        <div class="logo">O</div>
-        <h1>ONLYOFFICE for Slack</h1>
-        <p class="subtitle">Collaborate on documents directly from Slack with powerful editing capabilities.</p>
+    <div class="installation">
+        <img src="/styles/images/installation_logo.svg" alt="ONLYOFFICE Logo" class="installation__logo">
+        <h1 class="installation__title">
+            [[${installationTitle}]]
+        </h1>
+        <p class="installation__subtitle">
+            [[${installationSubtitle}]]
+        </p>
         
-        <a th:href="${installationUrl}" class="install-btn">Add to Slack</a>
+        <a th:href="${installationUrl}" class="installation__button">
+            [[${installationButton}]]
+        </a>
         
-        <div class="features">
-            <div class="feature">
-                <div class="feature-icon">✓</div>
-                <span>Edit documents directly from Slack messages</span>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">✓</div>
-                <span>Real-time collaboration with team members</span>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">✓</div>
-                <span>Support for Word, Excel, and PowerPoint files</span>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">✓</div>
-                <span>Secure document editing and sharing</span>
+        <div class="installation__content">
+            <div class="features">
+                <div class="features__item">
+                    <div class="features__icon">✓</div>
+                    <span>[[${installationFeatureEdit}]]</span>
+                </div>
+                <div class="features__item">
+                    <div class="features__icon">✓</div>
+                    <span>[[${installationFeatureCollaboration}]]</span>
+                </div>
+                <div class="features__item">
+                    <div class="features__icon">✓</div>
+                    <span>[[${installationFeatureFileSupport}]]</span>
+                </div>
+                <div class="features__item">
+                    <div class="features__icon">✓</div>
+                    <span>[[${installationFeatureSecureEditing}]]</span>
+                </div>
             </div>
         </div>
     </div>
