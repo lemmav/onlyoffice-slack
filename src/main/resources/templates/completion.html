@@ -5,41 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, caller-scalable=no, minimal-ui" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <!--
-    *
-    * (c) Copyright Ascensio System SIA 2022
-    *
-    * Licensed under the Apache License, Version 2.0 (the "License");
-    * you may not use this file except in compliance with the License.
-    * You may obtain a copy of the License at
-    *
-    *     http://www.apache.org/licenses/LICENSE-2.0
-    *
-    * Unless required by applicable law or agreed to in writing, software
-    * distributed under the License is distributed on an "AS IS" BASIS,
-    * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    * See the License for the specific language governing permissions and
-    * limitations under the License.
-    *
-    -->
-    <title>ONLYOFFICE</title>
+    <title>[[${completionTitle}]]</title>
+
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
-    <link rel="stylesheet" href="/styles/installation.css">
+    <link href='https://fonts.googleapis.com/css?family=Lato:700&display=swap' rel='stylesheet'>
     <link rel="stylesheet" href="/styles/root.css">
+    <link rel="stylesheet" href="/styles/completion.css">
 </head>
-<body>
-<div class="container">
-    <div class="container__header">
-        <h1>Congrats!</h1>
-        <h1>ONLYOFFICE is activated now!</h1>
+<body class="completion-page">
+    <div class="completion-container">
+        <img src="/styles/images/logo_long.svg" alt="ONLYOFFICE Logo" class="completion__logo">
+        <img src="/styles/images/background.svg" alt="ONLYOFFICE Background" class="completion-container__illustration">
+        <div class="completion-container__title-block">
+            [[${completionText}]]
+        </div>
+        <div class="completion-container__description">
+            [[${completionDescription}]]
+        </div>
+        <a href="https://app.slack.com" class="completion-container__button">
+            [[${completionButton}]]
+        </a>
     </div>
-    <div class="container__main">
-        <span>Check out Slack tips on HOW TO GET STARTED</span>
-    </div>
-    <div class="container__footer">
-        <a href="https://app.slack.com" class="container__footer__button">BACK TO SLACK</a>
-    </div>
-</div>
 </body>
 </html>

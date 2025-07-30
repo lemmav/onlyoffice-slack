@@ -5,41 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, caller-scalable=no, minimal-ui" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <!--
-    *
-    * (c) Copyright Ascensio System SIA 2022
-    *
-    * Licensed under the Apache License, Version 2.0 (the "License");
-    * you may not use this file except in compliance with the License.
-    * You may obtain a copy of the License at
-    *
-    *     http://www.apache.org/licenses/LICENSE-2.0
-    *
-    * Unless required by applicable law or agreed to in writing, software
-    * distributed under the License is distributed on an "AS IS" BASIS,
-    * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    * See the License for the specific language governing permissions and
-    * limitations under the License.
-    *
-    -->
-    <title>ONLYOFFICE</title>
+    <title>[[${cancellationTitle}]]</title>
+
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
-    <link rel="stylesheet" href="/styles/installation.css">
+    <link href='https://fonts.googleapis.com/css?family=Lato:700,400&display=swap' rel='stylesheet'>
     <link rel="stylesheet" href="/styles/root.css">
+    <link rel="stylesheet" href="/styles/cancellation.css">
 </head>
-<body>
-<div class="container">
-    <div class="container__header">
-        <h1>Oops!</h1>
-        <h1>Something went wrong.</h1>
+<body class="cancellation-page">
+    <div class="cancellation-container">
+        <img src="/styles/images/logo_long.svg" alt="ONLYOFFICE Logo" class="cancellation__logo">
+        <img src="/styles/images/background_error.svg" alt="ONLYOFFICE Error Background" class="cancellation-container__illustration">
+        <div class="cancellation-container__title-block">
+            [[${cancellationText}]]
+        </div>
+        <div class="cancellation-container__description">
+            [[${cancellationDescription}]]
+        </div>
+        <a href="https://app.slack.com" class="cancellation-container__button">
+            [[${cancellationButton}]]
+        </a>
     </div>
-    <div class="container__main">
-        <span>Try reinstalling ONLYOFFICE App from Slack App Directory</span>
-    </div>
-    <div class="container__footer">
-        <a href="https://app.slack.com" class="container__footer__button">BACK TO APP PAGE</a>
-    </div>
-</div>
 </body>
 </html>
