@@ -1,4 +1,4 @@
-.notavailable-page {
+.nosettings-page {
     min-height: 100vh;
     background: #fff;
     font-family: 'Open Sans', Arial, sans-serif;
@@ -10,7 +10,7 @@
     margin: 0;
 }
 
-.notavailable-container {
+.nosettings-container {
     width: 100%;
     max-width: 400px;
     display: flex;
@@ -24,7 +24,7 @@
     padding: 0;
 }
 
-.notavailable__logo {
+.nosettings__logo {
     display: block;
     margin: 0 auto 32px auto;
     width: 160px;
@@ -32,7 +32,7 @@
     height: auto;
 }
 
-.notavailable-container__illustration {
+.nosettings-container__illustration {
     display: block;
     margin: 0 auto 0 auto;
     width: 360px;
@@ -41,7 +41,7 @@
     max-height: 60vh;
 }
 
-.notavailable-container__title-block {
+.nosettings-container__title-block {
     font-family: 'Lato', Arial, sans-serif;
     font-weight: 700;
     font-style: normal;
@@ -54,7 +54,7 @@
     margin-bottom: 16px;
 }
 
-.notavailable-container__description {
+.nosettings-container__description {
     font-family: 'Lato', Arial, sans-serif;
     font-weight: 400;
     font-style: normal;
@@ -67,10 +67,10 @@
     margin-top: 0;
 }
 
-.notavailable-container__button {
+.nosettings-container__button {
     display: block;
     margin: 16px auto 0 auto;
-    width: 160px;
+    width: 180px;
     height: 36px;
     background: #007A5A;
     color: #fff;
@@ -88,35 +88,35 @@
     box-sizing: border-box;
 }
 
-.notavailable-container__button:hover {
+.nosettings-container__button:hover {
     background: #005f47;
 }
 
 @media (max-width: 500px) {
-    .notavailable-container {
+    .nosettings-container {
         max-width: 98vw;
     }
-    .notavailable__logo {
+    .nosettings__logo {
         width: 120px;
         margin-bottom: 24px;
     }
-    .notavailable-container__illustration {
+    .nosettings-container__illustration {
         width: 90vw;
         height: auto;
         max-width: 360px;
         max-height: 360px;
         margin-bottom: 0;
     }
-    .notavailable-container__title-block {
+    .nosettings-container__title-block {
         font-size: 16px;
         line-height: 22px;
         margin-top: 16px;
     }
-    .notavailable-container__description {
+    .nosettings-container__description {
         font-size: 13px;
         line-height: 15px;
     }
-    .notavailable-container__button {
+    .nosettings-container__button {
         font-size: 13px;
         width: 120px;
         height: 32px;
