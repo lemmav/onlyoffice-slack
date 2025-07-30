@@ -223,6 +223,7 @@ public class InstallationService implements RotatingInstallationService {
   }
 
   @Override
+  @Transactional(rollbackFor = Exception.class)
   public Installer findInstallerWithRotation(String enterpriseId, String teamId, String userId) {
     try {
       MDC.put("team_id", teamId);
