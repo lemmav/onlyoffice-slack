@@ -1,7 +1,6 @@
 package com.onlyoffice.slack.handler.action.slack;
 
 import static com.slack.api.model.block.Blocks.*;
-import static com.slack.api.model.block.composition.BlockCompositions.markdownText;
 import static com.slack.api.model.block.composition.BlockCompositions.plainText;
 import static com.slack.api.model.block.element.BlockElements.button;
 import static com.slack.api.model.view.Views.*;
@@ -92,8 +91,26 @@ public class SlackOpenFileManagerMessageShortcutRequestHandler implements Messag
 
   private void addFileBlock(final List<LayoutBlock> blocks, final File file) {
     blocks.add(divider());
-    blocks.add(section(s -> s.text(markdownText(buildFileInfo(file)))));
-    blocks.add(buildFileActionsBlock(file));
+    var sessionId = UUID.randomUUID();
+    var openButton =
+        button(
+            b ->
+                b.text(
+                        plainText(
+                            messageSource.getMessage(
+                                slackMessageConfigurationProperties
+                                    .getMessageManagerModalOpenButton(),
+                                null,
+                                Locale.ENGLISH)))
+                    .value(slackFileActionBuilder.build(sessionId.toString(), file.getId()))
+                    .url(buildEditorUrl(sessionId))
+                    .actionId(slackConfigurationProperties.getOpenFileActionId())
+                    .style("primary"));
+    blocks.add(
+        section(
+            s ->
+                s.text(plainText(file.getName() + "  —  " + (file.getSize() / 1024) + " KB"))
+                    .accessory(openButton)));
   }
 
   private List<LayoutBlock> buildFileBlocks(final Message message) {
