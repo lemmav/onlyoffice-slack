@@ -49,10 +49,10 @@ public class BotUser {
   private String botScope;
 
   @Builder.Default
-  @OneToMany(mappedBy = "bot", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "bot", fetch = FetchType.LAZY)
   private Set<InstallerUser> users = new HashSet<>();
 
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "team_id",
       referencedColumnName = "team_id",

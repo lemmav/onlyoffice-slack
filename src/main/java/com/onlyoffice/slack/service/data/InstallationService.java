@@ -123,8 +123,9 @@ public class InstallationService implements RotatingInstallationService {
       if (users.isPresent() && !users.get().isEmpty()) {
         log.info("Deleting installer users for bot");
 
-        botCache.delete(bot.getTeamId());
         userCache.clear();
+        botCache.delete(bot.getTeamId());
+        userRepository.deleteAllByTeamId(bot.getTeamId());
         botRepository.deleteById(new BotUserId(bot.getTeamId(), botId));
 
         log.info("Bot and associated installer users deleted successfully");
@@ -281,8 +282,9 @@ public class InstallationService implements RotatingInstallationService {
       MDC.put("team_id", teamId);
       log.info("Deleting all bots for team");
 
-      botCache.clear();
       userCache.clear();
+      botCache.clear();
+      userRepository.deleteAllByTeamId(teamId);
       botRepository.deleteByTeamId(teamId);
 
       log.info("All bots deleted for team");

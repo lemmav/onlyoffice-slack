@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.hazelcast.map.IMap;
 import com.onlyoffice.slack.configuration.ServerConfigurationProperties;
+import com.onlyoffice.slack.configuration.slack.SlackMessageConfigurationProperties;
 import com.onlyoffice.slack.service.data.RotatingInstallationService;
 import com.onlyoffice.slack.service.data.TeamSettingsService;
 import com.onlyoffice.slack.service.document.core.ConfigManagerService;
@@ -25,6 +26,7 @@ import com.slack.api.model.File;
 import com.slack.api.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
 
 class DocumentEditorControllerTests {
@@ -35,6 +37,8 @@ class DocumentEditorControllerTests {
   private IMap<String, EditorSession> sessions;
   private TeamSettingsService teamSettingsService;
   private App app;
+  private SlackMessageConfigurationProperties slackMessageConfigurationProperties;
+  private MessageSource messageSource;
   private Model model;
 
   private EditorSession createValidEditorSession() {
@@ -119,6 +123,8 @@ class DocumentEditorControllerTests {
     sessions = mock(IMap.class);
     teamSettingsService = mock(TeamSettingsService.class);
     app = mock(App.class);
+    slackMessageConfigurationProperties = mock(SlackMessageConfigurationProperties.class);
+    messageSource = mock(MessageSource.class);
     model = mock(Model.class);
 
     controller =
@@ -128,7 +134,9 @@ class DocumentEditorControllerTests {
             configManagerService,
             sessions,
             teamSettingsService,
-            app);
+            app,
+            slackMessageConfigurationProperties,
+            messageSource);
   }
 
   @Test
