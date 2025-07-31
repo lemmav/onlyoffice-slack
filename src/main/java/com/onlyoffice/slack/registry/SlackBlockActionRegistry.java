@@ -17,7 +17,7 @@ public class SlackBlockActionRegistry {
   @Autowired
   public SlackBlockActionRegistry(final List<SlackBlockActionHandlerRegistrar> registrars) {
     for (var registrar : registrars) {
-      register(registrar.getId(), registrar.getAction());
+      for (var action : registrar.getIds()) register(action, registrar.getAction());
     }
   }
 

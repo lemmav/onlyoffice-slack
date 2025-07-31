@@ -10,6 +10,7 @@ import com.slack.api.bolt.context.builtin.ActionContext;
 import com.slack.api.bolt.handler.builtin.BlockActionHandler;
 import com.slack.api.methods.request.files.FilesInfoRequest;
 import com.slack.api.methods.response.files.FilesInfoResponse;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,15 +92,15 @@ public class SlackOpenFileBlockActionHandler implements SlackBlockActionHandlerR
   }
 
   @Override
-  public String getId() {
-    return slackConfigurationProperties.getOpenFileActionId();
+  public List<String> getIds() {
+    return List.of(slackConfigurationProperties.getOpenFileActionId());
   }
 
   @Override
   public BlockActionHandler getAction() {
     return (req, ctx) -> {
       MDC.put("team_id", ctx.getTeamId());
-      MDC.put("handler_id", getId());
+      MDC.put("handler_id", slackConfigurationProperties.getOpenFileActionId());
 
       try {
         log.info("Processing block action request for current handler");

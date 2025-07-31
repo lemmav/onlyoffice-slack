@@ -7,6 +7,7 @@ import com.onlyoffice.slack.service.document.core.SettingsValidationService;
 import com.onlyoffice.slack.transfer.request.SubmitSettingsRequest;
 import com.slack.api.bolt.handler.builtin.BlockActionHandler;
 import com.slack.api.model.view.ViewState;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -66,8 +67,8 @@ public class SlackSubmitSettingsBlockActionHandler implements SlackBlockActionHa
   }
 
   @Override
-  public String getId() {
-    return slackConfigurationProperties.getSubmitSettingsActionId();
+  public List<String> getIds() {
+    return List.of(slackConfigurationProperties.getSubmitSettingsActionId());
   }
 
   @Override
