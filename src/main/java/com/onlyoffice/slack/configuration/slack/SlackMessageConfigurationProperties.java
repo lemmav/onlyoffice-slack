@@ -24,6 +24,13 @@ public class SlackMessageConfigurationProperties {
   private String messageCompletionDescription = "completion.description";
   private String messageCompletionButton = "completion.button";
 
+  private String messageHelpGreeting = "help.greeting";
+  private String messageHelpInstructions = "help.instructions";
+  private String messageHelpLearnMore = "help.learnMore";
+  private String messageHelpLearnMoreButton = "help.learnMoreButton";
+  private String messageHelpFeedback = "help.feedback";
+  private String messageHelpFeedbackButton = "help.feedbackButton";
+
   private String messageHomeTitle = "home.title";
   private String messageHomeSettingsTitle = "home.settings.title";
   private String messageHomeDemoActive = "home.demo.active";

@@ -7,16 +7,16 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 @Getter
-@Configuration
+@Component
 public class SlackBlockActionRegistry {
   private final Map<String, BlockActionHandler> registry = new HashMap<>();
 
   @Autowired
   public SlackBlockActionRegistry(final List<SlackBlockActionHandlerRegistrar> registrars) {
-    for (SlackBlockActionHandlerRegistrar registrar : registrars) {
+    for (var registrar : registrars) {
       register(registrar.getId(), registrar.getAction());
     }
   }

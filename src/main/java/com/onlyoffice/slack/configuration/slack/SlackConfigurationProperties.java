@@ -30,6 +30,8 @@ public class SlackConfigurationProperties {
   private String readMoreActionId = "read_more";
   private String suggestFeatureActionId = "suggest_feature";
   private String getCloudActionId = "get_cloud";
+  private String shareFeedbackActionId = "share_feedback";
+  private String learnMoreActionId = "learn_more";
 
   private String editorPathPattern = "%s/editor?session=%s";
 

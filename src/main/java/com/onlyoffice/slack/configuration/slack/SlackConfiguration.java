@@ -1,6 +1,7 @@
 package com.onlyoffice.slack.configuration.slack;
 
 import com.onlyoffice.slack.registry.SlackBlockActionRegistry;
+import com.onlyoffice.slack.registry.SlackSlashCommandHandlerRegistry;
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.AppConfig;
 import com.slack.api.bolt.handler.BoltEventHandler;
@@ -24,6 +25,7 @@ import org.springframework.context.annotation.Configuration;
 public class SlackConfiguration {
   private final SlackConfigurationProperties properties;
   private final SlackBlockActionRegistry blockActionRegistry;
+  private final SlackSlashCommandHandlerRegistry commandHandlerRegistry;
 
   private final BoltEventHandler<AppHomeOpenedEvent> appHomeOpenedEventBoltEventHandler;
   private final MessageShortcutHandler slackMessageShortcutHandler;
@@ -61,6 +63,7 @@ public class SlackConfiguration {
     app.event(AppHomeOpenedEvent.class, appHomeOpenedEventBoltEventHandler);
     app.messageShortcut(properties.getFileManagerShortcutId(), slackMessageShortcutHandler);
     blockActionRegistry.getRegistry().forEach(app::blockAction);
+    commandHandlerRegistry.getRegistry().forEach(app::command);
 
     return app;
   }
