@@ -13,6 +13,7 @@ import com.onlyoffice.slack.util.SafeOptional;
 import com.onlyoffice.slack.util.TriFunction;
 import com.slack.api.bolt.App;
 import com.slack.api.methods.SlackApiException;
+import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.request.files.FilesInfoRequest;
 import com.slack.api.methods.request.files.FilesUploadV2Request;
 import com.slack.api.methods.response.files.FilesInfoResponse;
@@ -144,6 +145,36 @@ public class DocumentServerSaveCallbackHandler implements DocumentServerCallback
           "Failed to upload a new file to Slack: %s".formatted(uploadResponse.getError()));
   }
 
+  private void sendPersonalMessage(
+      final String ownerId,
+      final String fileName,
+      final String botToken,
+      final String editorUserId) {
+    try {
+      log.info("Sending personal message to file owner {}", ownerId);
+
+      var message = String.format("Your file %s has been edited by <@%s>", fileName, editorUserId);
+
+      var response =
+          app.client()
+              .chatPostMessage(
+                  ChatPostMessageRequest.builder()
+                      .token(botToken)
+                      .channel(ownerId)
+                      .text(message)
+                      .build());
+
+      if (!response.isOk()) {
+        log.warn(
+            "Failed to send personal message to file owner {}: {}", ownerId, response.getError());
+      } else {
+        log.info("Personal message sent successfully to file owner {} from bot", ownerId);
+      }
+    } catch (IOException | SlackApiException e) {
+      log.warn("Error sending personal message to file owner {}: {}", ownerId, e.getMessage());
+    }
+  }
+
   @Override
   public Status getStatus() {
     return Status.SAVE;
@@ -211,6 +242,10 @@ public class DocumentServerSaveCallbackHandler implements DocumentServerCallback
             targetChannelId,
             installer.getInstallerUserAccessToken(),
             messageTs);
+
+        if (!file.getUser().equalsIgnoreCase(userId))
+          sendPersonalMessage(
+              file.getUser(), file.getName(), installer.getBotAccessToken(), userId);
       } catch (IOException | SlackApiException e) {
         throw new DocumentCallbackException(
             "Could not upload a new file for user %s in team %s".formatted(userId, teamId), e);
