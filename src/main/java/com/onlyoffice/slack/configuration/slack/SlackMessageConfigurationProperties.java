@@ -25,7 +25,7 @@ public class SlackMessageConfigurationProperties {
   private String messageCompletionButton = "completion.button";
 
   private String messageHomeTitle = "home.title";
-  private String messageHomeDescription = "home.description";
+  private String messageHomeSettingsTitle = "home.settings.title";
   private String messageHomeDemoActive = "home.demo.active";
   private String messageHomeInputHttpsAddressLabel = "home.input.httpsAddress.label";
   private String messageHomeInputHttpsAddressPlaceholder = "home.input.httpsAddress.placeholder";
@@ -34,10 +34,19 @@ public class SlackMessageConfigurationProperties {
   private String messageHomeInputDemoSettingsLabel = "home.input.demoSettings.label";
   private String messageHomeCheckboxEnableDemo = "home.checkbox.enableDemo";
   private String messageHomeButtonSaveSettings = "home.button.saveSettings";
-  private String messageHomeBannerTitle = "home.banner.title";
-  private String messageHomeBannerDescription = "home.banner.description";
-  private String messageHomeImageAltText = "home.image.altText";
   private String messageHomeErrorRenderView = "home.error.renderView";
+  private String messageHomeWelcomeTitle = "home.welcome.title";
+  private String messageHomeWelcomeDescription = "home.welcome.description";
+  private String messageHomeReadMore = "home.readMore";
+  private String messageHomeSuggestFeature = "home.suggestFeature";
+  private String messageHomeReadMoreEmoji = "home.readMore.emoji";
+  private String messageHomeSuggestFeatureEmoji = "home.suggestFeature.emoji";
+  private String messageHomeCloudTitle = "home.cloud.title";
+  private String messageHomeCloudDescription = "home.cloud.description";
+  private String messageHomeCloudButton = "home.cloud.button";
+  private String messageHomeSecretHelp = "home.secret.help";
+  private String messageHomeHeaderHelp = "home.header.help";
+  private String messageHomeDemoHelp = "home.demo.help";
 
   private String messageInstallButton = "install.button";
   private String messageInstallTitle = "install.title";

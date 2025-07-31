@@ -27,6 +27,13 @@ public class SlackConfigurationProperties {
   private String fileManagerShortcutId = "open_file_manager";
   private String openFileActionId = "open_file";
   private String submitSettingsActionId = "submit_settings";
+  private String readMoreActionId = "read_more";
+  private String suggestFeatureActionId = "suggest_feature";
+  private String getCloudActionId = "get_cloud";
 
   private String editorPathPattern = "%s/editor?session=%s";
+
+  private String welcomeReadMoreUrl = "https://github.com/ONLYOFFICE/onlyoffice-slack";
+  private String welcomeSuggestFeatureUrl = "https://github.com/ONLYOFFICE/onlyoffice-slack/issues";
+  private String getCloudUrl = "https://www.onlyoffice.com";
 }
