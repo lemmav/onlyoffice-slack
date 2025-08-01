@@ -4,6 +4,7 @@ import com.hazelcast.map.MapStore;
 import com.onlyoffice.slack.persistence.entity.ActiveFileSession;
 import com.onlyoffice.slack.persistence.repository.ActiveFileSessionRepository;
 import com.onlyoffice.slack.transfer.cache.DocumentSessionKey;
+import io.github.resilience4j.retry.annotation.Retry;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +21,8 @@ public class ActiveFileSessionService implements MapStore<String, DocumentSessio
   @Autowired private ActiveFileSessionRepository activeFileSessionRepository;
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
+  @Retry(name = "active_file_session")
+  @Transactional(rollbackFor = Exception.class, timeout = 2)
   public void store(String fileId, DocumentSessionKey session) {
     try {
       MDC.put("file_id", fileId);
@@ -42,7 +44,8 @@ public class ActiveFileSessionService implements MapStore<String, DocumentSessio
   }
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
+  @Retry(name = "active_file_session")
+  @Transactional(rollbackFor = Exception.class, timeout = 2)
   public void storeAll(Map<String, DocumentSessionKey> map) {
     activeFileSessionRepository.saveAll(
         map.entrySet().stream()
@@ -60,7 +63,8 @@ public class ActiveFileSessionService implements MapStore<String, DocumentSessio
   }
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
+  @Retry(name = "active_file_session")
+  @Transactional(rollbackFor = Exception.class, timeout = 2)
   public void delete(String fileId) {
     try {
       MDC.put("file_id", fileId);
@@ -75,7 +79,8 @@ public class ActiveFileSessionService implements MapStore<String, DocumentSessio
   }
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
+  @Retry(name = "active_file_session")
+  @Transactional(rollbackFor = Exception.class, timeout = 2)
   public void deleteAll(Collection<String> ids) {
     log.info("Deleting {} document sessions", ids.size());
 
@@ -85,7 +90,8 @@ public class ActiveFileSessionService implements MapStore<String, DocumentSessio
   }
 
   @Override
-  @Transactional(readOnly = true)
+  @Retry(name = "active_file_session")
+  @Transactional(readOnly = true, timeout = 1)
   public DocumentSessionKey load(String fileId) {
     try {
       MDC.put("file_id", fileId);
@@ -110,7 +116,8 @@ public class ActiveFileSessionService implements MapStore<String, DocumentSessio
   }
 
   @Override
-  @Transactional(readOnly = true)
+  @Retry(name = "active_file_session")
+  @Transactional(readOnly = true, timeout = 2)
   public Map<String, DocumentSessionKey> loadAll(Collection<String> keys) {
     log.info("Loading document sessions");
 

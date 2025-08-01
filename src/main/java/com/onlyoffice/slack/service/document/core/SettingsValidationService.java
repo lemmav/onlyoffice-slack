@@ -6,6 +6,7 @@ import com.onlyoffice.slack.transfer.command.DocumentServerCommand;
 import com.onlyoffice.slack.transfer.command.DocumentServerTokenCommand;
 import com.onlyoffice.slack.transfer.command.DocumentServerVersion;
 import com.onlyoffice.slack.transfer.request.SubmitSettingsRequest;
+import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -75,6 +76,7 @@ public class SettingsValidationService implements DocumentSettingsValidationServ
   }
 
   @Override
+  @Retry(name = "settings_validation")
   public void validateConnection(@NotNull final SubmitSettingsRequest request) throws IOException {
     try {
       MDC.put("address", request.getAddress());

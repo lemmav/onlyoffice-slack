@@ -15,6 +15,7 @@ import com.slack.api.bolt.model.Installer;
 import com.slack.api.bolt.model.builtin.DefaultBot;
 import com.slack.api.bolt.model.builtin.DefaultInstaller;
 import com.slack.api.methods.request.oauth.OAuthV2AccessRequest;
+import io.github.resilience4j.retry.annotation.Retry;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
@@ -53,7 +54,8 @@ public class InstallationService implements RotatingInstallationService {
   }
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
+  @Retry(name = "installation")
+  @Transactional(rollbackFor = Exception.class, timeout = 2)
   public void saveInstallerAndBot(Installer installer) {
     var slackBot = installer.toBot();
     try {
@@ -102,7 +104,8 @@ public class InstallationService implements RotatingInstallationService {
   }
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
+  @Retry(name = "installation")
+  @Transactional(rollbackFor = Exception.class, timeout = 3)
   public void deleteBot(Bot bot) {
     try {
       MDC.put("team_id", bot.getTeamId());
@@ -136,7 +139,8 @@ public class InstallationService implements RotatingInstallationService {
   }
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
+  @Retry(name = "installation")
+  @Transactional(rollbackFor = Exception.class, timeout = 3)
   public void deleteInstaller(Installer installer) {
     try {
       MDC.put("team_id", installer.getTeamId());
@@ -161,7 +165,8 @@ public class InstallationService implements RotatingInstallationService {
   }
 
   @Override
-  @Transactional(readOnly = true)
+  @Retry(name = "installation")
+  @Transactional(readOnly = true, timeout = 1)
   public Bot findBot(String enterpriseId, String teamId) {
     try {
       MDC.put("team_id", teamId);
@@ -176,7 +181,8 @@ public class InstallationService implements RotatingInstallationService {
   }
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
+  @Retry(name = "installation")
+  @Transactional(rollbackFor = Exception.class, timeout = 2)
   public void saveBot(Bot bot) throws Exception {
     try {
       MDC.put("team_id", bot.getTeamId());
@@ -204,7 +210,8 @@ public class InstallationService implements RotatingInstallationService {
   }
 
   @Override
-  @Transactional(readOnly = true)
+  @Retry(name = "installation")
+  @Transactional(readOnly = true, timeout = 1)
   public Installer findInstaller(String enterpriseId, String teamId, String userId) {
     try {
       MDC.put("team_id", teamId);
@@ -224,7 +231,7 @@ public class InstallationService implements RotatingInstallationService {
   }
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
+  @Transactional(rollbackFor = Exception.class, timeout = 4)
   public Installer findInstallerWithRotation(String enterpriseId, String teamId, String userId) {
     try {
       MDC.put("team_id", teamId);
@@ -276,7 +283,8 @@ public class InstallationService implements RotatingInstallationService {
   }
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
+  @Retry(name = "installation")
+  @Transactional(rollbackFor = Exception.class, timeout = 3)
   public void deleteAll(String enterpriseId, String teamId) {
     try {
       MDC.put("team_id", teamId);

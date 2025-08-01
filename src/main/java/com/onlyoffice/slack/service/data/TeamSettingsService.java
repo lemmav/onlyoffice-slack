@@ -8,6 +8,7 @@ import com.onlyoffice.slack.service.cryptography.AesEncryptionService;
 import com.onlyoffice.slack.transfer.request.SubmitSettingsRequest;
 import com.onlyoffice.slack.transfer.response.SettingsResponse;
 import com.slack.api.bolt.context.Context;
+import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ public class TeamSettingsService implements SettingsService {
   private final MessageSource messageSource;
 
   @Override
+  @Retry(name = "team_settings")
   @Transactional(rollbackFor = Exception.class, timeout = 2)
   public void saveSettings(
       @NotNull final Context ctx, @NotNull final SubmitSettingsRequest request) {
@@ -58,6 +60,7 @@ public class TeamSettingsService implements SettingsService {
   }
 
   @Override
+  @Retry(name = "team_settings")
   @Transactional(readOnly = true, timeout = 1)
   public SettingsResponse findSettings(@NotBlank final String teamId) {
     var maybeSettings = settingsRepository.findById(teamId);
@@ -108,6 +111,7 @@ public class TeamSettingsService implements SettingsService {
   }
 
   @Override
+  @Retry(name = "team_settings")
   @Transactional(readOnly = true, timeout = 1)
   public SettingsResponse alwaysFindSettings(@NotBlank final String teamId) {
     var maybeSettings = settingsRepository.findById(teamId);
