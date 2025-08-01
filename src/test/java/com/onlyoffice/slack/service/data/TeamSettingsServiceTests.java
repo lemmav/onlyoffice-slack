@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.onlyoffice.slack.configuration.ServerConfigurationProperties;
+import com.onlyoffice.slack.configuration.slack.SlackMessageConfigurationProperties;
 import com.onlyoffice.slack.exception.SettingsConfigurationException;
 import com.onlyoffice.slack.persistence.entity.TeamSettings;
 import com.onlyoffice.slack.persistence.repository.TeamSettingsRepository;
@@ -17,12 +18,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.MessageSource;
 
 @ExtendWith(MockitoExtension.class)
 class TeamSettingsServiceTests {
+  @Mock private SlackMessageConfigurationProperties slackMessageConfigurationProperties;
   @Mock private ServerConfigurationProperties configurationProperties;
   @Mock private TeamSettingsRepository settingsRepository;
   @Mock private AesEncryptionService encryptionService;
+  @Mock private MessageSource messageSource;
   @InjectMocks private TeamSettingsService service;
 
   @Test
@@ -52,6 +56,14 @@ class TeamSettingsServiceTests {
     var req = mock(SubmitSettingsRequest.class);
 
     when(req.isValidConfiguration()).thenReturn(false);
+    when(slackMessageConfigurationProperties.getErrorSettingsTitle())
+        .thenReturn("error.settings.title");
+    when(slackMessageConfigurationProperties.getErrorSettingsInvalidConfigurationText())
+        .thenReturn("error.settings.invalid.text");
+    when(slackMessageConfigurationProperties.getErrorSettingsButton())
+        .thenReturn("error.settings.button");
+    when(messageSource.getMessage(anyString(), any(), any())).thenReturn("Test message");
+
     assertThrows(SettingsConfigurationException.class, () -> service.saveSettings(ctx, req));
   }
 
@@ -71,6 +83,13 @@ class TeamSettingsServiceTests {
     when(settings.getDemoEnabled()).thenReturn(false);
     when(settings.getAddress()).thenReturn(null);
     when(settingsRepository.findById("team")).thenReturn(Optional.of(settings));
+    when(slackMessageConfigurationProperties.getErrorSettingsTitle())
+        .thenReturn("error.settings.title");
+    when(slackMessageConfigurationProperties.getErrorSettingsIncompleteText())
+        .thenReturn("error.settings.incomplete.text");
+    when(slackMessageConfigurationProperties.getErrorSettingsButton())
+        .thenReturn("error.settings.button");
+    when(messageSource.getMessage(anyString(), any(), any())).thenReturn("Test message");
 
     assertThrows(SettingsConfigurationException.class, () -> service.findSettings("team"));
   }
@@ -87,6 +106,14 @@ class TeamSettingsServiceTests {
     when(demoProps.getDurationDays()).thenReturn(5);
     when(configurationProperties.getDemo()).thenReturn(demoProps);
     when(settingsRepository.findById("team")).thenReturn(Optional.of(settings));
+    when(slackMessageConfigurationProperties.getErrorSettingsTitle())
+        .thenReturn("error.settings.title");
+    when(slackMessageConfigurationProperties.getErrorSettingsDemoText())
+        .thenReturn("error.settings.demo.text");
+    when(slackMessageConfigurationProperties.getErrorSettingsButton())
+        .thenReturn("error.settings.button");
+    when(messageSource.getMessage(anyString(), any(), any())).thenReturn("Test message");
+
     assertThrows(SettingsConfigurationException.class, () -> service.findSettings("team"));
   }
 

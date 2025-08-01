@@ -14,6 +14,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "slack.application.messages")
 public class SlackMessageConfigurationProperties {
+  private String errorSettingsTitle = "error.settings.title";
+  private String errorSettingsButton = "error.settings.button";
+  private String errorSettingsInvalidConfigurationText = "error.settings.invalid.text";
+  private String errorSettingsIncompleteText = "error.settings.incomplete.text";
+  private String errorSettingsDemoText = "error.settings.demo.text";
+
   private String messageCancellationTitle = "cancellation.title";
   private String messageCancellationText = "cancellation.text";
   private String messageCancellationDescription = "cancellation.description";

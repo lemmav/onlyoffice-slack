@@ -43,22 +43,11 @@ public class GlobalErrorController implements ErrorController {
   @ExceptionHandler(SettingsConfigurationException.class)
   public String handleSettingsConfigurationException(
       final SettingsConfigurationException ex, final Model model) {
-    log.error(
-        "Settings configuration error: type={}, message={}",
-        ex.getErrorType(),
-        ex.getMessage(),
-        ex);
+    model.addAttribute("title", ex.getTitle());
+    model.addAttribute("description", ex.getMessage());
+    model.addAttribute("button", ex.getAction());
 
-    var title = getSettingsErrorTitle(ex.getErrorType());
-    var message = ex.getMessage();
-    var buttonText = "Back to Slack";
-
-    model.addAttribute("errorTitle", title);
-    model.addAttribute("errorMessage", message);
-    model.addAttribute("buttonText", buttonText);
-    model.addAttribute("statusCode", 503); // Service Unavailable
-
-    return "error";
+    return "nosettings";
   }
 
   @ExceptionHandler(ResponseStatusException.class)
@@ -94,15 +83,6 @@ public class GlobalErrorController implements ErrorController {
     model.addAttribute("statusCode", 500);
 
     return "error";
-  }
-
-  private String getSettingsErrorTitle(
-      final SettingsConfigurationException.SettingsErrorType errorType) {
-    return switch (errorType) {
-      case NOT_CONFIGURED -> "App Not Configured";
-      case INCOMPLETE_CONFIGURATION -> "Configuration Incomplete";
-      case INVALID_CONFIGURATION -> "Configuration Invalid";
-    };
   }
 
   private String getErrorTitle(final HttpStatus status) {

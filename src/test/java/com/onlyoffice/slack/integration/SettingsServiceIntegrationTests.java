@@ -99,8 +99,7 @@ class SettingsServiceIntegrationTests extends BaseIntegrationTest {
               .build();
 
       assertThatThrownBy(() -> settingsService.saveSettings(mockContext, request))
-          .isInstanceOf(SettingsConfigurationException.class)
-          .hasMessageContaining("Could not validate settings");
+          .isInstanceOf(SettingsConfigurationException.class);
     }
 
     @Test
@@ -597,8 +596,7 @@ class SettingsServiceIntegrationTests extends BaseIntegrationTest {
               .build();
 
       assertThatThrownBy(() -> settingsService.saveSettings(mockContext, request))
-          .isInstanceOf(SettingsConfigurationException.class)
-          .hasMessageContaining("Could not validate settings");
+          .isInstanceOf(SettingsConfigurationException.class);
 
       var unchangedSettings = teamSettingsRepository.findById("test-team-id");
 
