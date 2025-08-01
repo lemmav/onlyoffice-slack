@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, caller-scalable=no, minimal-ui" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
-  <title>[[${badsessionTitle}]]</title>
+  <title>[[${title}]]</title>
 
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
@@ -18,14 +18,14 @@
   <img src="/styles/images/logo_long.svg" alt="ONLYOFFICE Logo" class="badsession__logo">
   <img src="/styles/images/background_notavailable.svg" alt="ONLYOFFICE Not Available Background" class="badsession-container__illustration">
   <div class="badsession-container__title-block">
-    [[${badsessionText}]]
+    [[${title}]]
   </div>
   <div class="badsession-container__description">
-    [[${badsessionDescription}]]
+    [[${text}]]
   </div>
-  <a href="https://slack.com/apps" class="badsession-container__button">
-    [[${badsessionButton}]]
-  </a>
+  <button onclick="window.close()" class="badsession-container__button">
+    [[${button}]]
+  </button>
 </div>
 </body>
 </html>

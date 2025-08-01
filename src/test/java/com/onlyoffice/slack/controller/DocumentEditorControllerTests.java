@@ -156,7 +156,7 @@ class DocumentEditorControllerTests {
 
     var result = controller.editorContent(sessionId, model);
 
-    assertEquals("error", result);
+    assertEquals("badsession", result);
   }
 
   @Test
@@ -170,7 +170,7 @@ class DocumentEditorControllerTests {
 
     var result = controller.editorContent(sessionId, model);
 
-    assertEquals("error", result);
+    assertEquals("notavailable", result);
   }
 
   @Test
@@ -200,7 +200,7 @@ class DocumentEditorControllerTests {
 
     var result = controller.editorContent(sessionId, model);
 
-    assertEquals("error", result);
+    assertEquals("badapicall", result);
   }
 
   @Test
@@ -226,7 +226,7 @@ class DocumentEditorControllerTests {
 
     var result = controller.editorContent(sessionId, model);
 
-    assertEquals("error", result);
+    assertEquals("badapicall", result);
   }
 
   @Test
@@ -252,7 +252,7 @@ class DocumentEditorControllerTests {
 
     var result = controller.editorContent(sessionId, model);
 
-    assertEquals("error", result);
+    assertEquals("badapicall", result);
   }
 
   @Test
@@ -283,6 +283,6 @@ class DocumentEditorControllerTests {
 
     var result = controller.editorContent(sessionId, model);
 
-    assertEquals("error", result);
+    assertEquals("badapicall", result);
   }
 }

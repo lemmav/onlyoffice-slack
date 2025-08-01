@@ -80,25 +80,38 @@ public class DocumentEditorController {
   public String editorContent(@RequestParam("session") final String sessionId, final Model model) {
     var storedSession = retrieveAndRemoveSession(sessionId);
     if (storedSession.isEmpty()) {
-      model.addAttribute("errorTitle", "Session Expired");
       model.addAttribute(
-          "errorMessage", "Your session has expired. Please open the file again from Slack.");
-      model.addAttribute("buttonText", "Back to Slack");
-      model.addAttribute("statusCode", 403);
-      return "error";
+          "title",
+          messageSource.getMessage(
+              slackMessageConfigurationProperties.getErrorSessionTitle(), null, Locale.ENGLISH));
+      model.addAttribute(
+          "text",
+          messageSource.getMessage(
+              slackMessageConfigurationProperties.getErrorSessionText(), null, Locale.ENGLISH));
+      model.addAttribute(
+          "button",
+          messageSource.getMessage(
+              slackMessageConfigurationProperties.getErrorSessionButton(), null, Locale.ENGLISH));
+      return "badsession";
     }
 
     var session = storedSession.get();
 
     var maybeUser = findInstaller(session);
     if (maybeUser.isEmpty()) {
-      model.addAttribute("errorTitle", "App Not Installed");
       model.addAttribute(
-          "errorMessage",
-          "The ONLYOFFICE app needs to be installed or reinstalled for your workspace. Please contact your Slack administrator.");
-      model.addAttribute("buttonText", "Back to Slack");
-      model.addAttribute("statusCode", 403);
-      return "error";
+          "title",
+          messageSource.getMessage(
+              slackMessageConfigurationProperties.getErrorAvailableTitle(), null, Locale.ENGLISH));
+      model.addAttribute(
+          "text",
+          messageSource.getMessage(
+              slackMessageConfigurationProperties.getErrorAvailableText(), null, Locale.ENGLISH));
+      model.addAttribute(
+          "button",
+          messageSource.getMessage(
+              slackMessageConfigurationProperties.getErrorAvailableButton(), null, Locale.ENGLISH));
+      return "notavailable";
     }
 
     var user = maybeUser.get();
@@ -118,13 +131,21 @@ public class DocumentEditorController {
       var userInfoOpt = userInfoFuture.get();
 
       if (fileInfoOpt.isEmpty() || userInfoOpt.isEmpty()) {
-        model.addAttribute("errorTitle", "Slack API Error");
         model.addAttribute(
-            "errorMessage",
-            "Failed to fetch file or user info from Slack. Please try again later.");
-        model.addAttribute("buttonText", "Back to Slack");
-        model.addAttribute("statusCode", 500);
-        return "error";
+            "title",
+            messageSource.getMessage(
+                slackMessageConfigurationProperties.getErrorSlackApiTitle(), null, Locale.ENGLISH));
+        model.addAttribute(
+            "text",
+            messageSource.getMessage(
+                slackMessageConfigurationProperties.getErrorSlackApiText(), null, Locale.ENGLISH));
+        model.addAttribute(
+            "button",
+            messageSource.getMessage(
+                slackMessageConfigurationProperties.getErrorSlackApiButton(),
+                null,
+                Locale.ENGLISH));
+        return "badapicall";
       }
 
       var config =
@@ -145,13 +166,19 @@ public class DocumentEditorController {
           String.format("%s/web-apps/apps/api/documents/api.js", settings.getAddress()));
       return "editor";
     } catch (InterruptedException | ExecutionException e) {
-      model.addAttribute("errorTitle", "Internal Error");
       model.addAttribute(
-          "errorMessage",
-          "An error occurred while loading the document editor. Please try again later.");
-      model.addAttribute("buttonText", "Back to Slack");
-      model.addAttribute("statusCode", 500);
-      return "error";
+          "title",
+          messageSource.getMessage(
+              slackMessageConfigurationProperties.getErrorSlackApiTitle(), null, Locale.ENGLISH));
+      model.addAttribute(
+          "text",
+          messageSource.getMessage(
+              slackMessageConfigurationProperties.getErrorSlackApiText(), null, Locale.ENGLISH));
+      model.addAttribute(
+          "button",
+          messageSource.getMessage(
+              slackMessageConfigurationProperties.getErrorSlackApiButton(), null, Locale.ENGLISH));
+      return "badapicall";
     }
   }
 

@@ -20,6 +20,18 @@ public class SlackMessageConfigurationProperties {
   private String errorSettingsIncompleteText = "error.settings.incomplete.text";
   private String errorSettingsDemoText = "error.settings.demo.text";
 
+  private String errorSessionTitle = "error.session.title";
+  private String errorSessionText = "error.session.text";
+  private String errorSessionButton = "error.session.button";
+
+  private String errorAvailableTitle = "error.available.title";
+  private String errorAvailableText = "error.available.text";
+  private String errorAvailableButton = "error.available.button";
+
+  private String errorSlackApiTitle = "error.slack.api.title";
+  private String errorSlackApiText = "error.slack.api.text";
+  private String errorSlackApiButton = "error.slack.api.button";
+
   private String messageCancellationTitle = "cancellation.title";
   private String messageCancellationText = "cancellation.text";
   private String messageCancellationDescription = "cancellation.description";
