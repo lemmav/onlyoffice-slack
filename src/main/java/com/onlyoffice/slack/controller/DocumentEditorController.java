@@ -5,7 +5,6 @@ import com.onlyoffice.model.documenteditor.config.document.Type;
 import com.onlyoffice.model.documenteditor.config.editorconfig.Mode;
 import com.onlyoffice.slack.configuration.ServerConfigurationProperties;
 import com.onlyoffice.slack.configuration.slack.SlackMessageConfigurationProperties;
-import com.onlyoffice.slack.handler.action.slack.SlackFileActionExtractor;
 import com.onlyoffice.slack.service.data.RotatingInstallationService;
 import com.onlyoffice.slack.service.data.TeamSettingsService;
 import com.onlyoffice.slack.service.document.core.ConfigManagerService;
@@ -41,7 +40,6 @@ public class DocumentEditorController {
   private final ServerConfigurationProperties serverConfigurationProperties;
 
   private final RotatingInstallationService rotatingInstallationService;
-  private final SlackFileActionExtractor slackFileActionExtractor;
   private final ConfigManagerService configManagerService;
   private final IMap<String, EditorSession> sessions;
   private final TeamSettingsService settingsService;
@@ -80,8 +78,7 @@ public class DocumentEditorController {
 
   @GetMapping(path = "/editor/content")
   public String editorContent(@RequestParam("session") final String sessionId, final Model model) {
-    var sid = slackFileActionExtractor.extract(sessionId, SlackFileActionExtractor.Type.SESSION);
-    var storedSession = retrieveAndRemoveSession(sid);
+    var storedSession = retrieveAndRemoveSession(sessionId);
     if (storedSession.isEmpty()) {
       model.addAttribute(
           "title",

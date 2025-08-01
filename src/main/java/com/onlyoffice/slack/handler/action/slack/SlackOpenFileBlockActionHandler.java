@@ -48,17 +48,10 @@ public class SlackOpenFileBlockActionHandler implements SlackBlockActionHandlerR
       final String messageTs) {
     if (ctx.getRequestUserToken() == null || ctx.getRequestUserToken().isBlank()) return;
 
-    var sessionId =
-        slackSplittingFileActionExtractor.extract(
-            action.getValue(), SlackFileActionExtractor.Type.SESSION);
+    var sessionId = action.getValue();
     var fileId =
         slackSplittingFileActionExtractor.extract(
             action.getValue(), SlackFileActionExtractor.Type.FILE);
-
-    if (sessionId == null || sessionId.isBlank()) {
-      log.warn("Invalid action value format: {}. Session id is missing", action.getValue());
-      return;
-    }
 
     if (fileId == null || fileId.isBlank()) {
       log.warn("Invalid action value format: {}. File id is missing", action.getValue());
