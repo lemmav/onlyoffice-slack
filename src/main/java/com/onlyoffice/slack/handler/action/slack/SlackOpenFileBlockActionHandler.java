@@ -46,6 +46,9 @@ public class SlackOpenFileBlockActionHandler implements SlackBlockActionHandlerR
       final BlockActionPayload.User user,
       final String channelId,
       final String messageTs) {
+    if (ctx.getRequestUserToken() == null || ctx.getRequestUserToken().isBlank())
+      return;
+
     var sessionId =
         slackSplittingFileActionExtractor.extract(
             action.getValue(), SlackFileActionExtractor.Type.SESSION);
