@@ -2,6 +2,7 @@ package com.onlyoffice.slack.service.data;
 
 import com.hazelcast.map.IMap;
 import com.onlyoffice.slack.configuration.slack.SlackConfigurationProperties;
+import com.onlyoffice.slack.mapper.Mapper;
 import com.onlyoffice.slack.persistence.entity.BotUser;
 import com.onlyoffice.slack.persistence.entity.InstallerUser;
 import com.onlyoffice.slack.persistence.entity.id.BotUserId;
@@ -34,6 +35,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 public class InstallationService implements RotatingInstallationService {
   private final Slack slack = Slack.getInstance();
 
+  private final Mapper<InstallerUser, DefaultInstaller> installerMapper;
+  private final Mapper<InstallerUser, DefaultBot> installerBotMapper;
   private final IMap<InstallerUserId, DefaultInstaller> userCache;
   private final SlackConfigurationProperties slackProperties;
   private final PlatformTransactionManager transactionManager;
@@ -174,7 +177,7 @@ public class InstallationService implements RotatingInstallationService {
 
       return botCache.getOrDefault(
           teamId,
-          userRepository.findFirstByTeamId(teamId).map(this::convertUserToBot).orElse(null));
+          userRepository.findFirstByTeamId(teamId).map(installerBotMapper::map).orElse(null));
     } finally {
       MDC.clear();
     }
@@ -223,7 +226,7 @@ public class InstallationService implements RotatingInstallationService {
           id,
           userRepository
               .findByTeamIdAndInstallerUserId(teamId, userId)
-              .map(this::convertUserToInstaller)
+              .map(installerMapper::map)
               .orElse(null));
     } finally {
       MDC.clear();
@@ -276,7 +279,7 @@ public class InstallationService implements RotatingInstallationService {
         }
       }
 
-      return maybeUser.map(this::convertUserToInstaller).orElse(null);
+      return maybeUser.map(installerMapper::map).orElse(null);
     } finally {
       MDC.clear();
     }
@@ -299,53 +302,5 @@ public class InstallationService implements RotatingInstallationService {
     } finally {
       MDC.clear();
     }
-  }
-
-  private DefaultBot convertUserToBot(InstallerUser user) {
-    if (user.getBot() == null || user.getBot().getBotAccessToken() == null) return null;
-
-    var bot = new DefaultBot();
-    bot.setAppId(user.getAppId());
-    bot.setTeamId(user.getTeamId());
-    bot.setBotId(user.getBot().getBotId());
-    bot.setBotUserId(user.getBot().getBotUserId());
-    bot.setBotAccessToken(user.getBot().getBotAccessToken());
-    bot.setBotRefreshToken(user.getBot().getBotRefreshToken());
-    bot.setBotTokenExpiresAt(user.getBot().getBotTokenExpiresAt());
-    bot.setBotScope(user.getBot().getBotScope());
-    bot.setTokenType(user.getTokenType());
-    bot.setScope(user.getBot().getBotScope());
-    bot.setInstalledAt(user.getInstalledAt());
-
-    return bot;
-  }
-
-  private DefaultInstaller convertUserToInstaller(InstallerUser user) {
-    if (user.getInstallerUserAccessToken() == null
-        && (user.getBot() == null || user.getBot().getBotAccessToken() == null)) return null;
-
-    var builder =
-        DefaultInstaller.builder()
-            .appId(user.getAppId())
-            .teamId(user.getTeamId())
-            .installerUserId(user.getInstallerUserId())
-            .installerUserScope(user.getInstallerUserScope())
-            .installerUserAccessToken(user.getInstallerUserAccessToken())
-            .installerUserRefreshToken(user.getInstallerUserRefreshToken())
-            .installerUserTokenExpiresAt(user.getInstallerUserTokenExpiresAt())
-            .tokenType(user.getTokenType())
-            .installedAt(user.getInstalledAt());
-
-    if (user.getBot() != null) {
-      builder
-          .botId(user.getBot().getBotId())
-          .botUserId(user.getBot().getBotUserId())
-          .botAccessToken(user.getBot().getBotAccessToken())
-          .botRefreshToken(user.getBot().getBotRefreshToken())
-          .botTokenExpiresAt(user.getBot().getBotTokenExpiresAt())
-          .botScope(user.getBot().getBotScope());
-    }
-
-    return builder.build();
   }
 }

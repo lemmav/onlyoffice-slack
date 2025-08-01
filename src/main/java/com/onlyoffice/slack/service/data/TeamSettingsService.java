@@ -3,6 +3,8 @@ package com.onlyoffice.slack.service.data;
 import com.onlyoffice.slack.configuration.ServerConfigurationProperties;
 import com.onlyoffice.slack.configuration.slack.SlackMessageConfigurationProperties;
 import com.onlyoffice.slack.exception.SettingsConfigurationException;
+import com.onlyoffice.slack.mapper.Mapper;
+import com.onlyoffice.slack.persistence.entity.TeamSettings;
 import com.onlyoffice.slack.persistence.repository.TeamSettingsRepository;
 import com.onlyoffice.slack.service.cryptography.AesEncryptionService;
 import com.onlyoffice.slack.transfer.request.SubmitSettingsRequest;
@@ -28,6 +30,7 @@ public class TeamSettingsService implements SettingsService {
   private final SlackMessageConfigurationProperties slackMessageConfigurationProperties;
   private final ServerConfigurationProperties configurationProperties;
 
+  private final Mapper<TeamSettings, SettingsResponse> teamSettingsMapper;
   private final TeamSettingsRepository settingsRepository;
   private final AesEncryptionService encryptionService;
   private final MessageSource messageSource;
@@ -101,13 +104,9 @@ public class TeamSettingsService implements SettingsService {
     var secret = settings.getSecret();
     if (secret != null && !secret.isBlank()) secret = encryptionService.decrypt(secret);
 
-    return SettingsResponse.builder()
-        .address(settings.getAddress())
-        .header(settings.getHeader())
-        .secret(secret)
-        .demoEnabled(settings.getDemoEnabled())
-        .demoStartedDate(settings.getDemoStartedDate())
-        .build();
+    var response = teamSettingsMapper.map(settings);
+    response.setSecret(secret);
+    return response;
   }
 
   @Override
@@ -121,12 +120,8 @@ public class TeamSettingsService implements SettingsService {
     var secret = settings.getSecret();
     if (secret != null && !secret.isBlank()) secret = encryptionService.decrypt(secret);
 
-    return SettingsResponse.builder()
-        .address(settings.getAddress())
-        .header(settings.getHeader())
-        .secret(secret)
-        .demoEnabled(settings.getDemoEnabled())
-        .demoStartedDate(settings.getDemoStartedDate())
-        .build();
+    var response = teamSettingsMapper.map(settings);
+    response.setSecret(secret);
+    return response;
   }
 }
