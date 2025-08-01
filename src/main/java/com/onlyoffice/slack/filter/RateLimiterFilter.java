@@ -1,5 +1,6 @@
 package com.onlyoffice.slack.filter;
 
+import com.onlyoffice.slack.handler.action.slack.SlackFileActionExtractor;
 import com.onlyoffice.slack.util.HttpUtils;
 import io.github.bucket4j.BucketConfiguration;
 import io.github.bucket4j.ConsumptionProbe;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -29,10 +31,11 @@ public class RateLimiterFilter extends OncePerRequestFilter {
   private static final String X_RATE_RESET = "X-Ratelimit-Reset";
 
   private final Function<HttpMethod, Supplier<BucketConfiguration>> bucketFactory;
+  private final SlackFileActionExtractor slackFileActionExtractor;
   private final ProxyManager<String> proxyManager;
   private final HttpUtils httpUtils;
 
-  private final Map<String, Boolean> filterPath = Map.of("/slack/events", true);
+  private final Map<String, Boolean> filterPath = Map.of("/slack/events", true, "/callback", true);
 
   private void addRateLimitHeaders(
       final HttpServletResponse response, final ConsumptionProbe probe) {
@@ -57,7 +60,12 @@ public class RateLimiterFilter extends OncePerRequestFilter {
       @NotNull final FilterChain chain)
       throws ServletException, IOException {
     var method = httpUtils.getHttpMethod(request);
-    var clientIdentifier = httpUtils.getFirstRequestIP(request);
+    var clientIdentifier =
+        Optional.ofNullable(request.getParameter("session"))
+            .map(
+                session ->
+                    slackFileActionExtractor.extract(session, SlackFileActionExtractor.Type.USER))
+            .orElse(httpUtils.getFirstRequestIP(request));
     var bucketConfiguration = bucketFactory.apply(HttpMethod.valueOf(method));
     if (clientIdentifier != null) {
       var bucket =

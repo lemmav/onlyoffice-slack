@@ -7,13 +7,14 @@ class SlackSplittingFileActionExtractor implements SlackFileActionExtractor {
   @Override
   public String extract(final String composite, final Type type) {
     var ids = composite.split(":");
-    if (ids.length != 2) {
+    if (ids.length != 3) {
       return null;
     }
 
     return switch (type) {
-      case SESSION -> ids[0];
-      case FILE -> ids[1];
+      case USER -> ids[0];
+      case SESSION -> ids[1];
+      case FILE -> ids[2];
     };
   }
 }

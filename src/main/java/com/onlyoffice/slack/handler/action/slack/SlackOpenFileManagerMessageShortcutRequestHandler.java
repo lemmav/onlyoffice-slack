@@ -64,34 +64,17 @@ public class SlackOpenFileManagerMessageShortcutRequestHandler implements Messag
         Locale.ENGLISH);
   }
 
-  private String buildEditorUrl(final UUID sessionId) {
+  private String buildEditorUrl(final String userId, final String sessionId, final String fileId) {
     return slackConfigurationProperties
         .getEditorPathPattern()
-        .formatted(serverConfigurationProperties.getBaseAddress(), sessionId);
+        .formatted(
+            serverConfigurationProperties.getBaseAddress(),
+            "%s:%s:%s".formatted(userId, sessionId, fileId));
   }
 
-  private LayoutBlock buildFileActionsBlock(final File file) {
-    var sessionId = UUID.randomUUID();
-    var buttonElement =
-        button(
-            b ->
-                b.text(
-                        plainText(
-                            messageSource.getMessage(
-                                slackMessageConfigurationProperties
-                                    .getMessageManagerModalOpenButton(),
-                                null,
-                                Locale.ENGLISH)))
-                    .value(slackFileActionBuilder.build(sessionId.toString(), file.getId()))
-                    .url(buildEditorUrl(sessionId))
-                    .actionId(slackConfigurationProperties.getOpenFileActionId())
-                    .style("primary"));
-    return actions(actions -> actions.elements(List.of(buttonElement)));
-  }
-
-  private void addFileBlock(final List<LayoutBlock> blocks, final File file) {
+  private void addFileBlock(final String userId, final List<LayoutBlock> blocks, final File file) {
     blocks.add(divider());
-    var sessionId = UUID.randomUUID();
+    var sessionId = UUID.randomUUID().toString();
     var openButton =
         button(
             b ->
@@ -102,8 +85,8 @@ public class SlackOpenFileManagerMessageShortcutRequestHandler implements Messag
                                     .getMessageManagerModalOpenButton(),
                                 null,
                                 Locale.ENGLISH)))
-                    .value(slackFileActionBuilder.build(sessionId.toString(), file.getId()))
-                    .url(buildEditorUrl(sessionId))
+                    .value(slackFileActionBuilder.build(userId, sessionId, file.getId()))
+                    .url(buildEditorUrl(userId, sessionId, file.getId()))
                     .actionId(slackConfigurationProperties.getOpenFileActionId())
                     .style("primary"));
     blocks.add(
@@ -113,7 +96,7 @@ public class SlackOpenFileManagerMessageShortcutRequestHandler implements Messag
                     .accessory(openButton)));
   }
 
-  private List<LayoutBlock> buildFileBlocks(final Message message) {
+  private List<LayoutBlock> buildFileBlocks(final String userId, final Message message) {
     var blocks = new ArrayList<LayoutBlock>();
     blocks.add(
         header(
@@ -127,7 +110,7 @@ public class SlackOpenFileManagerMessageShortcutRequestHandler implements Messag
 
     if (hasFiles(message)) {
       log.info("Found {} files in message", message.getFiles().size());
-      message.getFiles().forEach(file -> addFileBlock(blocks, file));
+      message.getFiles().forEach(file -> addFileBlock(userId, blocks, file));
     } else {
       log.info("No files found in message");
       blocks.add(
@@ -192,7 +175,8 @@ public class SlackOpenFileManagerMessageShortcutRequestHandler implements Messag
   @Override
   public Response apply(MessageShortcutRequest request, MessageShortcutContext ctx)
       throws IOException, SlackApiException {
-    openFilesModal(ctx, request, buildFileBlocks(request.getPayload().getMessage()));
+    openFilesModal(
+        ctx, request, buildFileBlocks(ctx.getRequestUserId(), request.getPayload().getMessage()));
     return ctx.ack();
   }
 }

@@ -12,8 +12,8 @@ public class HttpUtils {
   private static final String[] IP_HEADERS = {
     "X-Remote-Ip-Address",
     "X-Real-IP",
-    "X-Forwarded-Host",
     "X-Forwarded-For",
+    "X-Forwarded-Host",
     "Proxy-Client-IP",
     "WL-Proxy-Client-IP",
     "HTTP_X_FORWARDED_FOR",
