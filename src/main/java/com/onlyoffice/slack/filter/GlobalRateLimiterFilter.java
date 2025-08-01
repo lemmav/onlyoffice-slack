@@ -1,6 +1,6 @@
 package com.onlyoffice.slack.filter;
 
-import com.onlyoffice.slack.exception.GlobalRateLimiterException;
+import com.onlyoffice.slack.configuration.slack.SlackMessageConfigurationProperties;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
 import jakarta.servlet.FilterChain;
@@ -9,8 +9,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Locale;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -19,21 +22,33 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @Order(Integer.MIN_VALUE)
 public class GlobalRateLimiterFilter extends OncePerRequestFilter {
+  private final SlackMessageConfigurationProperties slackMessageConfigurationProperties;
   private final RateLimiter globalRateLimiter;
+  private final MessageSource messageSource;
 
-  public GlobalRateLimiterFilter() {
+  @Autowired
+  public GlobalRateLimiterFilter(
+      MessageSource messageSource,
+      SlackMessageConfigurationProperties slackMessageConfigurationProperties) {
     this(
         RateLimiter.of(
             "global",
             RateLimiterConfig.custom()
-                .limitForPeriod(5000)
+                .limitForPeriod(2500)
                 .limitRefreshPeriod(Duration.ofSeconds(1))
                 .timeoutDuration(Duration.ofMillis(100))
-                .build()));
+                .build()),
+        messageSource,
+        slackMessageConfigurationProperties);
   }
 
-  public GlobalRateLimiterFilter(RateLimiter rateLimiter) {
+  public GlobalRateLimiterFilter(
+      RateLimiter rateLimiter,
+      MessageSource messageSource,
+      SlackMessageConfigurationProperties slackMessageConfigurationProperties) {
     this.globalRateLimiter = rateLimiter;
+    this.messageSource = messageSource;
+    this.slackMessageConfigurationProperties = slackMessageConfigurationProperties;
   }
 
   @Override
@@ -42,8 +57,28 @@ public class GlobalRateLimiterFilter extends OncePerRequestFilter {
       @NotNull final HttpServletResponse response,
       @NotNull final FilterChain chain)
       throws ServletException, IOException {
-    if (!globalRateLimiter.acquirePermission())
-      throw new GlobalRateLimiterException("Service is busy. Please try again later");
+    if (!globalRateLimiter.acquirePermission()) {
+      response.setStatus(429);
+      request.setAttribute(
+          "title",
+          messageSource.getMessage(
+              slackMessageConfigurationProperties.getErrorRateLimiterTitle(),
+              null,
+              Locale.ENGLISH));
+      request.setAttribute(
+          "text",
+          messageSource.getMessage(
+              slackMessageConfigurationProperties.getErrorRateLimiterText(), null, Locale.ENGLISH));
+      request.setAttribute(
+          "action",
+          messageSource.getMessage(
+              slackMessageConfigurationProperties.getErrorRateLimiterButton(),
+              null,
+              Locale.ENGLISH));
+      request.getRequestDispatcher("/error").forward(request, response);
+      return;
+    }
+
     chain.doFilter(request, response);
   }
 }

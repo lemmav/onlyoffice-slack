@@ -32,6 +32,14 @@ public class SlackMessageConfigurationProperties {
   private String errorSlackApiText = "error.slack.api.text";
   private String errorSlackApiButton = "error.slack.api.button";
 
+  private String errorRateLimiterTitle = "error.ratelimiter.title";
+  private String errorRateLimiterText = "error.ratelimiter.text";
+  private String errorRateLimiterButton = "error.ratelimiter.button";
+
+  private String errorGenericTitle = "error.generic.title";
+  private String errorGenericText = "error.generic.text";
+  private String errorGenericButton = "error.generic.button";
+
   private String messageCancellationTitle = "cancellation.title";
   private String messageCancellationText = "cancellation.text";
   private String messageCancellationDescription = "cancellation.description";

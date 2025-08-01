@@ -3,7 +3,8 @@ package com.onlyoffice.slack.filter;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-import com.onlyoffice.slack.exception.GlobalRateLimiterException;
+import com.onlyoffice.slack.configuration.slack.SlackMessageConfigurationProperties;
+import com.onlyoffice.slack.exception.RateLimiterException;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.MessageSource;
 
 class GlobalRateLimiterFilterTests {
   private GlobalRateLimiterFilter filter;
@@ -23,7 +25,12 @@ class GlobalRateLimiterFilterTests {
   @BeforeEach
   void setUp() {
     rateLimiter = mock(RateLimiter.class);
-    filter = new GlobalRateLimiterFilter(rateLimiter);
+    MessageSource messageSource = mock(MessageSource.class);
+    SlackMessageConfigurationProperties slackMessageConfigurationProperties =
+        mock(SlackMessageConfigurationProperties.class);
+    filter =
+        new GlobalRateLimiterFilter(
+            rateLimiter, messageSource, slackMessageConfigurationProperties);
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
     chain = mock(FilterChain.class);
@@ -42,6 +49,6 @@ class GlobalRateLimiterFilterTests {
   void whenPermissionNotAcquired_thenThrowsException() {
     when(rateLimiter.acquirePermission()).thenReturn(false);
     assertThrows(
-        GlobalRateLimiterException.class, () -> filter.doFilterInternal(request, response, chain));
+        RateLimiterException.class, () -> filter.doFilterInternal(request, response, chain));
   }
 }
