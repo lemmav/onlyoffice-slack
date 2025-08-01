@@ -18,7 +18,5 @@ public interface InstallerUserRepository extends JpaRepository<InstallerUser, In
   @Query("SELECT u FROM InstallerUser u WHERE u.bot.botId = :botId")
   List<InstallerUser> findByBotId(String botId);
 
-  Optional<InstallerUser> findByInstallerUserId(String installerUserId);
-
   int deleteAllByTeamId(String teamId);
 }
