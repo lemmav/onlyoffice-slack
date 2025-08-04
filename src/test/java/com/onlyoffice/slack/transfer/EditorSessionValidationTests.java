@@ -2,7 +2,7 @@ package com.onlyoffice.slack.transfer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.onlyoffice.slack.transfer.cache.EditorSession;
+import com.onlyoffice.slack.shared.transfer.cache.EditorSession;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeAll;

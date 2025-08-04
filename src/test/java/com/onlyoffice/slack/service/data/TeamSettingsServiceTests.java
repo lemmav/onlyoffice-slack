@@ -3,13 +3,14 @@ package com.onlyoffice.slack.service.data;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.onlyoffice.slack.configuration.ServerConfigurationProperties;
-import com.onlyoffice.slack.configuration.slack.SlackMessageConfigurationProperties;
-import com.onlyoffice.slack.exception.SettingsConfigurationException;
-import com.onlyoffice.slack.persistence.entity.TeamSettings;
-import com.onlyoffice.slack.persistence.repository.TeamSettingsRepository;
-import com.onlyoffice.slack.service.cryptography.AesEncryptionService;
-import com.onlyoffice.slack.transfer.request.SubmitSettingsRequest;
+import com.onlyoffice.slack.domain.slack.settings.TeamSettingsRepository;
+import com.onlyoffice.slack.domain.slack.settings.TeamSettingsService;
+import com.onlyoffice.slack.shared.configuration.ServerConfigurationProperties;
+import com.onlyoffice.slack.shared.configuration.message.MessageSourceSlackConfiguration;
+import com.onlyoffice.slack.shared.exception.domain.DocumentSettingsConfigurationException;
+import com.onlyoffice.slack.shared.persistence.entity.TeamSettings;
+import com.onlyoffice.slack.shared.transfer.request.SubmitSettingsRequest;
+import com.onlyoffice.slack.shared.utils.AesEncryptionService;
 import com.slack.api.bolt.context.Context;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -22,11 +23,12 @@ import org.springframework.context.MessageSource;
 
 @ExtendWith(MockitoExtension.class)
 class TeamSettingsServiceTests {
-  @Mock private SlackMessageConfigurationProperties slackMessageConfigurationProperties;
+  @Mock private MessageSourceSlackConfiguration messageSourceSlackConfiguration;
   @Mock private ServerConfigurationProperties configurationProperties;
-  @Mock private TeamSettingsRepository settingsRepository;
-  @Mock private AesEncryptionService encryptionService;
   @Mock private MessageSource messageSource;
+
+  @Mock private TeamSettingsRepository teamSettingsRepository;
+  @Mock private AesEncryptionService encryptionService;
   @InjectMocks private TeamSettingsService service;
 
   @Test
@@ -46,7 +48,7 @@ class TeamSettingsServiceTests {
 
     service.saveSettings(ctx, req);
 
-    verify(settingsRepository)
+    verify(teamSettingsRepository)
         .upsertSettings(eq("team"), eq("address"), eq("header"), eq("encrypted"), eq(false));
   }
 
@@ -56,20 +58,21 @@ class TeamSettingsServiceTests {
     var req = mock(SubmitSettingsRequest.class);
 
     when(req.isValidConfiguration()).thenReturn(false);
-    when(slackMessageConfigurationProperties.getErrorSettingsTitle())
+    when(messageSourceSlackConfiguration.getErrorSettingsTitle())
         .thenReturn("error.settings.title");
-    when(slackMessageConfigurationProperties.getErrorSettingsInvalidConfigurationText())
+    when(messageSourceSlackConfiguration.getErrorSettingsInvalidConfigurationText())
         .thenReturn("error.settings.invalid.text");
-    when(slackMessageConfigurationProperties.getErrorSettingsButton())
+    when(messageSourceSlackConfiguration.getErrorSettingsButton())
         .thenReturn("error.settings.button");
     when(messageSource.getMessage(anyString(), any(), any())).thenReturn("Test message");
 
-    assertThrows(SettingsConfigurationException.class, () -> service.saveSettings(ctx, req));
+    assertThrows(
+        DocumentSettingsConfigurationException.class, () -> service.saveSettings(ctx, req));
   }
 
   @Test
   void whenFindSettingsWithNoSettings_thenReturnEmptyResponse() {
-    when(settingsRepository.findById("team")).thenReturn(Optional.empty());
+    when(teamSettingsRepository.findById("team")).thenReturn(Optional.empty());
 
     var resp = service.findSettings("team");
 
@@ -82,21 +85,21 @@ class TeamSettingsServiceTests {
 
     when(settings.getDemoEnabled()).thenReturn(false);
     when(settings.getAddress()).thenReturn(null);
-    when(settingsRepository.findById("team")).thenReturn(Optional.of(settings));
-    when(slackMessageConfigurationProperties.getErrorSettingsTitle())
+    when(teamSettingsRepository.findById("team")).thenReturn(Optional.of(settings));
+    when(messageSourceSlackConfiguration.getErrorSettingsTitle())
         .thenReturn("error.settings.title");
-    when(slackMessageConfigurationProperties.getErrorSettingsIncompleteText())
+    when(messageSourceSlackConfiguration.getErrorSettingsIncompleteText())
         .thenReturn("error.settings.incomplete.text");
-    when(slackMessageConfigurationProperties.getErrorSettingsButton())
+    when(messageSourceSlackConfiguration.getErrorSettingsButton())
         .thenReturn("error.settings.button");
     when(messageSource.getMessage(anyString(), any(), any())).thenReturn("Test message");
 
-    assertThrows(SettingsConfigurationException.class, () -> service.findSettings("team"));
+    assertThrows(DocumentSettingsConfigurationException.class, () -> service.findSettings("team"));
   }
 
   @Test
   void whenFindSettingsWithExpiredDemo_thenThrowException() {
-    var settings = mock(com.onlyoffice.slack.persistence.entity.TeamSettings.class);
+    var settings = mock(TeamSettings.class);
 
     when(settings.getDemoEnabled()).thenReturn(true);
     when(settings.getDemoStartedDate()).thenReturn(LocalDateTime.now().minusDays(10));
@@ -105,21 +108,21 @@ class TeamSettingsServiceTests {
 
     when(demoProps.getDurationDays()).thenReturn(5);
     when(configurationProperties.getDemo()).thenReturn(demoProps);
-    when(settingsRepository.findById("team")).thenReturn(Optional.of(settings));
-    when(slackMessageConfigurationProperties.getErrorSettingsTitle())
+    when(teamSettingsRepository.findById("team")).thenReturn(Optional.of(settings));
+    when(messageSourceSlackConfiguration.getErrorSettingsTitle())
         .thenReturn("error.settings.title");
-    when(slackMessageConfigurationProperties.getErrorSettingsDemoText())
+    when(messageSourceSlackConfiguration.getErrorSettingsDemoText())
         .thenReturn("error.settings.demo.text");
-    when(slackMessageConfigurationProperties.getErrorSettingsButton())
+    when(messageSourceSlackConfiguration.getErrorSettingsButton())
         .thenReturn("error.settings.button");
     when(messageSource.getMessage(anyString(), any(), any())).thenReturn("Test message");
 
-    assertThrows(SettingsConfigurationException.class, () -> service.findSettings("team"));
+    assertThrows(DocumentSettingsConfigurationException.class, () -> service.findSettings("team"));
   }
 
   @Test
   void whenAlwaysFindSettingsWithNoSettings_thenReturnEmptyResponse() {
-    when(settingsRepository.findById("team")).thenReturn(Optional.empty());
+    when(teamSettingsRepository.findById("team")).thenReturn(Optional.empty());
 
     var resp = service.alwaysFindSettings("team");
 

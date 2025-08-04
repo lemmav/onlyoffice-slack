@@ -2,10 +2,11 @@ package com.onlyoffice.slack.service.cryptography;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.onlyoffice.slack.configuration.ServerConfigurationProperties;
-import com.onlyoffice.slack.configuration.ServerConfigurationProperties.CryptographyProperties;
-import com.onlyoffice.slack.exception.DecryptionException;
-import com.onlyoffice.slack.exception.EncryptionException;
+import com.onlyoffice.slack.shared.configuration.ServerConfigurationProperties;
+import com.onlyoffice.slack.shared.configuration.ServerConfigurationProperties.CryptographyProperties;
+import com.onlyoffice.slack.shared.exception.DecryptionException;
+import com.onlyoffice.slack.shared.exception.EncryptionException;
+import com.onlyoffice.slack.shared.utils.AesEncryptionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,6 +14,7 @@ import org.mockito.Mockito;
 class AesEncryptionServiceTests {
   private static final String SECRET = "test";
   private static final String WRONG_SECRET = "wrong";
+
   private AesEncryptionService aesEncryptionService;
 
   @BeforeEach
@@ -32,6 +34,7 @@ class AesEncryptionServiceTests {
     var plainText = "Test data";
     var cipherText = aesEncryptionService.encrypt(plainText);
     var decrypted = aesEncryptionService.decrypt(cipherText);
+
     assertEquals(plainText, decrypted);
   }
 
@@ -57,6 +60,7 @@ class AesEncryptionServiceTests {
     var plainText = "";
     var cipherText = aesEncryptionService.encrypt(plainText);
     var decrypted = aesEncryptionService.decrypt(cipherText);
+
     assertEquals(plainText, decrypted);
   }
 }

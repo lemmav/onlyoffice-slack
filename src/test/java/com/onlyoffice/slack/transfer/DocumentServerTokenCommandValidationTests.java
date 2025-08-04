@@ -2,7 +2,7 @@ package com.onlyoffice.slack.transfer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.onlyoffice.slack.transfer.command.DocumentServerTokenCommand;
+import com.onlyoffice.slack.shared.transfer.command.DocumentServerTokenCommand;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeAll;

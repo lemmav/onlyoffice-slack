@@ -2,6 +2,7 @@ package com.onlyoffice.slack.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.onlyoffice.slack.shared.utils.TriFunction;
 import org.junit.jupiter.api.Test;
 
 class TriFunctionTests {

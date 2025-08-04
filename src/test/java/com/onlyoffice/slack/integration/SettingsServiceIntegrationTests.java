@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.onlyoffice.slack.configuration.ServerConfigurationProperties;
-import com.onlyoffice.slack.exception.SettingsConfigurationException;
-import com.onlyoffice.slack.persistence.entity.TeamSettings;
-import com.onlyoffice.slack.persistence.repository.TeamSettingsRepository;
-import com.onlyoffice.slack.service.cryptography.AesEncryptionService;
-import com.onlyoffice.slack.service.data.SettingsService;
-import com.onlyoffice.slack.transfer.request.SubmitSettingsRequest;
+import com.onlyoffice.slack.domain.slack.settings.SettingsService;
+import com.onlyoffice.slack.domain.slack.settings.TeamSettingsRepository;
+import com.onlyoffice.slack.shared.configuration.ServerConfigurationProperties;
+import com.onlyoffice.slack.shared.exception.domain.DocumentSettingsConfigurationException;
+import com.onlyoffice.slack.shared.persistence.entity.TeamSettings;
+import com.onlyoffice.slack.shared.transfer.request.SubmitSettingsRequest;
+import com.onlyoffice.slack.shared.utils.AesEncryptionService;
 import com.slack.api.bolt.context.Context;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -99,7 +99,7 @@ class SettingsServiceIntegrationTests extends BaseIntegrationTest {
               .build();
 
       assertThatThrownBy(() -> settingsService.saveSettings(mockContext, request))
-          .isInstanceOf(SettingsConfigurationException.class);
+          .isInstanceOf(DocumentSettingsConfigurationException.class);
     }
 
     @Test
@@ -259,7 +259,7 @@ class SettingsServiceIntegrationTests extends BaseIntegrationTest {
       teamSettingsRepository.flush();
 
       assertThatThrownBy(() -> settingsService.findSettings("test-team-id"))
-          .isInstanceOf(SettingsConfigurationException.class)
+          .isInstanceOf(DocumentSettingsConfigurationException.class)
           .hasMessageContaining("ONLYOFFICE demo has expired");
     }
 
@@ -276,7 +276,7 @@ class SettingsServiceIntegrationTests extends BaseIntegrationTest {
       teamSettingsRepository.flush();
 
       assertThatThrownBy(() -> settingsService.findSettings("test-team-id"))
-          .isInstanceOf(SettingsConfigurationException.class)
+          .isInstanceOf(DocumentSettingsConfigurationException.class)
           .hasMessageContaining("ONLYOFFICE settings are incomplete");
     }
 
@@ -358,7 +358,7 @@ class SettingsServiceIntegrationTests extends BaseIntegrationTest {
       teamSettingsRepository.flush();
 
       assertThatThrownBy(() -> settingsService.findSettings("test-team-id"))
-          .isInstanceOf(SettingsConfigurationException.class)
+          .isInstanceOf(DocumentSettingsConfigurationException.class)
           .hasMessageContaining("ONLYOFFICE demo has expired");
     }
 
@@ -596,7 +596,7 @@ class SettingsServiceIntegrationTests extends BaseIntegrationTest {
               .build();
 
       assertThatThrownBy(() -> settingsService.saveSettings(mockContext, request))
-          .isInstanceOf(SettingsConfigurationException.class);
+          .isInstanceOf(DocumentSettingsConfigurationException.class);
 
       var unchangedSettings = teamSettingsRepository.findById("test-team-id");
 

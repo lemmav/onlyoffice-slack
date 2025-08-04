@@ -1,25 +1,25 @@
 package com.onlyoffice.slack.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 import com.onlyoffice.model.documenteditor.Callback;
-import com.onlyoffice.slack.service.document.core.CallbackService;
+import com.onlyoffice.slack.domain.document.editor.DocumentCallbackController;
+import com.onlyoffice.slack.domain.document.editor.core.DocumentCallbackService;
 import java.util.HashMap;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 class DocumentCallbackControllerTests {
   private DocumentCallbackController controller;
-  private CallbackService callbackService;
+  private DocumentCallbackService documentCallbackService;
 
   @BeforeEach
   void setUp() {
-    callbackService = mock(CallbackService.class);
-    controller = new DocumentCallbackController(callbackService);
+    documentCallbackService = mock(DocumentCallbackService.class);
+    controller = new DocumentCallbackController(documentCallbackService);
   }
 
   @Test
@@ -32,8 +32,9 @@ class DocumentCallbackControllerTests {
     var result = controller.callback(headers, callback);
 
     assertEquals(HttpStatus.OK, result.getStatusCode());
+    Assertions.assertNotNull(result.getBody());
     assertEquals(0, result.getBody().getError());
-    verify(callbackService).processCallback(headers, callback);
+    verify(documentCallbackService).processCallback(headers, callback);
   }
 
   @Test
@@ -43,14 +44,15 @@ class DocumentCallbackControllerTests {
     var callback = mock(Callback.class);
 
     doThrow(new RuntimeException("Processing failed"))
-        .when(callbackService)
+        .when(documentCallbackService)
         .processCallback(headers, callback);
 
     var result = controller.callback(headers, callback);
 
     assertEquals(HttpStatus.OK, result.getStatusCode());
+    Assertions.assertNotNull(result.getBody());
     assertEquals(1, result.getBody().getError());
-    verify(callbackService).processCallback(headers, callback);
+    verify(documentCallbackService).processCallback(headers, callback);
   }
 
   @Test
@@ -62,7 +64,8 @@ class DocumentCallbackControllerTests {
     var result = controller.callback(emptyHeaders, callback);
 
     assertEquals(HttpStatus.OK, result.getStatusCode());
+    Assertions.assertNotNull(result.getBody());
     assertEquals(0, result.getBody().getError());
-    verify(callbackService).processCallback(emptyHeaders, callback);
+    verify(documentCallbackService).processCallback(emptyHeaders, callback);
   }
 }

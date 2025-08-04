@@ -5,8 +5,9 @@ import static org.mockito.Mockito.*;
 
 import com.hazelcast.map.IMap;
 import com.onlyoffice.model.documenteditor.Callback;
-import com.onlyoffice.slack.service.document.helper.DocumentFileKeyExtractor;
-import com.onlyoffice.slack.transfer.cache.DocumentSessionKey;
+import com.onlyoffice.slack.domain.document.editor.core.DocumentFileKeyExtractor;
+import com.onlyoffice.slack.domain.document.event.handler.DocumentClosedCallbackHandler;
+import com.onlyoffice.slack.shared.transfer.cache.DocumentSessionKey;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,11 +19,11 @@ class DocumentServerClosedCallbackHandlerTests {
   @Mock private DocumentFileKeyExtractor documentFileKeyExtractor;
   @Mock private IMap<String, DocumentSessionKey> keys;
 
-  private DocumentServerClosedCallbackHandler handler;
+  private DocumentClosedCallbackHandler handler;
 
   @BeforeEach
   void setUp() {
-    handler = new DocumentServerClosedCallbackHandler(documentFileKeyExtractor, keys);
+    handler = new DocumentClosedCallbackHandler(documentFileKeyExtractor, keys);
   }
 
   @Test

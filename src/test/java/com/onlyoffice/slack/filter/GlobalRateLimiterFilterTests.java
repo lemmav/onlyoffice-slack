@@ -1,12 +1,12 @@
 package com.onlyoffice.slack.filter;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-import com.onlyoffice.slack.configuration.slack.SlackMessageConfigurationProperties;
-import com.onlyoffice.slack.exception.RateLimiterException;
+import com.onlyoffice.slack.shared.configuration.message.MessageSourceSlackConfiguration;
+import com.onlyoffice.slack.shared.filter.GlobalRateLimiterFilter;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,19 +18,20 @@ import org.springframework.context.MessageSource;
 class GlobalRateLimiterFilterTests {
   private GlobalRateLimiterFilter filter;
   private RateLimiter rateLimiter;
+
+  private FilterChain chain;
   private HttpServletRequest request;
   private HttpServletResponse response;
-  private FilterChain chain;
 
   @BeforeEach
   void setUp() {
     rateLimiter = mock(RateLimiter.class);
-    MessageSource messageSource = mock(MessageSource.class);
-    SlackMessageConfigurationProperties slackMessageConfigurationProperties =
-        mock(SlackMessageConfigurationProperties.class);
+
+    var messageSource = mock(MessageSource.class);
+    var messageSourceSlackConfiguration = mock(MessageSourceSlackConfiguration.class);
+
     filter =
-        new GlobalRateLimiterFilter(
-            rateLimiter, messageSource, slackMessageConfigurationProperties);
+        new GlobalRateLimiterFilter(rateLimiter, messageSource, messageSourceSlackConfiguration);
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
     chain = mock(FilterChain.class);
@@ -40,15 +41,19 @@ class GlobalRateLimiterFilterTests {
   void whenPermissionAcquired_thenFilterChainContinues() throws ServletException, IOException {
     when(rateLimiter.acquirePermission()).thenReturn(true);
 
-    filter.doFilterInternal(request, response, chain);
+    filter.doFilter(request, response, chain);
 
     verify(chain, times(1)).doFilter(request, response);
   }
 
   @Test
-  void whenPermissionNotAcquired_thenThrowsException() {
+  void whenPermissionNotAcquired_thenSetsResponseStatus() throws ServletException, IOException {
     when(rateLimiter.acquirePermission()).thenReturn(false);
-    assertThrows(
-        RateLimiterException.class, () -> filter.doFilterInternal(request, response, chain));
+    when(request.getRequestDispatcher("/error")).thenReturn(mock(RequestDispatcher.class));
+
+    filter.doFilter(request, response, chain);
+
+    verify(response, times(1)).setStatus(429);
+    verify(chain, never()).doFilter(request, response);
   }
 }

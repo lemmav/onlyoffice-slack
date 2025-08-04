@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 
 import com.onlyoffice.model.documenteditor.config.document.Type;
 import com.onlyoffice.model.documenteditor.config.editorconfig.Mode;
-import com.onlyoffice.slack.transfer.command.BuildConfigCommand;
+import com.onlyoffice.slack.shared.transfer.command.BuildConfigCommand;
 import com.slack.api.model.File;
 import com.slack.api.model.User;
 import jakarta.validation.Validation;

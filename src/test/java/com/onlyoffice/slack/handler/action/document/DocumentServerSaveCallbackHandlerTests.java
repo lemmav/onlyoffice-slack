@@ -5,13 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 import com.hazelcast.map.IMap;
-import com.onlyoffice.slack.configuration.client.OkHttpClientPoolService;
-import com.onlyoffice.slack.exception.DocumentCallbackException;
-import com.onlyoffice.slack.service.data.InstallationService;
-import com.onlyoffice.slack.service.document.helper.DocumentFileKeyExtractor;
-import com.onlyoffice.slack.transfer.cache.DocumentSessionKey;
+import com.onlyoffice.slack.domain.document.editor.core.DocumentFileKeyExtractor;
+import com.onlyoffice.slack.domain.document.event.handler.DocumentSaveCallbackHandler;
+import com.onlyoffice.slack.domain.slack.installation.RotatingInstallationService;
+import com.onlyoffice.slack.shared.configuration.client.OkHttpClientPoolService;
+import com.onlyoffice.slack.shared.exception.domain.DocumentCallbackException;
+import com.onlyoffice.slack.shared.transfer.cache.DocumentSessionKey;
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.model.Installer;
+import com.slack.api.methods.MethodsClient;
+import com.slack.api.methods.request.files.FilesInfoRequest;
 import com.slack.api.methods.response.files.FilesInfoResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,18 +25,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class DocumentServerSaveCallbackHandlerTests {
   @Mock private DocumentFileKeyExtractor documentFileKeyExtractor;
+
   @Mock private OkHttpClientPoolService httpClientPoolService;
-  @Mock private InstallationService installationService;
+  @Mock private RotatingInstallationService installationService;
   @Mock private IMap<String, DocumentSessionKey> keys;
   @Mock private App app;
 
-  private DocumentServerSaveCallbackHandler handler;
+  private DocumentSaveCallbackHandler handler;
 
   @BeforeEach
   void setUp() {
     handler =
-        new DocumentServerSaveCallbackHandler(
-            documentFileKeyExtractor, httpClientPoolService, installationService, keys, app);
+        new DocumentSaveCallbackHandler(
+            documentFileKeyExtractor, installationService, httpClientPoolService, keys, app);
   }
 
   @Test
@@ -82,10 +86,9 @@ class DocumentServerSaveCallbackHandlerTests {
 
     when(filesInfoResponse.isOk()).thenReturn(false);
 
-    var slackClient = mock(com.slack.api.methods.MethodsClient.class);
+    var slackClient = mock(MethodsClient.class);
     try {
-      when(slackClient.filesInfo(any(com.slack.api.methods.request.files.FilesInfoRequest.class)))
-          .thenReturn(filesInfoResponse);
+      when(slackClient.filesInfo(any(FilesInfoRequest.class))).thenReturn(filesInfoResponse);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

@@ -2,8 +2,9 @@ package com.onlyoffice.slack.service.data;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.onlyoffice.slack.transfer.request.SubmitSettingsRequest;
-import com.onlyoffice.slack.transfer.response.SettingsResponse;
+import com.onlyoffice.slack.domain.slack.settings.SettingsService;
+import com.onlyoffice.slack.shared.transfer.request.SubmitSettingsRequest;
+import com.onlyoffice.slack.shared.transfer.response.SettingsResponse;
 import com.slack.api.bolt.context.Context;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

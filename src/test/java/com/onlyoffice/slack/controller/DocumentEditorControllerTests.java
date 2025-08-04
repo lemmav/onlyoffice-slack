@@ -7,13 +7,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.hazelcast.map.IMap;
-import com.onlyoffice.slack.configuration.ServerConfigurationProperties;
-import com.onlyoffice.slack.configuration.slack.SlackMessageConfigurationProperties;
-import com.onlyoffice.slack.service.data.RotatingInstallationService;
-import com.onlyoffice.slack.service.data.TeamSettingsService;
-import com.onlyoffice.slack.service.document.core.ConfigManagerService;
-import com.onlyoffice.slack.transfer.cache.EditorSession;
-import com.onlyoffice.slack.transfer.response.SettingsResponse;
+import com.onlyoffice.slack.domain.document.editor.DocumentEditorController;
+import com.onlyoffice.slack.domain.document.editor.core.DocumentConfigManagerService;
+import com.onlyoffice.slack.domain.slack.installation.RotatingInstallationService;
+import com.onlyoffice.slack.domain.slack.settings.TeamSettingsService;
+import com.onlyoffice.slack.shared.configuration.ServerConfigurationProperties;
+import com.onlyoffice.slack.shared.configuration.message.MessageSourceSlackConfiguration;
+import com.onlyoffice.slack.shared.transfer.cache.EditorSession;
+import com.onlyoffice.slack.shared.transfer.response.SettingsResponse;
 import com.slack.api.Slack;
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.model.Installer;
@@ -30,16 +31,16 @@ import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
 
 class DocumentEditorControllerTests {
-  private DocumentEditorController controller;
   private ServerConfigurationProperties serverConfigurationProperties;
-  private RotatingInstallationService rotatingInstallationService;
-  private ConfigManagerService configManagerService;
-  private IMap<String, EditorSession> sessions;
-  private TeamSettingsService teamSettingsService;
+
   private App app;
-  private SlackMessageConfigurationProperties slackMessageConfigurationProperties;
-  private MessageSource messageSource;
+  private IMap sessions;
+
   private Model model;
+  private DocumentEditorController controller;
+
+  private TeamSettingsService teamSettingsService;
+  private RotatingInstallationService rotatingInstallationService;
 
   private EditorSession createValidEditorSession() {
     return EditorSession.builder()
@@ -117,26 +118,27 @@ class DocumentEditorControllerTests {
 
   @BeforeEach
   void setUp() {
-    serverConfigurationProperties = mock(ServerConfigurationProperties.class);
-    rotatingInstallationService = mock(RotatingInstallationService.class);
-    configManagerService = mock(ConfigManagerService.class);
+    app = mock(App.class);
+    model = mock(Model.class);
     sessions = mock(IMap.class);
     teamSettingsService = mock(TeamSettingsService.class);
-    app = mock(App.class);
-    slackMessageConfigurationProperties = mock(SlackMessageConfigurationProperties.class);
-    messageSource = mock(MessageSource.class);
-    model = mock(Model.class);
+    rotatingInstallationService = mock(RotatingInstallationService.class);
+    serverConfigurationProperties = mock(ServerConfigurationProperties.class);
+
+    var documentConfigManagerService = mock(DocumentConfigManagerService.class);
+    var messageSourceSlackConfiguration = mock(MessageSourceSlackConfiguration.class);
+    var messageSource = mock(MessageSource.class);
 
     controller =
         new DocumentEditorController(
             serverConfigurationProperties,
-            rotatingInstallationService,
-            configManagerService,
-            sessions,
-            teamSettingsService,
+            messageSourceSlackConfiguration,
             app,
-            slackMessageConfigurationProperties,
-            messageSource);
+            messageSource,
+            teamSettingsService,
+            sessions,
+            rotatingInstallationService,
+            documentConfigManagerService);
   }
 
   @Test
@@ -145,7 +147,7 @@ class DocumentEditorControllerTests {
 
     var result = controller.editor(sessionId, model);
 
-    assertEquals("loading", result);
+    assertEquals("document/loading", result);
   }
 
   @Test
@@ -156,7 +158,7 @@ class DocumentEditorControllerTests {
 
     var result = controller.editorContent(sessionId, model);
 
-    assertEquals("badsession", result);
+    assertEquals("errors/bad_session", result);
   }
 
   @Test
@@ -170,7 +172,7 @@ class DocumentEditorControllerTests {
 
     var result = controller.editorContent(sessionId, model);
 
-    assertEquals("notavailable", result);
+    assertEquals("errors/not_available", result);
   }
 
   @Test
@@ -200,7 +202,7 @@ class DocumentEditorControllerTests {
 
     var result = controller.editorContent(sessionId, model);
 
-    assertEquals("badapicall", result);
+    assertEquals("errors/bad_slack", result);
   }
 
   @Test
@@ -226,7 +228,7 @@ class DocumentEditorControllerTests {
 
     var result = controller.editorContent(sessionId, model);
 
-    assertEquals("badapicall", result);
+    assertEquals("errors/bad_slack", result);
   }
 
   @Test
@@ -247,12 +249,12 @@ class DocumentEditorControllerTests {
     try {
       when(methodsClient.filesInfo(any(FilesInfoRequest.class)))
           .thenThrow(new RuntimeException("API Error"));
-    } catch (Exception e) {
+    } catch (Exception ignored) {
     }
 
     var result = controller.editorContent(sessionId, model);
 
-    assertEquals("badapicall", result);
+    assertEquals("errors/bad_slack", result);
   }
 
   @Test
@@ -278,11 +280,11 @@ class DocumentEditorControllerTests {
     try {
       when(methodsClient.filesInfo(any(FilesInfoRequest.class))).thenReturn(fileInfo);
       when(methodsClient.usersInfo(any(UsersInfoRequest.class))).thenReturn(userInfo);
-    } catch (Exception e) {
+    } catch (Exception ignored) {
     }
 
     var result = controller.editorContent(sessionId, model);
 
-    assertEquals("badapicall", result);
+    assertEquals("errors/bad_slack", result);
   }
 }

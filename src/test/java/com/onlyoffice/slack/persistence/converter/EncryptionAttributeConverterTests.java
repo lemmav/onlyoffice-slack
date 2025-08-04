@@ -3,7 +3,8 @@ package com.onlyoffice.slack.persistence.converter;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.onlyoffice.slack.service.cryptography.AesEncryptionService;
+import com.onlyoffice.slack.shared.persistence.converter.EncryptionAttributeConverter;
+import com.onlyoffice.slack.shared.utils.AesEncryptionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

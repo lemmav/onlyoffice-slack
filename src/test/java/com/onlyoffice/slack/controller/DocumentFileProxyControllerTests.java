@@ -5,9 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.onlyoffice.slack.configuration.ServerConfigurationProperties;
-import com.onlyoffice.slack.service.document.FileStreamingService;
-import com.onlyoffice.slack.service.document.core.JwtManagerService;
+import com.onlyoffice.slack.domain.document.editor.core.DocumentJwtManagerService;
+import com.onlyoffice.slack.domain.document.proxy.DocumentFileProxyController;
+import com.onlyoffice.slack.domain.document.proxy.DocumentFileStreamingService;
+import com.onlyoffice.slack.shared.configuration.ServerConfigurationProperties;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,10 +16,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class DocumentFileProxyControllerTests {
-  private DocumentFileProxyController controller;
   private ServerConfigurationProperties serverConfigurationProperties;
-  private FileStreamingService fileStreamingService;
-  private JwtManagerService jwtManagerService;
+
+  private DocumentFileProxyController controller;
+  private DocumentJwtManagerService documentJwtManagerService;
+
   private HttpServletResponse response;
 
   private Map<String, Object> createValidDecodedToken() {
@@ -32,13 +34,14 @@ class DocumentFileProxyControllerTests {
   @BeforeEach
   void setUp() {
     serverConfigurationProperties = mock(ServerConfigurationProperties.class);
-    fileStreamingService = mock(FileStreamingService.class);
-    jwtManagerService = mock(JwtManagerService.class);
+    documentJwtManagerService = mock(DocumentJwtManagerService.class);
     response = mock(HttpServletResponse.class);
+
+    var documentFileStreamingService = mock(DocumentFileStreamingService.class);
 
     controller =
         new DocumentFileProxyController(
-            serverConfigurationProperties, fileStreamingService, jwtManagerService);
+            serverConfigurationProperties, documentJwtManagerService, documentFileStreamingService);
   }
 
   @Test
@@ -49,7 +52,7 @@ class DocumentFileProxyControllerTests {
 
     when(serverConfigurationProperties.getCryptography()).thenReturn(cryptography);
     when(cryptography.getSecret()).thenReturn("secret");
-    when(jwtManagerService.verifyToken(token, "secret")).thenReturn(decodedToken);
+    when(documentJwtManagerService.verifyToken(token, "secret")).thenReturn(decodedToken);
 
     var result = controller.downloadFile(token, response);
 
@@ -63,7 +66,7 @@ class DocumentFileProxyControllerTests {
 
     when(serverConfigurationProperties.getCryptography()).thenReturn(cryptography);
     when(cryptography.getSecret()).thenReturn("secret");
-    when(jwtManagerService.verifyToken(token, "secret"))
+    when(documentJwtManagerService.verifyToken(token, "secret"))
         .thenThrow(new RuntimeException("Invalid token"));
 
     try {
@@ -81,7 +84,7 @@ class DocumentFileProxyControllerTests {
 
     when(serverConfigurationProperties.getCryptography()).thenReturn(cryptography);
     when(cryptography.getSecret()).thenReturn("secret");
-    when(jwtManagerService.verifyToken(token, "secret")).thenReturn(decodedToken);
+    when(documentJwtManagerService.verifyToken(token, "secret")).thenReturn(decodedToken);
 
     var result = controller.downloadFile(token, response);
 
@@ -107,7 +110,7 @@ class DocumentFileProxyControllerTests {
 
     when(serverConfigurationProperties.getCryptography()).thenReturn(cryptography);
     when(cryptography.getSecret()).thenReturn("secret");
-    when(jwtManagerService.verifyToken(token, "secret"))
+    when(documentJwtManagerService.verifyToken(token, "secret"))
         .thenThrow(new RuntimeException("Empty token"));
 
     try {
