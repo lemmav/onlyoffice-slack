@@ -50,30 +50,30 @@ public class DocumentEditorController {
 
   @GetMapping(path = "/editor")
   public String editor(@RequestParam("session") final String sessionId, final Model model) {
-    model.addAttribute("sessionId", sessionId);
+    model.addAttribute("sid", sessionId);
     model.addAttribute(
-        "loadingTitle",
+        "title",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageLoadingTitle(), null, Locale.ENGLISH));
     model.addAttribute(
-        "loadingDescription",
+        "description",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageLoadingDescription(),
             null,
             Locale.ENGLISH));
     model.addAttribute(
-        "loadingError",
+        "error",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageLoadingError(), null, Locale.ENGLISH));
     model.addAttribute(
-        "loadingRetry",
+        "retry",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageLoadingRetry(), null, Locale.ENGLISH));
     model.addAttribute(
-        "loadingCancel",
+        "cancel",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageLoadingCancel(), null, Locale.ENGLISH));
-    return "loading";
+    return "document/loading";
   }
 
   @GetMapping(path = "/editor/content")
@@ -92,7 +92,7 @@ public class DocumentEditorController {
           "button",
           messageSource.getMessage(
               slackMessageConfigurationProperties.getErrorSessionButton(), null, Locale.ENGLISH));
-      return "badsession";
+      return "errors/bad_session";
     }
 
     var session = storedSession.get();
@@ -111,7 +111,7 @@ public class DocumentEditorController {
           "button",
           messageSource.getMessage(
               slackMessageConfigurationProperties.getErrorAvailableButton(), null, Locale.ENGLISH));
-      return "notavailable";
+      return "errors/not_available";
     }
 
     var user = maybeUser.get();
@@ -145,7 +145,7 @@ public class DocumentEditorController {
                 slackMessageConfigurationProperties.getErrorSlackApiButton(),
                 null,
                 Locale.ENGLISH));
-        return "badapicall";
+        return "errors/bad_slack";
       }
 
       var config =
@@ -162,9 +162,8 @@ public class DocumentEditorController {
 
       model.addAttribute("config", config);
       model.addAttribute(
-          "documentServerApiUrl",
-          String.format("%s/web-apps/apps/api/documents/api.js", settings.getAddress()));
-      return "editor";
+          "apiUrl", String.format("%s/web-apps/apps/api/documents/api.js", settings.getAddress()));
+      return "document/editor";
     } catch (InterruptedException | ExecutionException e) {
       model.addAttribute(
           "title",
@@ -178,7 +177,7 @@ public class DocumentEditorController {
           "button",
           messageSource.getMessage(
               slackMessageConfigurationProperties.getErrorSlackApiButton(), null, Locale.ENGLISH));
-      return "badapicall";
+      return "errors/bad_slack";
     }
   }
 

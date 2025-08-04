@@ -42,12 +42,10 @@ public class SlackMessageConfigurationProperties {
 
   private String messageCancellationTitle = "cancellation.title";
   private String messageCancellationText = "cancellation.text";
-  private String messageCancellationDescription = "cancellation.description";
   private String messageCancellationButton = "cancellation.button";
 
   private String messageCompletionTitle = "completion.title";
   private String messageCompletionText = "completion.text";
-  private String messageCompletionDescription = "completion.description";
   private String messageCompletionButton = "completion.button";
 
   private String messageHelpGreeting = "help.greeting";

@@ -5,56 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, caller-scalable=no, minimal-ui" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <title>[[${title}]]</title>
-
+    <title>ONLYOFFICE</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
     <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Lato:700,400&display=swap' rel='stylesheet'>
     <style>
-        .notavailable-page {
+        .error-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
             min-height: 100vh;
+
+            margin: 0;
+            padding: 0;
+
             background: #fff;
             font-family: 'Open Sans', Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            margin: 0;
         }
 
-        .notavailable-container {
+        .error-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
             width: 100%;
             max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+
             margin: 0 auto;
-            background: none;
-            box-shadow: none;
-            border-radius: 0;
             padding: 0;
+
+            border-radius: 0;
+
+            box-shadow: none;
+            background: none;
         }
 
-        .notavailable__logo {
+        .error__logo {
             display: block;
-            margin: 0 auto 32px auto;
+
             width: 160px;
-            max-width: 80vw;
             height: auto;
+            max-width: 80vw;
+
+            margin: 0 auto 32px auto;
         }
 
-        .notavailable-container__illustration {
+        .error-container__illustration {
             display: block;
-            margin: 0 auto 0 auto;
+
             width: 360px;
             height: 360px;
             max-width: 90vw;
             max-height: 60vh;
+
+            margin: 0 auto 0 auto;
         }
 
-        .notavailable-container__title-block {
+        .error-container__title-block {
+            margin-top: 24px;
+            margin-bottom: 16px;
+
             font-family: 'Lato', Arial, sans-serif;
             font-weight: 700;
             font-style: normal;
@@ -62,12 +76,14 @@
             line-height: 28px;
             letter-spacing: 0;
             text-align: center;
+
             color: #222;
-            margin-top: 24px;
-            margin-bottom: 16px;
         }
 
-        .notavailable-container__description {
+        .error-container__description {
+            margin-bottom: 16px;
+            margin-top: 0;
+
             font-family: 'Lato', Arial, sans-serif;
             font-weight: 400;
             font-style: normal;
@@ -75,71 +91,80 @@
             line-height: 16px;
             letter-spacing: 0;
             text-align: center;
+
             color: #888;
-            margin-bottom: 16px;
-            margin-top: 0;
         }
 
-        .notavailable-container__button {
+        .error-container__button {
+            box-sizing: border-box;
             display: block;
-            margin: 16px auto 0 auto;
+
             width: 160px;
             height: 36px;
-            background: #007A5A;
-            color: #fff;
+
+            margin: 16px auto 0 auto;
+            padding: 6px 10px;
+
             font-size: 14px;
             font-family: 'Open Sans', Arial, sans-serif;
             font-weight: 400;
             text-decoration: none;
+            text-align: center;
+
             border-radius: 8px;
             border: none;
             cursor: pointer;
             opacity: 1;
-            padding: 6px 10px;
-            text-align: center;
+
+            background: #007A5A;
+            color: #fff;
             transition: background 0.2s;
-            box-sizing: border-box;
         }
 
-        .notavailable-container__button:hover {
+        .error-container__button:hover {
             background: #005f47;
         }
 
         @media (max-width: 500px) {
-            .notavailable-container {
+            .error-container {
                 max-width: 98vw;
             }
-            .notavailable__logo {
+            .error__logo {
                 width: 120px;
+
                 margin-bottom: 24px;
             }
-            .notavailable-container__illustration {
+            .error-container__illustration {
                 width: 90vw;
                 height: auto;
                 max-width: 360px;
                 max-height: 360px;
+
                 margin-bottom: 0;
             }
-            .notavailable-container__title-block {
+            .error-container__title-block {
+                margin-top: 16px;
+
                 font-size: 16px;
                 line-height: 22px;
-                margin-top: 16px;
             }
-            .notavailable-container__description {
+            .error-container__description {
                 font-size: 13px;
                 line-height: 15px;
             }
-            .notavailable-container__button {
-                font-size: 13px;
+            .error-container__button {
                 width: 120px;
                 height: 32px;
+
                 padding: 6px 8px;
+
+                font-size: 13px;
             }
         }
     </style>
 </head>
-<body class="notavailable-page">
-<div class="notavailable-container">
+<body class="error-page">
+<div class="error-container">
     <svg width="136" height="24" viewBox="0 0 136 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M15.411 23.7059L4.68526 18.7649C3.77158 18.3335 3.77158 17.6669 4.68526 17.2747L8.4194 15.5493L15.3713 18.7649C16.285 19.1963 17.7548 19.1963 18.6287 18.7649L25.5806 15.5493L29.3147 17.2747C30.2284 17.7061 30.2284 18.3727 29.3147 18.7649L18.589 23.7059C17.7548 24.098 16.285 24.098 15.411 23.7059Z" fill="#FF6F3D"/>
         <path fill-rule="evenodd" clip-rule="evenodd" d="M15.3762 17.5915L4.68317 12.6448C3.77228 12.2129 3.77228 11.5455 4.68317 11.1529L8.32673 9.46472L15.3762 12.7233C16.2871 13.1551 17.7525 13.1551 18.6238 12.7233L25.6733 9.46472L29.3168 11.1529C30.2277 11.5848 30.2277 12.2522 29.3168 12.6448L18.6238 17.5915C17.7129 18.0234 16.2475 18.0234 15.3762 17.5915Z" fill="#95C038"/>
@@ -256,13 +281,13 @@
             </filter>
         </defs>
     </svg>
-    <div class="notavailable-container__title-block">
+    <div class="error-container__title-block">
         [[${title}]]
     </div>
-    <div class="notavailable-container__description">
+    <div class="error-container__description">
         [[${text}]]
     </div>
-    <a onclick="window.close()" class="notavailable-container__button">
+    <a onclick="window.close()" class="error-container__button">
         [[${button}]]
     </a>
 </div>

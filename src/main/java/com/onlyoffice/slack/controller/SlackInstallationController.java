@@ -18,56 +18,44 @@ public class SlackInstallationController {
   @GetMapping(value = "/slack/oauth/completion")
   public String completion(Model model) {
     model.addAttribute(
-        "completionTitle",
+        "title",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageCompletionTitle(), null, Locale.ENGLISH));
     model.addAttribute(
-        "completionText",
+        "text",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageCompletionText(), null, Locale.ENGLISH));
     model.addAttribute(
-        "completionDescription",
-        messageSource.getMessage(
-            slackMessageConfigurationProperties.getMessageCompletionDescription(),
-            null,
-            Locale.ENGLISH));
-    model.addAttribute(
-        "completionButton",
+        "button",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageCompletionButton(),
             null,
             Locale.ENGLISH));
 
-    return "completion";
+    return "oauth/completion";
   }
 
   @GetMapping(value = "/slack/oauth/cancellation")
   public String cancellation(Model model) {
     model.addAttribute(
-        "cancellationTitle",
+        "title",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageCancellationTitle(),
             null,
             Locale.ENGLISH));
     model.addAttribute(
-        "cancellationText",
+        "text",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageCancellationText(),
             null,
             Locale.ENGLISH));
     model.addAttribute(
-        "cancellationDescription",
-        messageSource.getMessage(
-            slackMessageConfigurationProperties.getMessageCancellationDescription(),
-            null,
-            Locale.ENGLISH));
-    model.addAttribute(
-        "cancellationButton",
+        "button",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageCancellationButton(),
             null,
             Locale.ENGLISH));
 
-    return "cancellation";
+    return "oauth/cancellation";
   }
 }

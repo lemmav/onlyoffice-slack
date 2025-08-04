@@ -54,17 +54,17 @@ public class GlobalErrorController implements ErrorController {
     model.addAttribute("text", text);
     model.addAttribute("button", action);
 
-    return "error";
+    return "errors/global";
   }
 
   @ExceptionHandler(SettingsConfigurationException.class)
   public String handleSettingsConfigurationException(
       final SettingsConfigurationException ex, final Model model) {
     model.addAttribute("title", ex.getTitle());
-    model.addAttribute("description", ex.getMessage());
+    model.addAttribute("text", ex.getMessage());
     model.addAttribute("button", ex.getAction());
 
-    return "nosettings";
+    return "errors/no_settings";
   }
 
   @ExceptionHandler(Exception.class)
@@ -82,6 +82,6 @@ public class GlobalErrorController implements ErrorController {
         messageSource.getMessage(
             slackMessageConfigurationProperties.getErrorGenericButton(), null, Locale.ENGLISH));
 
-    return "error";
+    return "errors/global";
   }
 }

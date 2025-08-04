@@ -19,43 +19,43 @@ public class SlackCustomInstallationRenderer implements OAuthInstallPageRenderer
   public String render(final String installationUrl) {
     var ctx = new Context();
     ctx.setVariable(
-        "installationTitle",
+        "title",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageInstallTitle(), null, Locale.ENGLISH));
     ctx.setVariable(
-        "installationSubtitle",
+        "subtitle",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageInstallSubtitle(), null, Locale.ENGLISH));
     ctx.setVariable(
-        "installationButton",
+        "button",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageInstallButton(), null, Locale.ENGLISH));
     ctx.setVariable(
-        "installationFeatureEdit",
+        "featureEdit",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageInstallFeatureEdit(),
             null,
             Locale.ENGLISH));
     ctx.setVariable(
-        "installationFeatureCollaboration",
+        "featureCollaboration",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageInstallFeatureCollaboration(),
             null,
             Locale.ENGLISH));
     ctx.setVariable(
-        "installationFeatureFileSupport",
+        "featureFile",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageInstallFeatureFileSupport(),
             null,
             Locale.ENGLISH));
     ctx.setVariable(
-        "installationFeatureSecureEditing",
+        "featureSecure",
         messageSource.getMessage(
             slackMessageConfigurationProperties.getMessageInstallFeatureSecureEditing(),
             null,
             Locale.ENGLISH));
-    ctx.setVariable("installationUrl", installationUrl);
+    ctx.setVariable("url", installationUrl);
 
-    return engine.process("install", ctx);
+    return engine.process("oauth/install", ctx);
   }
 }

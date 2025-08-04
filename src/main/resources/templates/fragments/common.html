@@ -1,0 +1,57 @@
+<th:block xmlns:th="http://www.thymeleaf.org"
+          th:fragment="common-page (title, text, button, backgroundImage, href)"
+>
+    <!DOCTYPE html>
+    <html xmlns:th="http://www.thymeleaf.org">
+        <head>
+            <meta http-equiv="Content-Type"
+                    content="text/html; charset=UTF-8">
+            <meta name="viewport"
+                  content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, caller-scalable=no, minimal-ui"
+            />
+            <meta name="apple-mobile-web-app-capable"
+                  content="yes" />
+            <meta name="mobile-web-app-capable"
+                  content="yes" />
+            <title>ONLYOFFICE</title>
+            <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+            <link rel="stylesheet" href="/styles/root.css">
+            <link rel="stylesheet" href="/styles/common.css">
+            <link href='https://fonts.googleapis.com/css?family=Open Sans'
+                  rel='stylesheet'>
+            <link href='https://fonts.googleapis.com/css?family=Lato:700,400&display=swap'
+                  rel='stylesheet'>
+        </head>
+        <body class="common-page">
+            <div class="common-container">
+                <img class="common__logo"
+                     src="/images/logo_long.svg"
+                     alt="ONLYOFFICE Logo">
+                <img class="common-container__illustration"
+                     alt="ONLYOFFICE Background"
+                     th:src="${backgroundImage}">
+                <div class="common-container__title-block"
+                     th:text="${title}">
+                    Default Title
+                </div>
+                <div class="common-container__description"
+                     th:text="${text}">
+                    Default description text
+                </div>
+                <a th:if="${href != null}"
+                   class="common-container__button"
+                   th:href="${href}" th:text="${button}">
+                    Default Button
+                </a>
+                <button th:if="${href == null}"
+                        class="common-container__button"
+                        type="button"
+                        onclick="window.close()"
+                        th:text="${button}">
+                    Default Button
+                </button>
+            </div>
+        </body>
+    </html>
+</th:block>
