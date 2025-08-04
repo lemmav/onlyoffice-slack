@@ -12,6 +12,10 @@ server:
   baseAddress: ${SERVER_BASE_ADDRESS}
   cryptography:
     secret: ${SERVER_CRYPTOGRAPHY_SECRET:secret}
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
   demo:
     address: ${SERVER_DEMO_ADDRESS}
     header: ${SERVER_DEMO_HEADER}
