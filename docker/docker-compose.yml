@@ -8,6 +8,8 @@ services:
       dockerfile: docker/Dockerfile
     container_name: onlyoffice-slack
     environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-p}
+
       SERVER_BASE_ADDRESS: ${SERVER_BASE_ADDRESS}
 
       SERVER_DEMO_ADDRESS: ${SERVER_DEMO_ADDRESS}
