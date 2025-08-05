@@ -1,3 +1,33 @@
+:root {
+    --bg-color: #fff;
+    --text-color: #222;
+    --text-secondary: #888;
+    --button-bg: #007A5A;
+    --button-hover: #005f47;
+    --button-text: #fff;
+    --body-bg: #f5f5f5;
+    --container-bg: #fff;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --feature-icon-bg: #e8f5e8;
+    --feature-icon-color: #007A5A;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1a1d21;
+        --text-color: #ffffff;
+        --text-secondary: #d1d2d380;
+        --button-bg: #00553d;
+        --button-hover: #007a5a;
+        --button-text: #f8f8f8;
+        --body-bg: #1a1d21;
+        --container-bg: #1a1d21;
+        --shadow: rgba(255, 255, 255, 0.1);
+        --feature-icon-bg: #2a4a3a;
+        --feature-icon-color: #4ade80;
+    }
+}
+
 body {
     display: flex;
     justify-content: center;
@@ -10,7 +40,8 @@ body {
 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
-    background: #f8f9fa;
+    background: var(--body-bg);
+    color: var(--text-color);
 }
 
 .installation {
@@ -20,6 +51,9 @@ body {
     margin: 20px auto;
 
     text-align: center;
+    
+    background: var(--container-bg);
+    color: var(--text-color);
 }
 
 .installation__logo {
@@ -37,7 +71,7 @@ body {
     font-size: 28px;
     font-weight: 600;
 
-    color: #2c2d30;
+    color: var(--text-color);
 }
 
 .installation__subtitle {
@@ -46,7 +80,7 @@ body {
     font-size: 16px;
     line-height: 1.5;
 
-    color: #696969;
+    color: var(--text-secondary);
 }
 
 .installation__button {
@@ -62,13 +96,13 @@ body {
     border: none;
     border-radius: 6px;
 
-    background: #007a5a;
-    color: white;
+    background: var(--button-bg);
+    color: var(--button-text);
     transition: background 0.2s ease;
 }
 
 .installation__button:hover {
-    background: #005a42;
+    background: var(--button-hover);
 }
 
 .installation__content {
@@ -105,8 +139,22 @@ body {
 
     border-radius: 50%;
 
-    background: #007a5a;
-    color: white;
+    background: var(--feature-icon-bg);
+    color: var(--feature-icon-color);
+}
+
+.features__item span {
+    color: var(--text-color);
+}
+
+@media (prefers-color-scheme: dark) {
+    .installation__logo--light {
+        display: none;
+    }
+    
+    .installation__logo--dark {
+        display: block;
+    }
 }
 
 @media (max-width: 768px) {

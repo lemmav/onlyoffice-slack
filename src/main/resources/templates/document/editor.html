@@ -7,6 +7,18 @@
         
         <script type="text/javascript" th:src="${apiUrl}"></script>
         <style>
+            :root {
+                --editor-bg: #fff;
+                --editor-text: #333;
+            }
+
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --editor-bg: #1a1d21;
+                    --editor-text: #ffffff;
+                }
+            }
+
             html {
                 height: 100%;
                 width: 100%;
@@ -18,14 +30,14 @@
                 margin: 0;
                 padding: 0;
 
-                font-family: Arial, Tahoma,sans-serif;
+                font-family: Arial, Tahoma, sans-serif;
                 font-size: 12px;
                 font-weight: normal;
                 overflow-y: hidden;
                 text-decoration: none;
 
-                background: #fff;
-                color: #333;
+                background: var(--editor-bg);
+                color: var(--editor-text);
             }
 
             div {

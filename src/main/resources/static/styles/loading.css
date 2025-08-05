@@ -1,3 +1,33 @@
+:root {
+    --bg-color: #fff;
+    --text-color: #222;
+    --text-secondary: #888;
+    --button-bg: #007A5A;
+    --button-hover: #005f47;
+    --button-text: #fff;
+    --body-bg: #f5f5f5;
+    --container-bg: #fff;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --error-bg: #fee;
+    --error-text: #c53030;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #1a1d21;
+        --text-color: #ffffff;
+        --text-secondary: #d1d2d380;
+        --button-bg: #00553d;
+        --button-hover: #007a5a;
+        --button-text: #f8f8f8;
+        --body-bg: #1a1d21;
+        --container-bg: #1a1d21;
+        --shadow: rgba(255, 255, 255, 0.1);
+        --error-bg: #2d1b1b;
+        --error-text: #feb2b2;
+    }
+}
+
 .loading-page {
     display: flex;
     justify-content: center;
@@ -11,7 +41,8 @@
 
     font-family: 'Open Sans', Arial, sans-serif;
 
-    background: #fff;
+    background: var(--body-bg);
+    color: var(--text-color);
 }
 
 .loading-container {
@@ -29,7 +60,8 @@
     border-radius: 0;
 
     box-shadow: none;
-    background: none;
+    background: var(--container-bg);
+    color: var(--text-color);
 }
 
 .loading__logo {
@@ -63,7 +95,7 @@
     line-height: 24px;
     text-align: center;
 
-    color: #222;
+    color: var(--text-color);
 }
 
 .loading-container__description {
@@ -75,7 +107,7 @@
     line-height: 16px;
     text-align: center;
 
-    color: #888;
+    color: var(--text-secondary);
 }
 
 .loading-container__button {
@@ -100,13 +132,39 @@
     cursor: pointer;
     opacity: 1;
 
-    background: #007A5A;
-    color: #fff;
+    background: var(--button-bg);
+    color: var(--button-text);
     transition: background 0.2s;
 }
 
 .loading-container__button:hover {
-    background: #005f47;
+    background: var(--button-hover);
+}
+
+.loading-container__error-block {
+    background: var(--error-bg);
+}
+
+.loading-container__error-message {
+    color: var(--error-text);
+}
+
+.loading__logo--light {
+    display: block;
+}
+
+.loading__logo--dark {
+    display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    .loading__logo--light {
+        display: none;
+    }
+    
+    .loading__logo--dark {
+        display: block;
+    }
 }
 
 @keyframes loading-spin {
