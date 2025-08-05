@@ -16,6 +16,7 @@ import com.slack.api.bolt.model.Installer;
 import com.slack.api.methods.request.users.UsersInfoRequest;
 import com.slack.api.methods.response.files.FilesInfoResponse;
 import com.slack.api.methods.response.users.UsersInfoResponse;
+import jakarta.validation.ConstraintViolationException;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -232,6 +233,23 @@ class DocumentEditorController {
               messageSourceSlackConfiguration.getErrorSlackApiButton(), null, Locale.ENGLISH));
 
       return "errors/bad_slack";
+    } catch (ConstraintViolationException e) {
+      model.addAttribute(
+          "title",
+          messageSource.getMessage(
+              messageSourceSlackConfiguration.getErrorSettingsTitle(), null, Locale.ENGLISH));
+      model.addAttribute(
+          "text",
+          messageSource.getMessage(
+              messageSourceSlackConfiguration.getErrorSettingsInvalidConfigurationText(),
+              null,
+              Locale.ENGLISH));
+      model.addAttribute(
+          "button",
+          messageSource.getMessage(
+              messageSourceSlackConfiguration.getErrorSettingsButton(), null, Locale.ENGLISH));
+
+      return "errors/no_settings";
     }
   }
 }
