@@ -36,7 +36,7 @@ class SlackSubmitSettingsBlockActionHandler implements SlackBlockActionHandlerRe
           .map(ViewState.Value::getValue)
           .map(String::trim)
           .filter(value -> !value.isEmpty())
-          .orElse(null);
+          .orElse("");
     } catch (Exception e) {
       log.warn(
           "Error extracting value for block '{}' action '{}': {}",
