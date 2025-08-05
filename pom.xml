@@ -40,12 +40,26 @@
 		<logstack.logback.encoder.version>8.0</logstack.logback.encoder.version>
 		<lombok.version>1.18.38</lombok.version>
 		<onlyoffice.sdk.version>1.5.0</onlyoffice.sdk.version>
+		<otel.version>2.18.1</otel.version>
 		<resilience4j.version>2.2.0</resilience4j.version>
 
 		<maven.formatter.plugin.version>2.24</maven.formatter.plugin.version>
 		<maven.optimizer.version>2.6.2</maven.optimizer.version>
 		<java.version>21</java.version>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.opentelemetry.instrumentation</groupId>
+				<artifactId>opentelemetry-instrumentation-bom</artifactId>
+				<version>${otel.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<!-- Spring Web Dependencies -->
 		<dependency>
@@ -131,10 +145,14 @@
 			<version>${lettuce.version}</version>
 		</dependency>
 
-		<!-- Actuator & Monitoring Dependencies -->
+		<!-- Actuator, Tracing & Monitoring Dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.opentelemetry.instrumentation</groupId>
+			<artifactId>opentelemetry-spring-boot-starter</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.micrometer</groupId>

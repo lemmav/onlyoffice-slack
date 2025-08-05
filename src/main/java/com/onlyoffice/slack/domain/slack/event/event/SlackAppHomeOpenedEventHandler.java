@@ -39,20 +39,6 @@ class SlackAppHomeOpenedEventHandler implements BoltEventHandler<AppHomeOpenedEv
   private final SettingsService settingsService;
   private final MessageSource messageSource;
 
-  private LayoutBlock buildDemoModeSection(final SettingsResponse settings) {
-    var demoDeadline =
-        settings
-            .getDemoStartedDate()
-            .plusDays(serverConfigurationProperties.getDemo().getDurationDays());
-    var formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy 'at' h:mm a");
-    var message =
-        messageSource.getMessage(
-            messageSourceSlackConfiguration.getMessageHomeDemoActive(),
-            new Object[] {demoDeadline.format(formatter)},
-            Locale.ENGLISH);
-    return section(s -> s.text(plainText(message)));
-  }
-
   private List<LayoutBlock> buildSettingsInputs(final SettingsResponse settings) {
     var inputs = new ArrayList<LayoutBlock>();
     inputs.add(
@@ -313,9 +299,6 @@ class SlackAppHomeOpenedEventHandler implements BoltEventHandler<AppHomeOpenedEv
 
   private List<LayoutBlock> buildHomeTabBlocks(final SettingsResponse settings) {
     var blocks = new ArrayList<>(buildWelcomeBlocks());
-
-    if (settings != null && settings.isDemoEnabled() && settings.getDemoStartedDate() != null)
-      blocks.add(buildDemoModeSection(settings));
 
     blocks.addAll(buildSettingsInputs(settings));
     blocks.add(buildSaveButtonActions());

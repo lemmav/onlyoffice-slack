@@ -1,0 +1,8 @@
+otel:
+  instrumentation:
+    logback-appender:
+      enabled: false
+    logback-mdc:
+      enabled: false
+  propagators:
+    - tracecontext

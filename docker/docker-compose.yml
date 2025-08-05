@@ -9,6 +9,7 @@ services:
     container_name: onlyoffice-slack
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-p}
+      OTEL_SDK_DISABLED: ${OTEL_SDK_DISABLED:-true}
 
       SERVER_BASE_ADDRESS: ${SERVER_BASE_ADDRESS}
 

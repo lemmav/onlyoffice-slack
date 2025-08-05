@@ -55,7 +55,6 @@ public class MessageSourceSlackConfiguration {
 
   private String messageHomeTitle = "home.title";
   private String messageHomeSettingsTitle = "home.settings.title";
-  private String messageHomeDemoActive = "home.demo.active";
   private String messageHomeInputHttpsAddressLabel = "home.input.httpsAddress.label";
   private String messageHomeInputHttpsAddressPlaceholder = "home.input.httpsAddress.placeholder";
   private String messageHomeInputSecretLabel = "home.input.secret.label";

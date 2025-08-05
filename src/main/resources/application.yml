@@ -8,6 +8,7 @@ spring:
       - "classpath:application-migration.yml"
       - "classpath:application-resilience.yml"
       - "classpath:application-slack.yml"
+      - "classpath:application-telemetry.yml"
   main:
     banner-mode: off
 server:
