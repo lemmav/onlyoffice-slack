@@ -30,7 +30,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SlackOpenFileManagerMessageShortcutRequestHandler implements MessageShortcutHandler {
+class SlackOpenFileManagerMessageShortcutRequestHandler implements MessageShortcutHandler {
+  private static final long MAX_FILE_SIZE = 10 * 1024 * 1024;
+
   private final MessageSourceSlackConfiguration messageSourceSlackConfiguration;
   private final ServerConfigurationProperties serverConfigurationProperties;
   private final SlackConfigurationProperties slackConfigurationProperties;
@@ -51,6 +53,19 @@ public class SlackOpenFileManagerMessageShortcutRequestHandler implements Messag
 
   private void addFileBlock(final String userId, final List<LayoutBlock> blocks, final File file) {
     blocks.add(divider());
+    if (file.getSize() > MAX_FILE_SIZE) {
+      blocks.add(
+          section(
+              s ->
+                  s.text(
+                      plainText(
+                          file.getName()
+                              + "  —  "
+                              + (file.getSize() / 1024)
+                              + " KB (too large)"))));
+      return;
+    }
+
     var sessionId =
         slackFileActionBuilder.build(userId, UUID.randomUUID().toString(), file.getId());
     var openButton =
