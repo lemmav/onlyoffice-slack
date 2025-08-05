@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -59,6 +61,11 @@ public class GlobalExceptionHandler implements ErrorController {
     model.addAttribute("button", ex.getAction());
 
     return "errors/no_settings";
+  }
+
+  @ExceptionHandler(FileContentLengthException.class)
+  public ResponseEntity<?> handleFileContentLengthException(final FileContentLengthException ex) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
   }
 
   @ExceptionHandler(Exception.class)
