@@ -1,0 +1,57 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Artifacts
+*.war
+*.class
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.settings/
+.project
+.classpath
+.factorypath
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Docker files
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Docs
+README.md
+LICENSE
+*.md
+
+# Tests
+src/test/
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Node modules
+node_modules/
+npm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local 
