@@ -6,7 +6,7 @@ import com.onlyoffice.slack.shared.utils.Mapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TeamSettingsMapper implements Mapper<TeamSettings, SettingsResponse> {
+class TeamSettingsMapper implements Mapper<TeamSettings, SettingsResponse> {
 
   @Override
   public SettingsResponse map(TeamSettings source) {

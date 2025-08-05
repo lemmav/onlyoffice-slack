@@ -25,7 +25,7 @@ import org.springframework.validation.annotation.Validated;
 @Service
 @Validated
 @RequiredArgsConstructor
-public class TeamSettingsService implements SettingsService {
+class TeamSettingsService implements SettingsService {
   private final MessageSourceSlackConfiguration messageSourceSlackConfiguration;
   private final ServerConfigurationProperties configurationProperties;
   private final MessageSource messageSource;

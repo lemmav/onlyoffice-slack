@@ -11,7 +11,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Configuration
 @RequiredArgsConstructor
-public class InstallationRenderer implements OAuthInstallPageRenderer {
+class InstallationRenderer implements OAuthInstallPageRenderer {
   private final MessageSourceSlackConfiguration messageSourceSlackConfiguration;
 
   private final SpringTemplateEngine engine;

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SlackHelpSlashCommandHandler implements SlackSlashCommandHandlerRegistrar {
+class SlackHelpSlashCommandHandler implements SlackSlashCommandHandlerRegistrar {
   private final MessageSourceSlackConfiguration messageConfig;
   private final SlackConfigurationProperties slackProperties;
 

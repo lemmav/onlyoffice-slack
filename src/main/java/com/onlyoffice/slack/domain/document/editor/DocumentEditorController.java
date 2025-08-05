@@ -5,7 +5,7 @@ import com.onlyoffice.model.documenteditor.config.document.Type;
 import com.onlyoffice.model.documenteditor.config.editorconfig.Mode;
 import com.onlyoffice.slack.domain.document.editor.core.DocumentConfigManagerService;
 import com.onlyoffice.slack.domain.slack.installation.RotatingInstallationService;
-import com.onlyoffice.slack.domain.slack.settings.TeamSettingsService;
+import com.onlyoffice.slack.domain.slack.settings.SettingsService;
 import com.onlyoffice.slack.shared.configuration.ServerConfigurationProperties;
 import com.onlyoffice.slack.shared.configuration.message.MessageSourceSlackConfiguration;
 import com.onlyoffice.slack.shared.transfer.cache.EditorSession;
@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class DocumentEditorController {
+class DocumentEditorController {
   private static final ExecutorService VIRTUAL_THREAD_EXECUTOR =
       Executors.newVirtualThreadPerTaskExecutor();
 
@@ -42,7 +42,7 @@ public class DocumentEditorController {
 
   private final App app;
   private final MessageSource messageSource;
-  private final TeamSettingsService settingsService;
+  private final SettingsService settingsService;
   private final IMap<String, EditorSession> sessions;
   private final RotatingInstallationService rotatingInstallationService;
   private final DocumentConfigManagerService documentConfigManagerService;

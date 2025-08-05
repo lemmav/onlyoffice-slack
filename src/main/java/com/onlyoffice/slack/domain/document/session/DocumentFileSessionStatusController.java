@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class DocumentFileSessionStatusController {
+class DocumentFileSessionStatusController {
   private final IMap<String, EditorSession> sessions;
 
   @ResponseBody

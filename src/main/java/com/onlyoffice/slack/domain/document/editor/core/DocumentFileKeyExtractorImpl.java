@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 @Slf4j
 @Service
 @Validated
-public class DocumentFileKeyExtractorImpl implements DocumentFileKeyExtractor {
+class DocumentFileKeyExtractorImpl implements DocumentFileKeyExtractor {
 
   @Override
   public String extract(@NotBlank final String key, @NotNull final Type type) {

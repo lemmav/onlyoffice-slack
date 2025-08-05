@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class DocumentSaveCallbackHandler implements DocumentCallbackRegistrar {
+class DocumentSaveCallbackHandler implements DocumentCallbackRegistrar {
   private static final int MAX_FILE_SIZE = 25 * 1024 * 1024;
 
   private final DocumentFileKeyExtractor documentFileKeyExtractor;

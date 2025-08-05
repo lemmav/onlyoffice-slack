@@ -18,7 +18,7 @@ import org.springframework.validation.annotation.Validated;
 @Component
 @Validated
 @RequiredArgsConstructor
-public class DocumentJwtManagerServiceImpl implements DocumentJwtManagerService {
+class DocumentJwtManagerServiceImpl implements DocumentJwtManagerService {
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   private final DocumentServerConfigurationProperties documentServerConfigurationProperties;

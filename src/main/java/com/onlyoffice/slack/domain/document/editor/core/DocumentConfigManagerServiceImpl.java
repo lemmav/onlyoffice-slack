@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 @Service
 @Validated
 @RequiredArgsConstructor
-public class DocumentConfigManagerServiceImpl implements DocumentConfigManagerService {
+class DocumentConfigManagerServiceImpl implements DocumentConfigManagerService {
   private final ServerConfigurationProperties serverConfigurationProperties;
 
   private final DocumentJwtManagerService documentJwtManagerService;

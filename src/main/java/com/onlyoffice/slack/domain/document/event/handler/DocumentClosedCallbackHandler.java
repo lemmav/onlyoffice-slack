@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class DocumentClosedCallbackHandler implements DocumentCallbackRegistrar {
+class DocumentClosedCallbackHandler implements DocumentCallbackRegistrar {
   private final DocumentFileKeyExtractor documentFileKeyExtractor;
   private final IMap<String, DocumentSessionKey> keys;
 

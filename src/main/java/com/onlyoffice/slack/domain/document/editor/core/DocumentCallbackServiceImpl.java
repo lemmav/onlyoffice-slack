@@ -2,7 +2,7 @@ package com.onlyoffice.slack.domain.document.editor.core;
 
 import com.onlyoffice.model.documenteditor.Callback;
 import com.onlyoffice.slack.domain.document.event.registry.DocumentCallbackRegistry;
-import com.onlyoffice.slack.domain.slack.settings.TeamSettingsService;
+import com.onlyoffice.slack.domain.slack.settings.SettingsService;
 import com.onlyoffice.slack.shared.configuration.ServerConfigurationProperties;
 import com.onlyoffice.slack.shared.exception.domain.DocumentCallbackException;
 import jakarta.validation.constraints.NotNull;
@@ -17,14 +17,14 @@ import org.springframework.validation.annotation.Validated;
 @Service
 @Validated
 @RequiredArgsConstructor
-public class DocumentCallbackServiceImpl implements DocumentCallbackService {
+class DocumentCallbackServiceImpl implements DocumentCallbackService {
   private final ServerConfigurationProperties serverConfigurationProperties;
 
   private final DocumentFileKeyExtractor documentFileKeyExtractor;
 
   private final DocumentJwtManagerService documentJwtManagerService;
   private final DocumentCallbackRegistry documentCallbackRegistry;
-  private final TeamSettingsService settingsService;
+  private final SettingsService settingsService;
 
   @Override
   public void processCallback(

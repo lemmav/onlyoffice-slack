@@ -31,8 +31,7 @@ import org.springframework.validation.annotation.Validated;
 @Service
 @Validated
 @RequiredArgsConstructor
-public class DocumentFileStreamingServiceImpl implements DocumentFileStreamingService {
-  // TODO: Test exceptions
+class DocumentFileStreamingServiceImpl implements DocumentFileStreamingService {
   private static final long MAX_FILE_SIZE = 10 * 1024 * 1024;
   private static final int BUFFER_SIZE = 64 * 1024;
 

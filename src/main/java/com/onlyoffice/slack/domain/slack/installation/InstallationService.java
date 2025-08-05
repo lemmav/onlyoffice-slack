@@ -32,7 +32,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class InstallationService implements RotatingInstallationService {
+class InstallationService implements RotatingInstallationService {
   private final Slack slack = Slack.getInstance();
 
   private final SlackConfigurationProperties slackProperties;

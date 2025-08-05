@@ -21,7 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Slf4j
 @RequiredArgsConstructor
 @RestController(value = "/files")
-public class DocumentFileProxyController {
+class DocumentFileProxyController {
   private static final ExecutorService VIRTUAL_THREAD_EXECUTOR =
       Executors.newVirtualThreadPerTaskExecutor();
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();

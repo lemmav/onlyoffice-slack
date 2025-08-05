@@ -3,7 +3,8 @@ package com.onlyoffice.slack.domain.slack.event.action;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SlackPrivateMetadataExtractorImpl implements SlackPrivateMetadataExtractor {
+class SlackPrivateMetadataExtractorImpl implements SlackPrivateMetadataExtractor {
+
   @Override
   public String extract(final String metadata, final Type type) {
     var parts = metadata.split(":", 2);

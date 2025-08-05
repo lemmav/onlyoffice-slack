@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SlackOpenFileBlockActionHandler implements SlackBlockActionHandlerRegistrar {
+class SlackOpenFileBlockActionHandler implements SlackBlockActionHandlerRegistrar {
   private final SlackConfigurationProperties slackConfigurationProperties;
 
   private final SlackPrivateMetadataExtractor slackPrivateMetadataExtractor;

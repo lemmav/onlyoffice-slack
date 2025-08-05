@@ -5,7 +5,7 @@ import static com.slack.api.model.block.composition.BlockCompositions.*;
 import static com.slack.api.model.block.element.BlockElements.*;
 import static com.slack.api.model.view.Views.view;
 
-import com.onlyoffice.slack.domain.slack.settings.TeamSettingsService;
+import com.onlyoffice.slack.domain.slack.settings.SettingsService;
 import com.onlyoffice.slack.shared.configuration.ServerConfigurationProperties;
 import com.onlyoffice.slack.shared.configuration.SlackConfigurationProperties;
 import com.onlyoffice.slack.shared.configuration.message.MessageSourceSlackConfiguration;
@@ -31,12 +31,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SlackAppHomeOpenedEventHandler implements BoltEventHandler<AppHomeOpenedEvent> {
+class SlackAppHomeOpenedEventHandler implements BoltEventHandler<AppHomeOpenedEvent> {
   private final MessageSourceSlackConfiguration messageSourceSlackConfiguration;
   private final ServerConfigurationProperties serverConfigurationProperties;
   private final SlackConfigurationProperties slackConfigurationProperties;
 
-  private final TeamSettingsService settingsService;
+  private final SettingsService settingsService;
   private final MessageSource messageSource;
 
   private LayoutBlock buildDemoModeSection(final SettingsResponse settings) {

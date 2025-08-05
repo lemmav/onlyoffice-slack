@@ -26,7 +26,7 @@ import org.springframework.validation.annotation.Validated;
 @Service
 @Validated
 @RequiredArgsConstructor
-public class DocumentSettingsValidationServiceImpl implements DocumentSettingsValidationService {
+class DocumentSettingsValidationServiceImpl implements DocumentSettingsValidationService {
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   private final OkHttpClientPoolService httpClientPoolService;

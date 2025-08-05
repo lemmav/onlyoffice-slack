@@ -7,7 +7,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Service
 @Validated
-public class DocumentFileKeyBuilderImpl implements DocumentFileKeyBuilder {
+class DocumentFileKeyBuilderImpl implements DocumentFileKeyBuilder {
 
   @Override
   public String build(

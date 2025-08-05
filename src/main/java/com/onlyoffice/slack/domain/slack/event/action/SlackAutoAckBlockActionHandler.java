@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SlackAutoAckBlockActionHandler implements SlackBlockActionHandlerRegistrar {
+class SlackAutoAckBlockActionHandler implements SlackBlockActionHandlerRegistrar {
   private final SlackConfigurationProperties slackConfigurationProperties;
 
   @Override

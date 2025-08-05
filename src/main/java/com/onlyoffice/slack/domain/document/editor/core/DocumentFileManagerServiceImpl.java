@@ -23,7 +23,7 @@ import org.springframework.validation.annotation.Validated;
 @Component
 @Validated
 @RequiredArgsConstructor
-public class DocumentFileManagerServiceImpl implements DocumentFileManagerService {
+class DocumentFileManagerServiceImpl implements DocumentFileManagerService {
   private final ServerConfigurationProperties serverConfigurationProperties;
   private final SlackConfigurationProperties slackConfigurationProperties;
   private final DocumentServerFormatsConfiguration formatsConfiguration;
