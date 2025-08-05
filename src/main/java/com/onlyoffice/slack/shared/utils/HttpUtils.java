@@ -26,6 +26,11 @@ public class HttpUtils {
     "REMOTE_ADDR"
   };
 
+  public String normalizeAddress(@NotNull final String address) {
+    if (address == null || address.isEmpty()) return address;
+    return address.replaceAll("/+$", "");
+  }
+
   /**
    * Retrieves the HTTP method from the request with a fallback to "GET" for invalid methods.
    *

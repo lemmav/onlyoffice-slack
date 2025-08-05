@@ -2,9 +2,10 @@ package com.onlyoffice.slack.domain.slack.event.action;
 
 import com.onlyoffice.slack.domain.document.editor.core.DocumentSettingsValidationService;
 import com.onlyoffice.slack.domain.slack.event.registry.SlackBlockActionHandlerRegistrar;
-import com.onlyoffice.slack.domain.slack.settings.TeamSettingsService;
+import com.onlyoffice.slack.domain.slack.settings.SettingsService;
 import com.onlyoffice.slack.shared.configuration.SlackConfigurationProperties;
 import com.onlyoffice.slack.shared.transfer.request.SubmitSettingsRequest;
+import com.onlyoffice.slack.shared.utils.HttpUtils;
 import com.slack.api.bolt.handler.builtin.BlockActionHandler;
 import com.slack.api.model.view.ViewState;
 import java.util.List;
@@ -17,11 +18,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SlackSubmitSettingsBlockActionHandler implements SlackBlockActionHandlerRegistrar {
+class SlackSubmitSettingsBlockActionHandler implements SlackBlockActionHandlerRegistrar {
   private final SlackConfigurationProperties slackConfigurationProperties;
 
   private final DocumentSettingsValidationService documentSettingsValidationService;
-  private final TeamSettingsService settingsService;
+  private final SettingsService settingsService;
+
+  private final HttpUtils httpUtils;
 
   private String extractValue(
       final Map<String, Map<String, ViewState.Value>> values,
@@ -81,7 +84,9 @@ public class SlackSubmitSettingsBlockActionHandler implements SlackBlockActionHa
       var demoEnabled = extractDemoEnabled(values);
 
       try {
-        var request = buildSettingsRequest(httpsAddress, secret, header, demoEnabled);
+        var request =
+            buildSettingsRequest(
+                httpUtils.normalizeAddress(httpsAddress), secret, header, demoEnabled);
 
         if (!request.isValidConfiguration()) {
           log.warn(
