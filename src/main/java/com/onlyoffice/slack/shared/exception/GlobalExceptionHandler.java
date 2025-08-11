@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @Controller
@@ -66,6 +67,24 @@ public class GlobalExceptionHandler implements ErrorController {
   @ExceptionHandler(FileContentLengthException.class)
   public ResponseEntity<?> handleFileContentLengthException(final FileContentLengthException ex) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+  }
+
+  @ExceptionHandler(NoResourceFoundException.class)
+  public String handleResourceException(final NoResourceFoundException ex, final Model model) {
+    model.addAttribute(
+        "title",
+        messageSource.getMessage(
+            messageSourceSlackConfiguration.getErrorResourceTitle(), null, Locale.ENGLISH));
+    model.addAttribute(
+        "text",
+        messageSource.getMessage(
+            messageSourceSlackConfiguration.getErrorResourceText(), null, Locale.ENGLISH));
+    model.addAttribute(
+        "button",
+        messageSource.getMessage(
+            messageSourceSlackConfiguration.getErrorResourceButton(), null, Locale.ENGLISH));
+
+    return "errors/global";
   }
 
   @ExceptionHandler(Exception.class)

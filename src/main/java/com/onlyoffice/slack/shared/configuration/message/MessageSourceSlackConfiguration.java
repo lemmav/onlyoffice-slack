@@ -38,6 +38,10 @@ public class MessageSourceSlackConfiguration {
   private String errorGenericText = "error.generic.text";
   private String errorGenericButton = "error.generic.button";
 
+  private String errorResourceTitle = "error.resource.title";
+  private String errorResourceText = "error.resource.text";
+  private String errorResourceButton = "error.resource.button";
+
   private String messageCancellationTitle = "cancellation.title";
   private String messageCancellationText = "cancellation.text";
   private String messageCancellationButton = "cancellation.button";
