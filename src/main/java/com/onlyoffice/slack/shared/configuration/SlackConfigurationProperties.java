@@ -1,28 +1,31 @@
 package com.onlyoffice.slack.shared.configuration;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.annotation.Validated;
 
 @Data
 @Builder
+@Validated
+@Configuration
 @NoArgsConstructor
 @AllArgsConstructor
-@Configuration
 @ConfigurationProperties(prefix = "slack.application")
 public class SlackConfigurationProperties {
-  private String clientId;
-  private String clientSecret;
-  private String signingSecret;
-  private String scopes;
-  private String userScopes;
-  private String pathInstallation;
-  private String pathRedirect;
-  private String pathCompletion;
-  private String pathCancellation;
+  @NotBlank private String clientId;
+  @NotBlank private String clientSecret;
+  @NotBlank private String signingSecret;
+  @NotBlank private String scopes;
+  @NotBlank private String userScopes;
+  @NotBlank private String pathInstallation;
+  @NotBlank private String pathRedirect;
+  @NotBlank private String pathCompletion;
+  @NotBlank private String pathCancellation;
 
   private String fileManagerShortcutId = "open_file_manager";
   private String openFileActionId = "open_file";

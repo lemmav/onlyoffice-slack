@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Builder
+@Configuration
 @NoArgsConstructor
 @AllArgsConstructor
-@Configuration
 @ConfigurationProperties(prefix = "http.client")
 public class HttpClientConfigurationProperties {
   private int connectTimeoutSeconds = 15;
