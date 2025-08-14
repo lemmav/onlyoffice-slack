@@ -54,3 +54,6 @@ CREATE TABLE active_file_sessions (
     created_at TIMESTAMP NOT NULL,
     PRIMARY KEY (file_id)
 );
+
+CREATE INDEX idx_active_file_session_created_at ON active_file_sessions(created_at);
+CREATE INDEX idx_active_file_session_created_file_id ON active_file_sessions(created_at, file_id);
