@@ -56,3 +56,9 @@ hazelcast:
         eviction-policy: LRU
         max-size-policy: USED_HEAP_SIZE
         size: 100
+      map-store:
+        enabled: true
+        factory-class-name: com.onlyoffice.slack.shared.configuration.cache.HazelcastFileSessionMapStoreFactory
+        write-delay-seconds: 0
+        write-batch-size: 1
+        write-coalescing: true
