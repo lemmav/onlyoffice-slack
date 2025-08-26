@@ -1,28 +1,15 @@
 hazelcast:
-  cluster-name: onlyoffice-slack
+  cluster-name: onlyoffice-services
   network:
-    port:
-      auto-increment: true
-      port-count: 100
-      port: 5701
-    outbound-ports:
-      - 0
     join:
-      multicast:
-        enabled: false
-        multicast-group: 224.2.2.3
-        multicast-port: 54327
-        multicast-time-to-live: 32
-        multicast-timeout-seconds: 2
       tcp-ip:
         enabled: true
-        interface: 0.0.0.0
         member-list:
-          - 127.0.0.1
+          - localhost
       kubernetes:
         enabled: false
         namespace: default
-        service-name: onlyoffice-slack-hazelcast
+        service-name: onlyoffice-service
   map:
     bots:
       in-memory-format: BINARY
@@ -69,11 +56,3 @@ hazelcast:
         eviction-policy: LRU
         max-size-policy: USED_HEAP_SIZE
         size: 100
-  metrics:
-    enabled: true
-    management-center:
-      enabled: true
-      retention-seconds: 5
-    jmx:
-      enabled: true
-    collection-frequency-seconds: 5
