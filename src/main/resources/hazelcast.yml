@@ -9,11 +9,16 @@ hazelcast:
       - 0
     join:
       multicast:
-        enabled: true
+        enabled: false
         multicast-group: 224.2.2.3
         multicast-port: 54327
         multicast-time-to-live: 32
         multicast-timeout-seconds: 2
+      tcp-ip:
+        enabled: true
+        interface: 0.0.0.0
+        member-list:
+          - 127.0.0.1
       kubernetes:
         enabled: false
         namespace: default
@@ -27,6 +32,7 @@ hazelcast:
       eviction:
         eviction-policy: LRU
         max-size-policy: USED_HEAP_SIZE
+        size: 1000
     states:
       in-memory-format: BINARY
       backup-count: 1
@@ -35,6 +41,7 @@ hazelcast:
       eviction:
         eviction-policy: LRU
         max-size-policy: USED_HEAP_SIZE
+        size: 1000
     sessions:
       in-memory-format: BINARY
       backup-count: 1
@@ -43,6 +50,7 @@ hazelcast:
       eviction:
         eviction-policy: LRU
         max-size-policy: USED_HEAP_SIZE
+        size: 1000
     installers:
       in-memory-format: BINARY
       backup-count: 1
@@ -51,6 +59,16 @@ hazelcast:
       eviction:
         eviction-policy: LRU
         max-size-policy: USED_HEAP_SIZE
+        size: 1000
+    keys:
+      in-memory-format: BINARY
+      backup-count: 1
+      time-to-live-seconds: 10
+      max-idle-seconds: 10
+      eviction:
+        eviction-policy: LRU
+        max-size-policy: USED_HEAP_SIZE
+        size: 100
   metrics:
     enabled: true
     management-center:
