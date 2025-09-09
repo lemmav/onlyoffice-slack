@@ -15,7 +15,7 @@
 	<version>1.0.0</version>
 
 	<name>slack</name>
-	<description>ONLYOFFICE Integration with Slack</description>
+	<description>ONLYOFFICE app for Slack</description>
 	<url>https://github.com/ONLYOFFICE/onlyoffice-slack</url>
 
 	<inceptionYear>2025</inceptionYear>

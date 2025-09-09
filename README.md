@@ -1,1 +1,1 @@
-# ONLYOFFICE Integration with Slack
+# ONLYOFFICE app for Slack
