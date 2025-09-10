@@ -89,6 +89,8 @@ public class GlobalExceptionHandler implements ErrorController {
 
   @ExceptionHandler(Exception.class)
   public String handleGenericException(final Exception ex, final Model model) {
+    log.error("Something went wrong: {}", ex.getMessage());
+
     model.addAttribute(
         "title",
         messageSource.getMessage(
