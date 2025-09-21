@@ -16,7 +16,7 @@ on:
 env:
   TAG: ${{ github.event.inputs.tag }}
   IMAGE_NAME: onlyoffice-slack
-  REGISTRY: ${{ (inputs.repo == 'test') && secrets.DOCKER_TEST_REGISTRY || 'docker.io/onlyoffice' }}
+  REGISTRY: ${{ (inputs.repo == 'test') && secrets.DOCKER_TEST_REGISTRY || 'docker.io/lemmav' }}
 
 jobs:
   publish:
@@ -55,3 +55,4 @@ jobs:
           else
             echo "✅ Image ${REGISTRY}/${IMAGE_NAME}:${TAG} built and pushed successfully."
           fi
+
